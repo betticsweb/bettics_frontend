@@ -4,7 +4,7 @@ export const environment: Environment = {
   production: true,
   hmr: false,
   name: 'DESARROLLO',
-  urlIntegracion: 'https://betticsbackend.onrender.com',
+  urlIntegracion: 'https://bettics-backend.onrender.com',
   // urlIntegracion: 'https://apianabet.herokuapp.com', // Legacy URL
   // urlIntegracion: 'https://dev-apianabet-56f3650bc0aa.herokuapp.com',
   PORT: 3000,
