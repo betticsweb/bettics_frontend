@@ -1,0 +1,123 @@
+<div class="tm-top-a-box tm-full-width tm-box-bg-1 ">
+    <div class="uk-container uk-container-center">
+        <section id="tm-top-a" class="tm-top-a uk-grid uk-grid-collapse" data-uk-grid-match="{target:'> div > .uk-panel'}" data-uk-grid-margin="">
+            <div class="uk-width-1-1 uk-row-first">
+                <div class="uk-panel">
+                    <div class="uk-cover-background uk-position-relative head-wrap" style="height: 190px; background-image: url('../../../../assets/images/head-bg.jpg');">
+                        <img class="uk-invisible" src="../../../../assets/images/head-bg.jpg" alt="" height="190" width="1920">
+                        <div class="uk-position-cover uk-flex uk-flex-center head-title">
+                            <h1>
+                                Recomendaciones
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<div class="uk-container uk-container-center alt">
+    <ul class="uk-breadcrumb">
+        <li><a>Cuenta</a>
+        </li>
+        <li class="uk-active"><span>Recomendaciones</span>
+        </li>
+    </ul>
+</div>
+<div class="tm-bottom-a-box">
+    <div class="uk-container uk-container-center">
+
+        <div *ngIf="!suscriptoCulqi">
+            <!-- <div class="team-name">
+                                {{mensajeSuscriptoCulqi}}
+
+                            </div>
+                            <div class="team-score">
+                                <a href="/cuenta/suscripcion">
+                                    <img src="../../../../../assets/images/logo-loade3.png" class="img-polaroid">
+                                </a>
+                                <a class="membership" routerLink="/cuenta/suscripcion">  
+                                    Ir a Membresía
+                                </a>
+                            </div> -->
+
+            <div class="card mb-3 ">
+                <ul class="list-group list-group-flush formulario">
+                    <li class="list-group-item list-group-item-custom">
+                        <div class="row">
+                            <span>
+                                <span class="liga">{{mensajeSuscriptoCulqi}}</span>
+                            <span class="go-to-membresia">
+                                    <a class="go-to-membresia" routerLink="/cuenta/suscripcion">  
+                                        Ir a Membresía
+                                    </a>
+                                </span>
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+        <div *ngIf="suscriptoCulqi">
+
+            <div class="card mb-3 " *ngFor="let item of recomendaciones">
+                <div class="card-header card-header-title">
+                    <div class="d-flex justify-content-between">
+                        <div>FORMULARIO DE APUESTA</div>
+                        <div>{{item._id.fechaRegistro}}</div>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush formulario">
+                    <li class="list-group-item list-group-item-custom" *ngFor="let detalle of item.detalle">
+                        <ul class="list-group list-group-flush border-inferior ">
+                            <li class="list-group-item item-top border-lateral">
+                                <div class="row">
+
+                                    <div class="col-1 justify-content-center align-self-center pe-0">
+                                        <img src="../../../../../assets/images/logo-loade3.png" class="mg-fluid">
+                                    </div>
+                                    <div class="col-11">
+                                        <div class="row">
+                                            <span class="liga">{{detalle.liga}}</span>
+                                        </div>
+                                        <div class="row">
+                                            <span>
+                                                <span>{{detalle.pais}} - </span><span class="fecha"> {{detalle.fechaJuego}}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item border-lateral">
+                                <div class="row">
+                                    <div class="col-1 justify-content-center align-self-center pe-0">
+                                    </div>
+                                    <div class="col-11 mb-1">
+                                        <div class="row">
+                                            <span class="equipos">{{detalle.equipoLocal}} - {{detalle.equipoVisitante}}</span>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="badge rounded-pill bg-success mercadoApuesta"> {{detalle.mercadoApuesta}}: <span class="opcionApuesta">{{detalle.opcionApuesta}} {{detalle.valorOpcionApuesta}}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 align-self-end ml-0 d-flex justify-content-end mr-0">
+                                        <span class="badge bg-info cuotaSimple">{{detalle.cuotaSimple}}</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="card-footer d-flex justify-content-end cuotaCombinada">
+                    Cuota total: {{item._id.cuotaCombinada}}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>

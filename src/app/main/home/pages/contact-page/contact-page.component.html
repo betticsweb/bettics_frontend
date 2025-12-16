@@ -1,0 +1,131 @@
+<div class="tm-top-a-box tm-full-width tm-box-bg-1 ">
+    <div class="uk-container uk-container-center">
+        <section id="tm-top-a" class="tm-top-a uk-grid uk-grid-collapse" data-uk-grid-match="{target:'> div > .uk-panel'}" data-uk-grid-margin="">
+            <div class="uk-width-1-1 uk-row-first">
+                <div class="uk-panel">
+                    <div class="uk-cover-background uk-position-relative head-wrap" style="height: 190px; background-image: url('../../../../assets/images/head-bg.jpg');">
+                        <img class="uk-invisible" src="../../../../assets/images/head-bg.jpg" alt="" height="190" width="1920">
+                        <div class="uk-position-cover uk-flex uk-flex-center head-title">
+                            <h1>
+                                Contacto
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<div class="uk-container uk-container-center alt">
+    <ul class="uk-breadcrumb">
+        <li><a href="/">Inicio</a>
+        </li>
+        <li class="uk-active"><span>Contacto</span>
+        </li>
+    </ul>
+</div>
+<div class="tm-bottom-b-box tm-full-width  ">
+    <div class="uk-container uk-container-center">
+        <section id="tm-bottom-b" class="tm-bottom-b uk-grid uk-grid-collapse" data-uk-grid-match="{target:'> div > .uk-panel'}" data-uk-grid-margin="">
+            <div class="uk-width-1-1">
+                <div class="uk-panel">
+                    <div class="map-wrap">
+
+                        <div class="contact-form-wrap uk-flex">
+                            <div class="uk-container uk-container-center uk-flex-item-1">
+                                <div class="uk-grid  uk-grid-collapse uk-flex-item-1 uk-height-1-1 uk-nbfc">
+                                    <div class="uk-width-5-10 contact-left uk-vertical-align contact-left-wrap">
+                                        <div class="contact-info-lines uk-vertical-align-middle contact-info-lines-custom">
+                                            <!-- <div class="item phone"><span class="icon"><i class="uk-icon-phone"></i></span>(846)-356-9322</div> -->
+                                            <div class="item mail"><span class="icon icom-email"><i class="uk-icon-envelope"></i></span><a href="mailto:support@torbara.com">support@bettics.com.pe</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-medium-5-10 uk-width-small-1-1 contact-right-wrap">
+                                        <div class="contact-form uk-height-1-1">
+                                            <div class="uk-position-cover uk-flex uk-flex-column uk-flex-center uk-position-cover-custom ">
+                                                <div class="contact-form-title">
+                                                    <h2>Escribenos un mensaje</h2>
+                                                </div>
+                                                <div id="aiContactSafe_form_1">
+                                                    <div class="aiContactSafe" id="aiContactSafe_mainbody_1">
+                                                        <div class="contentpaneopen">
+                                                            <div id="aiContactSafeForm">
+                                                                <form [formGroup]="formularioEntidad" name="adminForm_1">
+                                                                    <div id="displayAiContactSafeForm_1">
+                                                                        <div class="aiContactSafe" id="aiContactSafe_contact_form">
+                                                                            <div class="aiContactSafe" id="aiContactSafe_info"></div>
+                                                                            <div class="aiContactSafe_row  " id="aiContactSafe_row_aics_name ">
+                                                                                <div class="aiContactSafe_contact_form_field_label_left" *ngIf="submitted &&  formularioEntidad.get('name')?.invalid">
+                                                                                    <span class="aiContactSafe_label" id="aiContactSafe_label_aics_name">
+                                                                                    </span>&nbsp;
+                                                                                    <label class="required_field input-error-name">Debe ingresar un nombre</label>
+                                                                                </div>
+                                                                                <div class="aiContactSafe_contact_form_field_right">
+                                                                                    <input type="text" class="textbox" formControlName="name" placeholder="Nombre y apellidos" [ngClass]="{ 'is-invalid': submitted && f['name'].errors }">
+
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="aiContactSafe_row" id="aiContactSafe_row_aics_email">
+                                                                                <div class="aiContactSafe_contact_form_field_label_left" *ngIf="submitted &&  formularioEntidad.get('to')?.invalid">
+                                                                                    <span class="aiContactSafe_label" id="aiContactSafe_label_aics_email">
+                                                                                    </span>&nbsp;
+                                                                                    <label class="required_field input-error">Debe ingresar un correo electrónico</label>
+                                                                                </div>
+                                                                                <div class="aiContactSafe_contact_form_field_right">
+                                                                                    <input type="text" class="email" formControlName="to" placeholder="Correo electrónico" [ngClass]="{ 'is-invalid': submitted && f['to'].errors }">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="aiContactSafe_row" id="aiContactSafe_row_aics_message">
+                                                                                <div class="aiContactSafe_contact_form_field_label_left" *ngIf="submitted &&  formularioEntidad.get('text')?.invalid">
+                                                                                    <span class="aiContactSafe_label" id="aiContactSafe_label_aics_message">
+                                                                                    </span>&nbsp;
+                                                                                    <label class="required_field input-error">Por favor escribenos un mensaje</label>
+                                                                                </div>
+                                                                                <div class="aiContactSafe_contact_form_field_right">
+                                                                                    <textarea name="aics_message" id="aics_message" formControlName="text" cols="40" rows="10" class="editbox" placeholder="Escribe tu mensaje" [ngClass]="{ 'is-invalid': submitted && f['text'].errors }"></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <br>
+                                                                    <br>
+                                                                    <div id="aiContactSafeBtns">
+                                                                        <div id="aiContactSafeButtons_center" style="clear:both; display:block; text-align:center;">
+                                                                            <table style="margin-left:auto; margin-right:auto;">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <div id="aiContactSafeSend_loading_1">&nbsp;</div>
+                                                                                        </td>
+                                                                                        <td id="td_aiContactSafeSendButton">
+                                                                                            <button id="aiContactSafeSendButton" value="Enviar" (click)="enviarEmail()">Enviar correo</button>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                    <br>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="map"></div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

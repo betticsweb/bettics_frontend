@@ -1,0 +1,1585 @@
+<div class="tm-top-a-box tm-full-width tm-box-bg-1 ">
+    <div class="uk-container uk-container-center">
+        <section id="tm-top-a" class="tm-top-a uk-grid uk-grid-collapse" data-uk-grid-match="{target:'> div > .uk-panel'}" data-uk-grid-margin="">
+            <div class="uk-width-1-1 uk-row-first">
+                <div class="uk-panel">
+                    <div class="uk-cover-background uk-position-relative head-wrap" style="height: 190px; background-image: url('../../../../assets/images/head-bg.jpg');">
+                        <img class="uk-invisible" src="../../../../assets/images/head-bg.jpg" alt="" height="190" width="1920">
+                        <div class="uk-position-cover uk-flex uk-flex-center head-title">
+                            <h1>
+                                Estadísticas
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<div class="uk-container uk-container-center alt">
+    <ul class="uk-breadcrumb">
+        <li><a>Cuenta</a>
+        </li>
+        <li class="uk-active"><span>Estadísticas</span>
+        </li>
+    </ul>
+</div>
+<div class="tm-bottom-a-box">
+    <div class="uk-container uk-container-center">
+
+        <div *ngIf="!suscriptoCulqi">
+            <div class="card mb-3 ">
+                <ul class="list-group list-group-flush formulario">
+                    <li class="list-group-item list-group-item-custom">
+                        <div class="row">
+                            <span>
+                                <span class="liga">{{mensajeSuscriptoCulqi}}</span>
+                            <span class="go-to-membresia">
+                                    <a class="go-to-membresia" routerLink="/cuenta/suscripcion">  
+                                        Ir a Membresía
+                                    </a>
+                                </span>
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div *ngIf="suscriptoCulqi">
+            <div class="d-flex justify-content-center row">
+                <div class="p-2 bd-highlight col-lg-3 col-sm-6">
+                    <label class="form-label">Liga</label>
+                    <select class="form-select" (change)="cargarTemporadasEquipos()" [(ngModel)]="strLeagueSelected">
+                            <option *ngFor="let op of strLeague" [value]="op.id">
+                                {{op.descripcion}}
+                              </option> 
+                    </select>
+                </div>
+                <div class="p-2 bd-highlight col-lg-3 col-sm-6">
+                    <label class="form-label">Temporada</label>
+                    <select class="form-select" (change)="cargarEquipos(false)" [(ngModel)]="strSeasonSelected">
+                            <option *ngFor="let op of strSeason" [value]="op.id">
+                                {{op.descripcion}}
+                              </option> 
+                    </select>
+                </div>
+                <div class="p-2 bd-highlight col-lg-3 ">
+                    <label class="form-label">  Equipo local
+                    </label>
+                    <select class="form-select" (change)="onChange()" [(ngModel)]="strHomeTeamSelected">
+                            <option *ngFor="let op of strHomeTeam" [ngValue]="op.id">
+                                {{op.descripcion}}
+                              </option> 
+                    </select>
+                </div>
+                <div class="p-2 bd-highlight col-lg-3 ">
+                    <label class="form-label">Equipo Visitante
+                    </label>
+                    <select class="form-select" (change)="onChange()" [(ngModel)]="strAwayTeamSelected">
+                            <option *ngFor="let op of strAwayTeam" [ngValue]="op.id"   >
+                                {{op.descripcion}}
+                              </option> 
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="tabbable-panel">
+                        <div class="tabbable-line">
+                            <ul class="nav nav-tabs ">
+                                <li class="nav-item" role="presentation" class="active">
+                                    <!-- <a href="#tab_default_1" data-toggle="tab">
+                                     </a> -->
+                                    <button (click)="onTab(1)" class="nav-link active titleTab" id="goles-tab" data-bs-toggle="tab" data-bs-target="#goles" type="button" role="tab" aria-controls="goles" aria-selected="true">Goles</button>
+                                </li>
+                                <li>
+                                    <button (click)="onTab(2)" class="nav-link titleTab" id="corners-tab" data-bs-toggle="tab" data-bs-target="#corners" type="button" role="tab" aria-controls="corners" aria-selected="true">Corners</button>
+                                </li>
+                                <li>
+                                    <button (click)="onTab(3)" class="nav-link titleTab" id="tarjetas-tab" data-bs-toggle="tab" data-bs-target="#tarjetas" type="button" role="tab" aria-controls="tarjetas" aria-selected="true">Tarjetas</button>
+                                </li>
+                                <li>
+                                    <button (click)="onTab(4)" class="nav-link titleTab" id="remates-tab" data-bs-toggle="tab" data-bs-target="#remates" type="button" role="tab" aria-controls="remates" aria-selected="true">Tiros a Puerta</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="goles" role="tabpanel" aria-labelledby="goles-tab">
+
+                                    <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md' ">
+                                        <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                            <label class="form-label">Total Goles más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                    <option [ngValue]="" disabled hidden></option>
+                                                    <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+                                        <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
+                                            <label class="form-label">Goles Local más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                <option [ngValue]="" disabled hidden></option>
+                                                <option *ngFor="let op of strFilterMatchLocal" [ngValue]="op" >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+
+                                        <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                            <label class="form-label">Goles Visita más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                <option [ngValue]="" disabled hidden></option>
+                                                <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                            </div>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered  table-sm">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Goles Local</th>
+                                                        <th scope="col">Goles Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td>{{item.strHomeTeam}}</td>
+                                                        <td>{{item.intHomeScore}}</td>
+                                                        <td>{{item.intAwayScore}}</td>
+                                                        <td>{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h4>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Goles Local</th>
+                                                        <th scope="col">Goles Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor'  , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intHomeScore}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor' , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intAwayScore}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h4>
+                                        </div>
+                                        <div class="table-responsive">
+
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Goles Local</th>
+                                                        <th scope="col">Goles Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true}">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor'  , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intHomeScore}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor' , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intAwayScore}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>LOCAL / VISITA</h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Goles Local</th>
+                                                        <th scope="col">Goles Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor'  , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intHomeScore}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor' , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intAwayScore}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h4>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Goles Local</th>
+                                                        <th scope="col">Goles Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor'  , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intHomeScore}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor' , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intAwayScore}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="mediaBreakpoint$.value != 'xs' && mediaBreakpoint$.value != 'sm' && mediaBreakpoint$.value != 'md'">
+                                        <div class="row">
+                                            <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                                <label class="form-label">Total Goles más de:
+                                                </label>
+                                                <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                        <option [ngValue]="" disabled hidden></option>
+                                                        <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+                                            <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
+                                                <label class="form-label">Goles Local más de2:
+                                                </label>
+                                                <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                        <option [ngValue]="" disabled hidden></option>
+                                                        <option *ngFor="let op of strFilterMatchLocal" [ngValue]="op" >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+
+                                            <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                                <label class="form-label">Goles Visita más de:
+                                                </label>
+                                                <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                        <option [ngValue]="" disabled hidden></option>
+                                                        <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                            </div>
+
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Goles Local</th>
+                                                        <th scope="col">Goles Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th scope="row">{{item.dateEvent}}</th>
+                                                        <td>{{item.strHomeTeam}}</td>
+                                                        <td>{{item.intHomeScore}}</td>
+                                                        <td>{{item.intAwayScore}}</td>
+                                                        <td>{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <br>
+                                        <br>
+
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h3>{{strHomeTeamNameSelected}} <span><span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></span></h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h3>
+                                            </div>
+                                            <div class="col-6">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Goles Local</th>
+                                                            <th scope="col">Goles Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor'  , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intHomeScore}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor' , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intAwayScore}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-6 ">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Goles Local</th>
+                                                            <th scope="col">Goles Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor'  , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intHomeScore}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor' , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intAwayScore}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>LOCAL / VISITA</h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h3>
+                                            </div>
+                                            <div class="col-6">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Goles Local</th>
+                                                            <th scope="col">Goles Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor'  , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intHomeScore}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor' , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intAwayScore}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-6 ">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Goles Local</th>
+                                                            <th scope="col">Goles Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor'  , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intHomeScore}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultado==='ganador' , 'label-perdedor' : item.tipoResultado==='perdedor' , 'label-empate' : item.tipoResultado==='empate'} ">{{item.intAwayScore}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="corners" role="tabpanel" aria-labelledby="corners-tab">
+
+                                    <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
+                                        <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                            <label class="form-label">Total Corners más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                <option [ngValue]="" disabled hidden></option>
+                                                <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+                                        <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
+                                            <label class="form-label">Corner Local más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                <option [ngValue]="" disabled hidden></option>    
+                                                <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+
+                                        <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                            <label class="form-label">Corner Visita más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                <option [ngValue]="" disabled hidden></option>
+                                                <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered  table-sm">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Corners Local</th>
+                                                        <th scope="col">Corners Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga"scope="row">{{item.dateEvent}}</th>
+                                                        <td>{{item.strHomeTeam}}</td>
+                                                        <td>{{item.cornerKicksHome}}</td>
+                                                        <td>{{item.cornerKicksAway}}</td>
+                                                        <td>{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Corners Local</th>
+                                                        <th scope="col">Corners Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksHome}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Corners Local</th>
+                                                        <th scope="col">Corners Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners ==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksHome}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>LOCAL / VISITA</h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Corners Local</th>
+                                                        <th scope="col">Corners Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksHome}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Corners Local</th>
+                                                        <th scope="col">Corners Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksHome}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+
+                                    </div>
+                                    <div *ngIf="mediaBreakpoint$.value != 'xs' && mediaBreakpoint$.value != 'sm' && mediaBreakpoint$.value != 'md'">
+                                        <div class="row">
+
+                                            <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                                <label class="form-label">Total Corners más de:
+                                                </label>
+                                                <select class="form-select"  (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                        <option [ngValue]="" ></option>
+                                                        <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+                                            <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
+                                                <label class="form-label">Corner Local más de:
+                                                </label>
+                                                <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                        <option [ngValue]="" ></option>
+                                                        <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+
+                                            <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                                <label class="form-label">Corner Visita más de:
+                                                </label>
+                                                <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                        <option [ngValue]="" ></option>
+                                                        <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                            </div>
+
+
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Corners Local</th>
+                                                        <th scope="col">Corners Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th scope="row">{{item.dateEvent}}</th>
+                                                        <td>{{item.strHomeTeam}}</td>
+                                                        <td>{{item.cornerKicksHome}}</td>
+                                                        <td>{{item.cornerKicksAway}}</td>
+                                                        <td>{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <br>
+                                        <br>
+
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h3>
+                                            </div>
+                                            <div class="col-6">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Corners Local</th>
+                                                            <th scope="col">Corners Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksHome}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-6 ">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Corners Local</th>
+                                                            <th scope="col">Corners Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksHome}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners ==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>LOCAL / VISITA</h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h3>
+                                            </div>
+                                            <div class="col-6">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Corners Local</th>
+                                                            <th scope="col">Corners Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksHome}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-6 ">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Corners Local</th>
+                                                            <th scope="col">Corners Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksHome}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.cornerKicksAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="tab-pane" id="tarjetas" role="tabpanel" aria-labelledby="tarjetas-tab">
+
+                                    <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
+                                        <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                            <label class="form-label">Total Tarjetas más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                    <option [ngValue]="" disabled hidden></option>
+                                                    <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+                                        <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
+                                            <label class="form-label">Tarjetas Local más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                <option [ngValue]="" disabled hidden></option>
+                                                    <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+
+                                        <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                            <label class="form-label">Tarjetas Visita más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                <option [ngValue]="" disabled hidden></option>
+                                                    <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                            </div>
+                                        </div>
+                                        <div class="p-2 bd-highlight col-lg-3 ">
+                                            <label class="form-label">Total Match Tarjetas
+                                            </label>
+                                            <select class="form-select" (change)="onChange()" [(ngModel)]="strAwayTeamSelected">
+                                                    <option   *ngFor="let op of strAwayTeam" [ngValue]="op.id"   >
+                                                        {{op.descripcion}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered  table-sm">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tarjetas Local</th>
+                                                        <th scope="col">Tarjetas Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td>{{item.strHomeTeam}}</td>
+                                                        <td>{{item.totalCardsHome}}</td>
+                                                        <td>{{item.totalCardsAway}}</td>
+                                                        <td>{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tarjetas Local</th>
+                                                        <th scope="col">Tarjetas Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsHome}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tarjetas Local</th>
+                                                        <th scope="col">Tarjetas Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners ==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsHome}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>LOCAL / VISITA</h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tarjetas Local</th>
+                                                        <th scope="col">Tarjetas Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsHome}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tarjetas Local</th>
+                                                        <th scope="col">Tarjetas Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsHome}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+
+                                    </div>
+                                    <div *ngIf="mediaBreakpoint$.value != 'xs' && mediaBreakpoint$.value != 'sm' && mediaBreakpoint$.value != 'md'">
+                                        <div class="row">
+                                            <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                                <label class="form-label">Total Tarjetas más de:
+                                                </label>
+                                                <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                    <option [ngValue]="" disabled hidden></option>
+                                                        <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+                                            <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
+                                                <label class="form-label">Tarjetas Local más de:
+                                                </label>
+                                                <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                    <option [ngValue]="" disabled hidden></option>
+                                                        <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+
+                                            <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                                <label class="form-label">Tarjetas Visita más de:
+                                                </label>
+                                                <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                    <option [ngValue]="" disabled hidden></option>
+                                                        <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                            </div>
+
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tarjetas Local</th>
+                                                        <th scope="col">Tarjetas Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th scope="row">{{item.dateEvent}}</th>
+                                                        <td>{{item.strHomeTeam}}</td>
+                                                        <td>{{item.totalCardsHome}}</td>
+                                                        <td>{{item.totalCardsAway}}</td>
+                                                        <td>{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <br>
+                                        <br>
+
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h3>
+                                            </div>
+                                            <div class="col-6">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Tarjetas Local</th>
+                                                            <th scope="col">Tarjetas Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsHome}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-6 ">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Tarjetas Local</th>
+                                                            <th scope="col">Tarjetas Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsHome}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners ==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>LOCAL / VISITA</h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h3>
+                                            </div>
+                                            <div class="col-6">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Tarjetas Local</th>
+                                                            <th scope="col">Tarjetas Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsHome}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-6 ">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Tarjetas Local</th>
+                                                            <th scope="col">Tarjetas Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsHome}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.totalCardsAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="tab-pane" id="remates" role="tabpanel" aria-labelledby="remates-tab">
+
+                                    <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
+                                        <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                            <label class="form-label">Total Tiros a puerta más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                <option [ngValue]="" disabled hidden></option>
+                                                    <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+                                        <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
+                                            <label class="form-label">Tiros a puerta Local más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                <option [ngValue]="" disabled hidden></option>    
+                                                <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+
+                                        <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                            <label class="form-label">Tiros a puerta Visita más de:
+                                            </label>
+                                            <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                <option [ngValue]="" disabled hidden></option>
+                                                    <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
+                                                        {{op}}
+                                                      </option> 
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered  table-sm">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tiros a puerta Local</th>
+                                                        <th scope="col">Tiros a puerta Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td>{{item.strHomeTeam}}</td>
+                                                        <td>{{item.shotsonGoalHome}}</td>
+                                                        <td>{{item.shotsonGoalAway}}</td>
+                                                        <td>{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tiros a puerta Local</th>
+                                                        <th scope="col">Tiros a puerta Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalHome}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tiros a puerta Local</th>
+                                                        <th scope="col">Tiros a puerta Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners ==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalHome}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>LOCAL / VISITA</h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tiros a puerta Local</th>
+                                                        <th scope="col">Tiros a puerta Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalHome}}</td>
+                                                        <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h4>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tiros a puerta Local</th>
+                                                        <th scope="col">Tiros a puerta Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalHome}}</td>
+                                                        <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalAway}}</td>
+                                                        <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+
+                                    </div>
+                                    <div *ngIf="mediaBreakpoint$.value != 'xs' && mediaBreakpoint$.value != 'sm' && mediaBreakpoint$.value != 'md'">
+                                        <div class="row">
+                                            <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                                <label class="form-label">Total Tiros a puerta más de:
+                                                </label>
+                                                <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                    <option [ngValue]="" disabled hidden></option>    
+                                                    <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+                                            <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
+                                                <label class="form-label">Tiros a puerta Local más de:
+                                                </label>
+                                                <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                    <option [ngValue]="" disabled hidden></option>    
+                                                    <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+
+                                            <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
+                                                <label class="form-label">Tiros a puerta Visita más de:
+                                                </label>
+                                                <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                    <option [ngValue]="" disabled hidden></option>    
+                                                    <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
+                                                            {{op}}
+                                                          </option> 
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                            </div>
+
+                                            <table class="table table-bordered ">
+                                                <thead class="thead-custom">
+                                                    <tr class="header-custom thead-custom">
+                                                        <th scope="col" class="left-cell">Fecha</th>
+                                                        <th scope="col">Equipo Local</th>
+                                                        <th scope="col">Tiros a puerta Local</th>
+                                                        <th scope="col">Tiros a puerta Visita</th>
+                                                        <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                        <th scope="row">{{item.dateEvent}}</th>
+                                                        <td>{{item.strHomeTeam}}</td>
+                                                        <td>{{item.shotsonGoalHome}}</td>
+                                                        <td>{{item.shotsonGoalAway}}</td>
+                                                        <td>{{item.strAwayTeam}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <br>
+                                        <br>
+
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h3>
+                                            </div>
+                                            <div class="col-6">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Tiros a puerta Local</th>
+                                                            <th scope="col">Tiros a puerta Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalHome}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-6 ">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Tiros a puerta Local</th>
+                                                            <th scope="col">Tiros a puerta Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalHome}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners ==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>LOCAL / VISITA</h3>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h3>
+                                            </div>
+                                            <div class="col-6">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Tiros a puerta Local</th>
+                                                            <th scope="col">Tiros a puerta Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalHome}}</td>
+                                                            <td [ngClass]="{ 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-6 ">
+                                                <table class="table table-bordered ">
+                                                    <thead class="thead-custom">
+                                                        <tr class="header-custom thead-custom">
+                                                            <th scope="col" class="left-cell">Fecha</th>
+                                                            <th scope="col">Equipo Local</th>
+                                                            <th scope="col">Tiros a puerta Local</th>
+                                                            <th scope="col">Tiros a puerta Visita</th>
+                                                            <th scope="col" class="rigth-cell">Equipo Visitante</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
+                                                            <th scope="row">{{item.dateEvent}}</th>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor'  , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalHome}}</td>
+                                                            <td [ngClass]=" { 'label-ganador': item.tipoResultadoCorners==='ganador' , 'label-perdedor' : item.tipoResultadoCorners==='perdedor' , 'label-empate' : item.tipoResultadoCorners==='empate'} ">{{item.shotsonGoalAway}}</td>
+                                                            <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

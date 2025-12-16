@@ -1,0 +1,127 @@
+<div class="tm-top-a-box tm-full-width tm-box-bg-1 ">
+    <div class="uk-container uk-container-center">
+        <section id="tm-top-a" class="tm-top-a uk-grid uk-grid-collapse" data-uk-grid-match="{target:'> div > .uk-panel'}" data-uk-grid-margin="">
+            <div class="uk-width-1-1 uk-row-first">
+                <div class="uk-panel">
+                    <div class="uk-cover-background uk-position-relative head-wrap" style="height: 190px; background-image: url('../../../../../assets/images/head-bg.jpg');">
+                        <img class="uk-invisible" src="../../../../../assets/images/head-bg.jpg" alt="" height="190" width="1920">
+                        <div class="uk-position-cover uk-flex uk-flex-center head-title">
+                            <h1>Subcripción</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<div class="uk-container uk-container-center alt">
+    <ul class="uk-breadcrumb">
+        <li><a>Cuenta</a>
+        </li>
+        <li class="uk-active"><span>Subcripción</span>
+        </li>
+    </ul>
+</div>
+<div class="tm-bottom-a-box">
+    <div class="uk-container uk-container-center">
+        <section id="tm-bottom-a" class="tm-bottom-a uk-grid" data-uk-grid-match="{target:'> div > .uk-panel'}" data-uk-grid-margin="">
+            <div class="uk-width-1-1 uk-row-first">
+                <div class="uk-panel">
+                    <div class="about-team-page-top-wrap">
+                        <div class="uk-grid">
+                            <div class="uk-width-large-12-10 uk-width-small-1-1 left-part">
+                                <div class="row top-title">
+                                    <h2 *ngIf="suscriptoCulqi">Cuenta <span><label>{{getControlLabel('fechaInicio')}}</label></span></h2>
+                                    <h2 *ngIf="billeteraMovilPagado">Cuenta <span><label>{{ billeteraMovilPagadoModel.fechaInicio }}</label></span></h2>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4" *ngIf="tipoMembresia != 'gratis'">
+                                        <div class="row px-3">
+                                            <label class="mb-1"><h6 class="mb-0 sub-title text-center padding-bottom-20">MEMBRESÍA Y FACTURACIÓN
+                                                </h6></label>
+                                            <button class="btn btn-default text-center me-3" *ngIf="!suscriptoCulqi" (click)="registrarSuscripcion()">Pagar acceso</button>
+                                            <button class="btn btn-default text-center me-3" *ngIf="suscriptoCulqi" (click)="cancelarSuscripcion()">Cancelar membresía</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4" *ngIf="tipoMembresia == 'gratis'">
+                                        <div class="row">
+                                            <h2>Tipo de membresia:</h2>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8" *ngIf="suscriptoCulqi">
+                                        <div class="row">
+                                            <label class="mb-1 account-item">Cuenta: {{getControlLabel('correoElectronico')}}</label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="mb-1 account-item">Teléfono: {{getControlLabel('celular')}}</label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="mb-1 account-item">Tarjeta: {{getControlLabel('numeroTarjeta')}}</label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="mb-1 account-item lbl-proxima-facturacion">{{getControlLabel('fechaProximaFacturacion')}}.</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-8" *ngIf="billeteraMovilPagado">
+                                        <div class="row">
+                                            <label class="mb-1 account-item">Cuenta: {{billeteraMovilPagadoModel.correoElectronico}}</label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="mb-1 account-item">Teléfono: {{billeteraMovilPagadoModel.celular}}</label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="mb-1 account-item">Descripción: {{billeteraMovilPagadoModel.description}}</label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="mb-1 account-item lbl-proxima-facturacion">{{billeteraMovilPagadoModel.fechaVigencia}}.</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 lbl-no-registrada" *ngIf="!suscriptoCulqi && tipoMembresia != 'gratis'">
+                                        <div class="row">
+                                            <label class="mb-1 account-item">Membresia no registrada..</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-8" *ngIf="tipoMembresia == 'gratis'">
+                                        <div class="row">
+                                            <h2 class="mb-1 account-item">Membresia gratuita</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="uk-width-large-12-10 uk-width-small-1-1 left-part" *ngIf="tipoMembresia != 'gratis'">
+                                <div class="row top-title">
+                                    <h2>INFORMACIÓN DEL PLAN</h2>
+                                </div>
+                                <div class="row">
+
+
+                                    <div class="col-lg-12 plan-right">
+                                        <div class="card-plan text-center">
+                                            <p class="ribbon ribbon-top-right"><span>PLAN</span></p>
+                                            <p class="py-4 fw-bold">PLAN</p>
+                                            <p class="d-flex justify-content-center align-text-top p-blue ">
+                                                <span class=" fas fa-dollar-sign textmuted pe-1 h6 mt-2 m-0"></span>
+                                                <span class="h1 m-0">S/. 20.00</span>
+                                            </p>
+                                            <p class="text-muted">MEMBRESÍA POR MES</p>
+                                            <P class="fs-10 mb-1"><span class="fw-bold">Acceso</span><span> Estadísticas</span></P>
+                                            <P class="fs-10 mb-1"><span class="fw-bold">Acceso</span><span> Recomendaciones</span>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

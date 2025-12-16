@@ -1,0 +1,262 @@
+.uk-push-1-4 {
+    left: 0% !important;
+}
+
+.uk-width-medium-3-4 {
+    width: 100%;
+}
+
+.match-list-item {
+    border-left: 4px solid #fdbd00 !important;
+    border-bottom: 4px solid #fdbd00 !important;
+}
+
+.match-list-wrap .match-list-item .tipoApuessta {
+    padding: 0 0 0 17px;
+    background: url("../../../../../assets/images/check.png") 0 50% no-repeat;
+    margin-left: 40px;
+    font-size: 14px;
+    color: #fff;
+    font-family: 'Work Sans';
+}
+
+.match-list-wrap .match-list-item .opcionApuesta {
+    margin: 0;
+}
+
+.match-list-wrap .match-list-item .opcionApuesta br {
+    display: none;
+}
+
+.membership {
+    color: white;
+}
+
+.match-list-wrap {
+    background: transparent;
+}
+
+.card-header-title {
+    background: #0f1f39;
+    color: white;
+}
+
+.list-group-item-custom {
+    padding: 0px !important;
+}
+
+.formulario {
+    padding-top: 0px !important;
+    margin-top: 0px !important;
+}
+
+.item-top {
+    background: #f8f8f8;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.item-bottom {
+    color: white;
+}
+
+.border-lateral {
+    border-left: 10px solid #87cc7c !important;
+}
+
+.border-inferior {
+    border-top: 1px solid #87cc7c !important;
+}
+
+.liga {
+    font-style: normal;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.fecha {
+    font-style: normal;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.opcionApuesta {
+    font-style: normal;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.mercadoApuesta {
+    font-size: 15px;
+    font-style: initial;
+    font-weight: 500;
+}
+
+.cuotaSimple {
+    font-size: 15px;
+    font-style: initial;
+    font-weight: 700;
+}
+
+.equipos {
+    font-size: 15px;
+    font-style: initial;
+    font-weight: 400;
+}
+
+.cuotaCombinada {
+    font-size: 18px;
+    font-style: initial;
+    font-weight: 700;
+}
+
+.uk-container {
+    box-sizing: border-box;
+    padding: 0 8px !important;
+}
+
+.uk-breadcrumb {
+    margin-bottom: 12px !important;
+}
+
+.go-to-membresia {
+    color: #87cc7c;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.nav-tabs>li,
+.nav-pills>li {
+    float: none;
+    display: inline-block;
+}
+
+.nav-tabs,
+.nav-pills {
+    text-align: center;
+}
+
+.tabbable-panel {
+    border: 3px solid #eee;
+    padding: 10px;
+}
+
+.tabbable-line {
+    text-align: center;
+}
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+    border-top: 1px solid !important;
+    border-right: 1px solid !important;
+    border-left: 1px solid !important;
+}
+
+.tabbable-line>.nav-tabs {
+    border: none;
+    margin: 0px;
+    text-align: center;
+    display: inline-block;
+}
+
+.tabbable-line>.nav-tabs>li {
+    margin-right: 2px;
+}
+
+.tabbable-line>.nav-tabs>li>a {
+    border: 0;
+    margin-right: 0;
+    color: #737373;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.tabbable-line>.nav-tabs>li>a>i {
+    color: #a6a6a6;
+}
+
+.tabbable-line>.nav-tabs>li.open,
+.tabbable-line>.nav-tabs>li:hover {
+    border-bottom: 4px solid #fbcdcf;
+}
+
+.tabbable-line>.nav-tabs>li.open>a,
+.tabbable-line>.nav-tabs>li:hover>a {
+    border: 0;
+    background: none !important;
+    color: #333333;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.nav-link {
+    color: #4c4c4c;
+    border: var(--bs-nav-tabs-border-width) solid transparent;
+}
+
+.header-custom {
+    background-color: #4c4c4c;
+    color: white;
+}
+
+.left-cell {
+    border-radius: 10px 0px 0px 0px;
+}
+
+.rigth-cell {
+    border-radius: 0px 10px 0px 0px;
+}
+
+.label-empate {
+    background-color: #f4b60c;
+    color: white !important;
+    -webkit-text-fill-color: #f9f9f9;
+    -webkit-text-stroke-color: #fafafa;
+    -webkit-text-stroke-width: 1px;
+}
+
+.label-ganador {
+    background-color: #51ad2f;
+    color: white !important;
+    -webkit-text-fill-color: #f9f9f9;
+    -webkit-text-stroke-color: #fafafa;
+    -webkit-text-stroke-width: 1px;
+}
+
+.label-perdedor {
+    background-color: #f71312;
+    color: white !important;
+    -webkit-text-fill-color: #f9f9f9;
+    -webkit-text-stroke-color: #fafafa;
+    -webkit-text-stroke-width: 1px;
+}
+
+.thead-custom {
+    border-style: hidden;
+}
+
+.label-equipo-identificado {
+    color: #0e0e0e;
+    font-weight: bold;
+}
+
+.titleTab {
+    font-size: 24px;
+}
+
+.filtro-aplicado {
+    background-color: #9bbc37e1;
+    /* border-color: #050505; */
+}
+.fechaLiga {
+    width: 80px;
+    font-size: 12px;
+}
+
+.porcentajeFiltro {
+    color: #9bbc37e1;
+}

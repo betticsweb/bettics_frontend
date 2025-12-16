@@ -1,0 +1,87 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<div class="container-fluid">
+    <div class="card card0 border-0 height-100">
+        <div class="row d-flex">
+            <div class="col-lg-6 imagen-left">
+                <div class="card1">
+                    <div class="row justify-content-center">
+                        <img src="assets/images/fondo1.jpg" class="image">
+                    </div>
+                </div>
+            </div>
+            <div @fadeInOut class="col-lg-6" *ngIf="!recuperarContrasenia">
+
+                <form [formGroup]="formularioEntidad" fxFlex="1 0 auto">
+                    <div class="card2 card border-0 px-4 py-5">
+
+                        <div class="row">
+                            <a href="/" class="link-underline"><label class="mb-5 link-underline"><h6 class="mb-0 text-sm link-underline"> < Regresar al inicio</h6></label></a>
+                        </div>
+                        <div class="row">
+                            <h3>Ingreso</h3>
+                        </div>
+                        <div class="row px-3">
+                            <label class="mb-1"><h6 class="mb-0 text-sm">Correo Electrónico</h6></label>
+                            <input class="mb-4" type="text" #correoInput class="form-control" autofocus formControlName="correoElectronico" placeholder="Ingrese su correo electrónico" [ngClass]="{ 'is-invalid': submitted && f['correoElectronico'].errors }">
+                            <div *ngIf="submitted && f['correoElectronico'].errors" class="invalid-feedback">
+                                <div *ngIf="f['correoElectronico'].errors['required']">Correo Electrónico es requerido</div>
+                                <div *ngIf="f['correoElectronico'].errors['pattern']">Correo Electrónico es incorrecto</div>
+                            </div>
+                        </div>
+                        <div class="row px-3">
+                            <label class="mb-1"><h6 class="mb-0 text-sm">Contraseña</h6></label>
+                            <input type="password" class="form-control" formControlName="password" placeholder="Ingrese su contraseña" [ngClass]="{ 'is-invalid': submitted && f['password'].errors }">
+                            <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+                                <div *ngIf="f['password'].errors['required']">Contraseña es requerido</div>
+                            </div>
+                        </div>
+                        <div class="row px-3 mb-4 padding-top-15">
+                            <div class="col-lg-7">
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input id="chk1" type="checkbox" formControlName="recuerdame" name="chk" class="custom-control-input">
+                                    <label for="chk1" class="custom-control-label text-sm margin-left-10">Recuérdame</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-5 text-right">
+                                <label class="ml-auto mb-0 text-sm link-underline" (click)="olvidoContrasenia()">Olvidaste tu contraseña?</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3 px-3 align-self-center">
+                            <button class="btn btn-blue text-center" (click)="ingresar()">Ingresar</button>
+                        </div>
+                        <div class="row mb-4">
+                            <small class="custom-control-label text-sm text-center">¿No tienes cuenta? <a routerLink="/auth/registrar" class="text-danger font-weight-bold">Regístrate</a></small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-6" *ngIf="recuperarContrasenia">
+                <form [formGroup]="formularioContrasenia" fxFlex="1 0 auto">
+                    <div class="card2 card border-0 px-4 py-5">
+                        <div class="row">
+                            <a href="/" class="link-underline"><label class="mb-3 link-underline"><h6 class="mb-0 text-sm link-underline"> < Regresar al inicio</h6></label></a>
+                        </div>
+                        <div class="row px-3">
+                            <label class="mb-1"><h6 class="mb-0 text-sm">Correo Electrónico</h6></label>
+                            <input class="mb-4" type="text" #correoOlvidoInput class="form-control" formControlName="to" placeholder="Ingrese su correo electrónico" [ngClass]="{ 'is-invalid': submittedContrasenia && f['to'].errors }">
+                            <div *ngIf="submittedContrasenia && f['to'].errors" class="invalid-feedback">
+                                <div *ngIf="f['to'].errors['required']">Correo Electrónico es requerido</div>
+                                <div *ngIf="f['to'].errors['pattern']">Correo Electrónico es incorrecto</div>
+                            </div>
+                        </div>
+                        <div class="row mb-3 px-3 align-self-center padding-top-15">
+                            <button class="btn btn-blue btn-blue-contrasenia text-center me-3" (click)="enviarEmailForgorPassword()">Enviar</button>
+                            <button class="btn btn-default text-center" (click)="cancelarContrasenia()">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="bg-bluefooter">
+            <div class="row px-3 text-center">
+                <small class="ml-4 ml-sm-5 mb-2">Copyright &copy; 2023. All rights reserved.</small>
+            </div>
+        </div>
+    </div>
+</div>

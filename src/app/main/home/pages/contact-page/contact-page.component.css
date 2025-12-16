@@ -1,0 +1,33 @@
+.uk-position-cover-custom {
+    top: auto !important;
+    bottom: auto !important;
+}
+
+.map-wrap .contact-form textarea {
+    line-height: 1;
+}
+
+.contact-left {
+    height: 270px !important;
+}
+
+.map-wrap .contact-form:before {
+    left: -85px;
+}
+
+.contact-info-lines-custom .icom-email:before {
+    height: 31px;
+}
+
+.input-error {
+    color: #dc3545;
+    margin-bottom: 10px;
+}
+
+.input-error-name {
+    color: #dc3545;
+}
+
+.map-wrap .contact-form label {
+    display: block !important;
+}

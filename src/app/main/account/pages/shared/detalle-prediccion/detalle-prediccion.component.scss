@@ -1,0 +1,154 @@
+
+.celdaAsignado {
+    word-break: break-all !important;
+    white-space: nowrap !important;
+    width: 300px !important;
+}
+
+.celdaAsignadoEstadisticas {
+    word-break: break-all !important;
+    white-space: nowrap !important;
+    width: 60px !important;
+    text-align: center;
+}
+.celdaAsignadofecha {
+    word-break: break-all !important;
+    white-space: nowrap !important;
+    width: 100px !important;
+    text-align: center;
+}
+.thead-custom {
+    border-style: hidden;
+}
+
+.header-custom {
+    background-color: #4c4c4c;
+    color: white;
+}
+
+.left-cell {
+    border-radius: 10px 0px 0px 0px;
+}
+
+.rigth-cell {
+    border-radius: 0px 10px 0px 0px;
+}
+
+.hiddenRow {
+    padding: 0 !important;
+}
+ 
+.table-custom {
+    font-size: 10px !important;
+}
+
+.subtitle-details {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.left-rigth-cell {
+    border-radius: 10px 10px 0px 0px;
+}
+
+.content-table {
+    font-size: 14px;
+}
+
+.colorPosicionLocalPrimeros {
+    background-color: #5a8ac6 !important;;
+    color: white !important;
+    -webkit-text-fill-color: #f9f9f9;
+    -webkit-text-stroke-color: #fafafa;
+    -webkit-text-stroke-width: 1px;
+}
+
+.colorPosicionLocalPrimeros {
+    background-color: #5a8ac6 !important;;
+    color: white !important;
+    -webkit-text-fill-color: #f9f9f9;
+    -webkit-text-stroke-color: #fafafa;
+    -webkit-text-stroke-width: 1px;
+}
+
+.colorPosicionLocalSegundos {
+    background-color: #90b0d9 !important;;
+    color: white !important;
+    -webkit-text-fill-color: #f9f9f9;
+    -webkit-text-stroke-color: #fafafa;
+    -webkit-text-stroke-width: 1px;
+}
+
+.colorPosicionLocalTerceros {
+    background-color: #fa9b9d !important;;
+    color: white !important;
+    -webkit-text-fill-color: #f9f9f9;
+    -webkit-text-stroke-color: #fafafa;
+    -webkit-text-stroke-width: 1px;
+}
+
+.colorPosicionLocalCuartos {
+    background-color: #f8696b !important;;
+    color: white !important;
+    -webkit-text-fill-color: #f9f9f9;
+    -webkit-text-stroke-color: #fafafa;
+    -webkit-text-stroke-width: 1px;
+}
+
+
+.linkEstadisticas {
+    color: blue
+}
+
+@media only screen and (min-width: 768px) {
+    .content-table {
+        font-size: 14px;
+    }
+}
+
+.n-borde-r {
+    border-radius: 0px 0px 0px 0px !important;
+}
+
+.labelRojo {
+    background-color: #FF9999 !important;;
+    color: #800020 !important;
+    -webkit-text-fill-color: #800020;
+    -webkit-text-stroke-color: #800020;
+    -webkit-text-stroke-width: 1px;
+}
+
+.labelAmarilloSuave {
+    background-color: #FADFAD !important;;
+    color: #654321 !important;
+    -webkit-text-fill-color: #654321;
+    -webkit-text-stroke-color: #654321;
+    -webkit-text-stroke-width: 1px;
+}
+
+.labelAmarilloIntenso {
+    background-color: #FADFAD !important;;
+    color: #654321 !important;
+    -webkit-text-fill-color: #654321;
+    -webkit-text-stroke-color: #654321;
+    -webkit-text-stroke-width: 1px;
+}
+
+.labelVerdeSuave {
+    background-color: #B4D7B4 !important;;
+    color: #228B22 !important;
+    -webkit-text-fill-color: #228B22;
+    -webkit-text-stroke-color: #228B22;
+    -webkit-text-stroke-width: 1px;
+}
+
+.labelVerdeIntenso {
+    background-color: #B4D7B4 !important;;
+    color: #228B22 !important;
+    -webkit-text-fill-color: #228B22;
+    -webkit-text-stroke-color: #228B22;
+    -webkit-text-stroke-width: 1px;
+}
+.border-right{
+    border-right-width: 5px !important;
+}
