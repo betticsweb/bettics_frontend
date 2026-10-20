@@ -84,11 +84,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     return 'Otros';
   }
   marketLabel(selection: Selection): string {
-    const option = [selection.opcionApuesta, selection.valorOpcionApuesta]
-      .filter(value => value !== undefined && value !== null && String(value).trim() !== '')
-      .map(value => String(value).trim()).join(' ');
-    return [String(selection.mercadoApuesta || '').trim(), option].filter(Boolean).join(': ');
+    return String(selection.mercadoApuesta || '').split(':')[0]
+      .replace(/\s*\(N\d+\w*\)/gi, '').replace(/\s+/g, ' ').trim();
   }
+
   get markets(): string[] {
     return Array.from(new Set(this.recomendaciones.flatMap(item => item.detalle)
       .filter(selection => !this.category || this.type(selection) === this.category)
