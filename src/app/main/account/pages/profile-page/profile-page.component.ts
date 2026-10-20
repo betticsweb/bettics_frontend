@@ -28,6 +28,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   period = 'today';
   league = '';
   category = '';
+  market = '';
   search = '';
   order = 'date';
   page = 1;
@@ -82,6 +83,22 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     if (/ganador|resultado|doble oportunidad/.test(market)) return 'Ganador';
     return 'Otros';
   }
+  marketLabel(selection: Selection): string {
+    const option = [selection.opcionApuesta, selection.valorOpcionApuesta]
+      .filter(value => value !== undefined && value !== null && String(value).trim() !== '')
+      .map(value => String(value).trim()).join(' ');
+    return [String(selection.mercadoApuesta || '').trim(), option].filter(Boolean).join(': ');
+  }
+  get markets(): string[] {
+    return Array.from(new Set(this.recomendaciones.flatMap(item => item.detalle)
+      .filter(selection => !this.category || this.type(selection) === this.category)
+      .map(selection => this.marketLabel(selection)).filter(Boolean)))
+      .sort((a, b) => a.localeCompare(b, 'es', {numeric: true}));
+  }
+  setCategory(): void {
+    this.market = '';
+    this.apply();
+  }
   apply(): void {
     const today = this.today();
     const tomorrow = this.shift(today, 1);
@@ -92,13 +109,13 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       return item.detalle.some(d => {
         const date = this.dateKey(d.fechaJuego);
         const inPeriod = this.period === 'all' || (this.period === 'today' && date === today) || (this.period === 'tomorrow' && date === tomorrow) || (this.period === 'week' && date >= today && date <= end);
-        return inPeriod && (!this.league || d.liga === this.league) && (!this.category || this.type(d) === this.category) && (!query || this.normalize(d.equipoLocal + ' ' + d.equipoVisitante).includes(query));
+        return inPeriod && (!this.league || d.liga === this.league) && (!this.category || this.type(d) === this.category) && (!this.market || this.marketLabel(d) === this.market) && (!query || this.normalize(d.equipoLocal + ' ' + d.equipoVisitante).includes(query));
       });
     }).sort((a, b) => this.order === 'low' ? a.odds - b.odds : this.order === 'high' ? b.odds - a.odds : (a.date || '9999').localeCompare(b.date || '9999'));
     this.page = 1;
   }
   setPeriod(value: string): void { this.period = value; this.apply(); }
-  reset(): void { this.period = 'today'; this.league = ''; this.category = ''; this.search = ''; this.order = 'date'; this.apply(); }
+  reset(): void { this.period = 'today'; this.league = ''; this.category = ''; this.market = ''; this.search = ''; this.order = 'date'; this.apply(); }
   get pages(): number { return Math.ceil(this.filtered.length / this.pageSize); }
   get groups(): {date: string; items: Recommendation[]}[] {
     const rows = this.filtered.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);

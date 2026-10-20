@@ -14,7 +14,8 @@
       <div class="periods" role="group" aria-label="Fecha de los partidos"><button *ngFor="let option of periods" type="button" [class.active]="period === option.value" [attr.aria-pressed]="period === option.value" (click)="setPeriod(option.value)">{{option.label}}</button></div>
       <div class="fields">
         <label>Liga<select [(ngModel)]="league" (ngModelChange)="apply()"><option value="">Todas las ligas</option><option *ngFor="let name of leagues" [value]="name">{{name}}</option></select></label>
-        <label>Tipo<select [(ngModel)]="category" (ngModelChange)="apply()"><option value="">Todos los tipos</option><option *ngFor="let name of ['Goles','Ganador','Corners','Tarjetas','Otros']" [value]="name">{{name}}</option></select></label>
+        <label>Tipo Mercado<select [(ngModel)]="category" (ngModelChange)="setCategory()"><option value="">Todos los tipos</option><option *ngFor="let name of ['Goles','Ganador','Corners','Tarjetas','Otros']" [value]="name">{{name}}</option></select></label>
+        <label>Detalle del mercado<select [(ngModel)]="market" (ngModelChange)="apply()"><option value="">Todos los mercados</option><option *ngFor="let name of markets" [value]="name">{{name}}</option></select></label>
         <label>Equipo<input type="search" [(ngModel)]="search" (ngModelChange)="apply()" placeholder="Buscar equipo"></label>
         <label>Ordenar<select [(ngModel)]="order" (ngModelChange)="apply()"><option value="date">Fecha más próxima</option><option value="low">Cuota menor</option><option value="high">Cuota mayor</option></select></label>
       </div>
