@@ -1,3 +1,4 @@
+import { HomeRecommendationsComponent } from 'src/app/shared/components/home-recommendations/home-recommendations.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomePageComponent } from './pages/home-page/home-page.component';
@@ -21,7 +22,8 @@ import { BodyHomePageComponent } from 'src/app/shared/pages/body-home-page/body-
     HomeRoutingModule,
     ReactiveFormsModule,
     RouterModule,
-    CarouselModule
+    CarouselModule,
+    HomeRecommendationsComponent
   ],
   exports: [
     HomePageComponent

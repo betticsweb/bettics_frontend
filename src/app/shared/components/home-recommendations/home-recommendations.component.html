@@ -1,0 +1,27 @@
+<section class="recommendations" aria-labelledby="recommendations-title" [attr.aria-busy]="estado === 'cargando'">
+  <div class="recommendations-inner">
+    <h2 id="recommendations-title">Recomendaciones del día</h2>
+    <p class="status" role="status" *ngIf="estado === 'cargando'">Cargando recomendaciones…</p>
+    <p class="status" role="status" *ngIf="estado === 'vacio'">No hay recomendaciones disponibles por el momento.</p>
+    <div class="status" role="status" *ngIf="estado === 'error'">
+      <p>No se pudieron cargar las recomendaciones.</p>
+      <button type="button" (click)="cargar()">Volver a intentar</button>
+    </div>
+    <ng-container *ngIf="estado === 'listo'">
+      <owl-carousel-o #carrusel [options]="opciones">
+        <ng-template carouselSlide *ngFor="let partido of recomendaciones">
+          <article class="recommendation-card">
+            <div class="league"><img *ngIf="partido.pais_imagen" [src]="partido.pais_imagen" alt="" width="24" height="18" loading="lazy" (error)="ocultarImagen($event)"><span>{{ partido.liga }}</span></div>
+            <div class="prediction"><strong>{{ partido.probabilidad }}%</strong><p>Probabilidad de {{ partido.mercado }}</p></div>
+            <div class="team"><img *ngIf="partido.home_image" [src]="partido.home_image" alt="" width="24" height="24" loading="lazy" (error)="ocultarImagen($event)"><span>{{ partido.home_name }}</span></div>
+            <div class="team"><img *ngIf="partido.away_image" [src]="partido.away_image" alt="" width="24" height="24" loading="lazy" (error)="ocultarImagen($event)"><span>{{ partido.away_name }}</span></div>
+          </article>
+        </ng-template>
+      </owl-carousel-o>
+      <div class="carousel-controls" *ngIf="recomendaciones.length > 1" role="group" aria-label="Navegación de recomendaciones">
+        <button type="button" (click)="carrusel.prev()" aria-label="Recomendaciones anteriores">Anterior</button>
+        <button type="button" (click)="carrusel.next()" aria-label="Recomendaciones siguientes">Siguiente</button>
+      </div>
+    </ng-container>
+  </div>
+</section>
