@@ -7,56 +7,61 @@
       </a>
       <button class="menu-toggle" type="button" aria-controls="home-navigation" [attr.aria-expanded]="menuOpen" (click)="menuOpen = !menuOpen">{{ menuOpen ? 'Cerrar menú' : 'Menú' }}</button>
       <nav id="home-navigation" aria-label="Navegación principal" [class.is-open]="menuOpen">
+        <a routerLink="/" (click)="menuOpen = false">Inicio</a>
         <a href="#funcionalidades" (click)="menuOpen = false">Funcionalidades</a>
-        <a href="#preguntas" (click)="menuOpen = false">Preguntas frecuentes</a>
-        <a routerLink="/auth/login" (click)="menuOpen = false">Iniciar sesión</a>
-        <a class="button button-small" routerLink="/auth/registrar" (click)="menuOpen = false">Crear cuenta <span class="arrow-icon" aria-hidden="true"></span></a>
+        <a routerLink="/auth/login" (click)="menuOpen = false">Login</a>
+        <a class="button" routerLink="/auth/registrar" (click)="menuOpen = false">Registrate ahora!</a>
       </nav>
     </div>
   </header>
-
   <main id="contenido" tabindex="-1">
     <section class="hero" aria-labelledby="hero-title">
-      <div class="shell hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow"><span aria-hidden="true">●</span> FÚTBOL · DATOS · INTELIGENCIA ARTIFICIAL</p>
-          <h1 id="hero-title">El fútbol se vive.<br>También se <em>analiza.</em></h1>
-          <p class="hero-description">Predicciones, estadísticas y recomendaciones deportivas en un solo lugar. Explora los datos y encuentra una nueva perspectiva del partido.</p>
-          <div class="hero-actions">
-            <a class="button" routerLink="/auth/registrar">Empieza con Bettics <span class="arrow-icon" aria-hidden="true"></span></a>
-            <a class="text-link" href="#funcionalidades">Conoce la plataforma <span aria-hidden="true">↓</span></a>
-          </div>
-          <p class="hero-note">Más información para entender el juego.</p>
-        </div>
-        <div class="hero-visual">
-          <img src="assets/images/fondo1.jpg" alt="Ilustración de un futbolista rodeado de elementos digitales de análisis deportivo" width="1280" height="853" fetchpriority="high">
-          <div class="visual-caption"><span class="status-dot" aria-hidden="true"></span> Una mirada al fútbol desde los datos <span class="arrow-icon" aria-hidden="true"></span></div>
-        </div>
+      <div class="shell hero-copy">
+        <h1 id="hero-title">Plataforma con <strong>inteligencia artificial</strong> y estadísticas para el fútbol</h1>
+        <a class="button" routerLink="/auth/registrar">Registrate Ya!</a>
       </div>
     </section>
-
-    <div class="sports-strip" aria-label="Áreas de análisis"><div class="shell"><span>EL JUEGO, CON MÁS CONTEXTO</span><span>Goles</span><span>Corners</span><span>Tarjetas</span><span>Remates al arco</span></div></div>
 
     <section class="section shell" id="funcionalidades" aria-labelledby="features-title">
-      <div class="section-heading"><div><p class="eyebrow">TU PRÓXIMA PERSPECTIVA</p><h2 id="features-title">Menos intuición.<br>Más información.</h2></div><p>Desde el detalle de un encuentro hasta una visión más amplia de los equipos. Conoce las herramientas de Bettics.</p></div>
+      <h2 id="features-title">Funcionalidades</h2>
       <div class="feature-grid">
-        <article class="feature-card"><span class="card-number">01 / PREDICCIONES</span><span class="feature-symbol" aria-hidden="true">↗</span><h3>Explora lo que puede pasar</h3><p>Consulta predicciones de encuentros deportivos elaboradas con modelos de inteligencia artificial.</p></article>
-        <article class="feature-card"><span class="card-number">02 / ESTADÍSTICAS</span><span class="feature-symbol" aria-hidden="true">▥</span><h3>Ve más allá del marcador</h3><p>Revisa el detalle de goles, corners, tarjetas y remates al arco para comprender mejor cada encuentro.</p></article>
-        <article class="feature-card"><span class="card-number">03 / RECOMENDACIONES</span><span class="feature-symbol" aria-hidden="true">◎</span><h3>Encuentra otra perspectiva</h3><p>Explora recomendaciones deportivas y contrástalas con las estadísticas disponibles.</p></article>
-        <article class="feature-card feature-card-dark"><span class="card-number">04 / INTELIGENCIA ARTIFICIAL</span><span class="feature-symbol" aria-hidden="true">✦</span><h3>Datos que aportan contexto</h3><p>Bettics utiliza modelos de machine learning como apoyo al análisis de encuentros de fútbol.</p></article>
+        <article class="feature-card"><span class="feature-icon" aria-hidden="true">01</span><h3>Predicciones</h3><p>Brindamos <strong>predicciones</strong> en los encuentros deportivos usando Inteligencia Artificial.</p></article>
+        <article class="feature-card"><span class="feature-icon" aria-hidden="true">02</span><h3>Estadísticas</h3><p>En la Web de Bettics encontrarás el detalle de las estadísticas de los encuentros deportivos. Por ejemplo el detalle de goles, corners, tarjetas y remates al arco.</p></article>
+        <article class="feature-card"><span class="feature-icon" aria-hidden="true">03</span><h3>Recomendaciones</h3><p>Brindamos <strong>recomendaciones</strong> de los encuentros deportivos.</p></article>
+        <article class="feature-card"><span class="feature-icon" aria-hidden="true">04</span><h3>Inteligencia artificial</h3><p>Te ayuda a mejorar la efectividad de los aciertos en los encuentros deportivos gracias a nuestra <strong>Inteligencia Artificial</strong> que usa modelos de Machine Learning.</p></article>
+      </div>
+      <a class="button section-action" routerLink="/auth/registrar">Registrate ahora!</a>
+    </section>
+
+    <section class="discover" aria-labelledby="discover-title">
+      <div class="shell discover-inner">
+        <div><h2 id="discover-title">DESCUBRE MAS++ DE BETTICS</h2><a class="button" routerLink="/auth/registrar">Registrate ahora!</a></div>
+        <img src="assets/images/fondo1.jpg" alt="Imagen de Bettics sobre análisis de fútbol con inteligencia artificial" width="1280" height="853" loading="lazy">
       </div>
     </section>
 
-    <section class="approach-section" aria-labelledby="approach-title"><div class="shell approach-grid"><div><p class="eyebrow">UNA FORMA DE EXPLORAR EL PARTIDO</p><h2 id="approach-title">Del encuentro<br>al detalle.</h2><p>Reúne información, compara perspectivas y profundiza en lo que te interesa.</p><a class="text-link" routerLink="/auth/registrar">Conoce Bettics <span class="arrow-icon" aria-hidden="true"></span></a></div><ol class="steps"><li><span>01</span><div><h3>Explora los encuentros</h3><p>Consulta partidos y competiciones disponibles en la plataforma.</p></div></li><li><span>02</span><div><h3>Revisa las estadísticas</h3><p>Analiza equipos y métricas relevantes para cada partido.</p></div></li><li><span>03</span><div><h3>Contrasta las predicciones</h3><p>Utiliza las recomendaciones como una perspectiva adicional, no como una garantía de resultado.</p></div></li></ol></div></section>
+    <section class="testimonials" aria-label="Testimonios">
+      <div class="shell">
+        <div class="testimonial-grid">
+          <figure><blockquote><h3>Muy seguro y fiable</h3><p>La página es muy fiable la recomiendo. Tiene muy buenos los pronósticos deportivos, son muy fiables al momento de dar las recomendaciones deportivas.</p></blockquote><figcaption>ISMAEL YUYES <span>28 años, hombre</span></figcaption></figure>
+          <figure><blockquote><h3>Buenas predicciones</h3><p>Usar las recomendaciones del sitio web fue mi fija, ya que es muy fiable y te muestra con porcentajes que tan alto o bajo puede ser esa recomendación.</p></blockquote><figcaption>SEBASTIAN CUADRAO</figcaption></figure>
+        </div>
+      </div>
+    </section>
 
-    <section class="section shell" id="preguntas" aria-labelledby="faq-title"><div class="section-heading"><div><p class="eyebrow">ANTES DEL PRIMER PARTIDO</p><h2 id="faq-title">Resolvemos tus dudas.</h2></div><p>Lo esencial para empezar a conocer la plataforma.</p></div><div class="faq-list">
-      <details><summary>¿Qué ligas contempla Bettics?</summary><p>La información de la portada original incluye Premier League, Ligue 1, Bundesliga, Serie A, La Liga, Champions League, Europa League, Copa Libertadores y Copa Sudamericana. La disponibilidad de encuentros y datos debe consultarse dentro de la plataforma.</p></details>
-      <details><summary>¿Qué estadísticas puedo consultar?</summary><p>La plataforma incluye secciones de goles, corners, tarjetas y remates al arco, además de partidos por jugar, resultados y recomendaciones. La información disponible puede variar según el encuentro.</p></details>
-      <details><summary>¿Cómo utiliza Bettics la inteligencia artificial?</summary><p>Utiliza modelos de machine learning para apoyar el análisis deportivo y elaborar predicciones. Las predicciones son estimaciones y no garantizan resultados.</p></details>
-      <details><summary>¿Cómo empiezo y dónde consulto las condiciones de acceso?</summary><p>Crea una cuenta para acceder a la plataforma. Revisa las condiciones y la información de membresía antes de realizar cualquier contratación.</p><a routerLink="/auth/registrar">Ir al registro →</a></details>
-    </div></section>
-
-    <section class="join-section"><div class="shell join-inner"><div><p class="eyebrow">TU MIRADA. MÁS INFORMADA.</p><h2>El próximo análisis<br>empieza contigo.</h2></div><a class="button button-light" routerLink="/auth/registrar">Crear mi cuenta <span class="arrow-icon" aria-hidden="true"></span></a></div></section>
+    <section class="section shell faq-section" id="preguntas" aria-labelledby="faq-title">
+      <p class="eyebrow">FAQ</p><h2 id="faq-title">Preguntas frecuentes</h2>
+      <div class="faq-list">
+        <details><summary>¿Qué ligas son las que puede predecir la IA Bettics?</summary><ul><li>English Premier League</li><li>French Ligue 1</li><li>German Bundesliga</li><li>Italian Serie A</li><li>Spanish La Liga</li><li>Otras ligas Tops de Europa</li><li>UEFA Champions League y UEFA Europa League</li><li>Copa Libertadores y Copa Sudamericana</li></ul></details>
+        <details><summary>¿El servicio de la web es gratis?</summary><p>El servicio de la web si es gratis, hasta nuevo aviso.</p></details>
+        <details><summary>¿Qué es la inteligencia artificial?</summary><p>La Inteligencia Artificial es la combinación de reglas en base a algoritmos matemáticos.</p></details>
+        <details><summary>¿Por qué no hay otras ligas?</summary><p>Estamos trabajando para agregar más ligas europeas y de América.</p></details>
+        <details><summary>¿Por qué sólo hay los mercados de goles y corners?</summary><p>Estamos iniciando con esos dos mercados de goles y corners. Más adelante incluiremos los mercados de equipo ganador y tarjetas.</p></details>
+      </div>
+    </section>
   </main>
-  <footer class="site-footer"><div class="shell"><div class="footer-top"><a class="footer-wordmark" routerLink="/" aria-label="Bettics, inicio">BETTICS<span aria-hidden="true">✦</span></a><nav aria-label="Información de Bettics"><a routerLink="/page/nosotros">Nosotros</a><a routerLink="/page/contacto">Contacto</a><a routerLink="/page/termino-condiciones">Términos y condiciones</a></nav></div><div class="footer-bottom"><p>Bettics · Inteligencia artificial y estadísticas para el fútbol.</p><p>Las predicciones no garantizan resultados.</p></div></div></footer>
+  <footer class="site-footer"><div class="shell">
+    <div class="footer-top"><a class="footer-brand" routerLink="/" aria-label="Bettics, inicio"><img src="assets/images/logo/logoBettics5.png" alt="Bettics" width="633" height="413" loading="lazy"></a><nav aria-label="Información de Bettics"><a routerLink="/">Inicio</a><a routerLink="/page/nosotros">Quienes Somos</a><a routerLink="/page/contacto">Trabaja con nosotros</a><a routerLink="/page/contacto">Atencion al cliente</a><a routerLink="/cuenta/suscripcion">Planes</a><a routerLink="/page/contacto">Contáctanos</a><a routerLink="/page/termino-condiciones">Términos y condiciones</a></nav><a class="contact-phone" href="tel:+51947134231">+51 947 134 231</a></div>
+
+  </div></footer>
 </div>
