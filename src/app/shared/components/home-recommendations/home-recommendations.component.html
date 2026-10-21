@@ -1,6 +1,7 @@
 <section class="recommendations" aria-labelledby="recommendations-title" [attr.aria-busy]="estado === 'cargando'">
   <div class="recommendations-inner">
-    <h2 id="recommendations-title">Recomendaciones del día</h2>
+    <h2 id="recommendations-title">{{ fechaSeleccionada ? (esHoy ? 'Recomendaciones de hoy' : 'Próximas recomendaciones') : 'Recomendaciones' }}</h2>
+    <p class="recommendations-date" *ngIf="fechaSeleccionada">{{ fechaSeleccionada }}</p>
     <p class="status" role="status" *ngIf="estado === 'cargando'">Cargando recomendaciones…</p>
     <p class="status" role="status" *ngIf="estado === 'vacio'">No hay recomendaciones disponibles por el momento.</p>
     <div class="status" role="status" *ngIf="estado === 'error'">

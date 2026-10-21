@@ -1,14 +1,14 @@
 :host { display: block; }
 .recommendations { background: #f2f6f1; color: #24342a; padding: 25px 0; font: 14px/1.5 Arial, Helvetica, sans-serif; }
 .recommendations-inner { width: min(1180px, calc(100% - 48px)); margin: auto; }
-h2 { margin: 0 0 18px; font: 700 20px/1.4 Arial, Helvetica, sans-serif; color: #006738; text-transform: none; }
-.recommendation-card { box-sizing: border-box; background: white; border: 1px solid #dbe5de; border-radius: 4px; padding: 18px; min-height: 240px; }
-.league, .team { display: flex; align-items: center; gap: 10px; }
-.league { min-height: 32px; font-weight: 700; font-size: 12px; }
-.team { min-height: 32px; font-size: 13px; }
+h2 { margin: 0 0 8px; font: 700 20px/1.4 Arial, Helvetica, sans-serif; color: #006738; text-transform: none; }
+.recommendation-card { box-sizing: border-box; background: white; border: 1px solid #dbe5de; border-radius: 4px; padding: 12px; min-height: 168px; }
+.league, .team { display: flex; align-items: center; gap: 7px; }
+.league { min-height: 24px; font-weight: 700; font-size: 12px; }
+.team { min-height: 24px; font-size: 13px; }
 .league img, .team img { object-fit: contain; flex-shrink: 0; max-width: 24px; }
-.prediction { padding: 15px 0; margin: 10px 0; border-block: 1px solid #edf1eb; }
-.prediction strong { color: #006738; font-size: 28px; line-height: 1.2; }
+.prediction { padding: 10px 0; margin: 7px 0; border-block: 1px solid #edf1eb; }
+.prediction strong { color: #006738; font-size: 22px; line-height: 1.2; }
 p { margin: 4px 0 0; }
 .status { padding: 18px 0; }
 .carousel-controls { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
@@ -17,3 +17,5 @@ button:hover { background: #e5eee2; }
 button:focus-visible { outline: 3px solid #bd7a14; outline-offset: 3px; }
 .status button { margin-top: 12px; }
 @media (max-width: 760px) { .recommendations-inner { width: calc(100% - 40px); } }
+
+.recommendations-date { margin: 0 0 16px; color: #48614f; font-weight: 600; }
