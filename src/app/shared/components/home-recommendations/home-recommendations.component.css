@@ -1,7 +1,6 @@
 :host { display: block; }
-.recommendations { background: #f2f6f1; color: #24342a; padding: 25px 0; font: 14px/1.5 Arial, Helvetica, sans-serif; }
+.recommendations { background: #f2f6f1; color: #24342a; padding: 12px 0; font: 14px/1.5 Arial, Helvetica, sans-serif; }
 .recommendations-inner { width: min(1180px, calc(100% - 80px)); margin: auto; }
-h2 { margin: 0 0 8px; font: 700 20px/1.4 Arial, Helvetica, sans-serif; color: #006738; text-transform: none; }
 .recommendation-card { box-sizing: border-box; background: white; border: 1px solid #dbe5de; border-radius: 4px; padding: 12px; min-height: 168px; }
 .league, .team { display: flex; align-items: center; gap: 7px; }
 .league { min-height: 24px; font-weight: 700; font-size: 12px; }
@@ -23,5 +22,3 @@ button:hover { background: #e5eee2; }
 button:focus-visible { outline: 3px solid #bd7a14; outline-offset: 3px; }
 .status button { margin-top: 12px; }
 @media (max-width: 760px) { .recommendations-inner { width: calc(100% - 64px); } }
-
-.recommendations-date { margin: 0 0 16px; color: #48614f; font-weight: 600; }
