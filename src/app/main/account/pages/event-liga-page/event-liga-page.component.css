@@ -1,262 +1,59 @@
-.uk-push-1-4 {
-    left: 0% !important;
-}
-
-.uk-width-medium-3-4 {
-    width: 100%;
-}
-
-.match-list-item {
-    border-left: 4px solid #fdbd00 !important;
-    border-bottom: 4px solid #fdbd00 !important;
-}
-
-.match-list-wrap .match-list-item .tipoApuessta {
-    padding: 0 0 0 17px;
-    background: url("../../../../../assets/images/check.png") 0 50% no-repeat;
-    margin-left: 40px;
-    font-size: 14px;
-    color: #fff;
-    font-family: 'Work Sans';
-}
-
-.match-list-wrap .match-list-item .opcionApuesta {
-    margin: 0;
-}
-
-.match-list-wrap .match-list-item .opcionApuesta br {
-    display: none;
-}
-
-.membership {
-    color: white;
-}
-
-.match-list-wrap {
-    background: transparent;
-}
-
-.card-header-title {
-    background: #0f1f39;
-    color: white;
-}
-
-.list-group-item-custom {
-    padding: 0px !important;
-}
-
-.formulario {
-    padding-top: 0px !important;
-    margin-top: 0px !important;
-}
-
-.item-top {
-    background: #f8f8f8;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-}
-
-.item-bottom {
-    color: white;
-}
-
-.border-lateral {
-    border-left: 10px solid #87cc7c !important;
-}
-
-.border-inferior {
-    border-top: 1px solid #87cc7c !important;
-}
-
-.liga {
-    font-style: normal;
-    font-size: 17px;
-    font-weight: 500;
-}
-
-.fecha {
-    font-style: normal;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.opcionApuesta {
-    font-style: normal;
-    font-size: 15px;
-    font-weight: 700;
-}
-
-.mercadoApuesta {
-    font-size: 15px;
-    font-style: initial;
-    font-weight: 500;
-}
-
-.cuotaSimple {
-    font-size: 15px;
-    font-style: initial;
-    font-weight: 700;
-}
-
-.equipos {
-    font-size: 15px;
-    font-style: initial;
-    font-weight: 400;
-}
-
-.cuotaCombinada {
-    font-size: 18px;
-    font-style: initial;
-    font-weight: 700;
-}
-
-.uk-container {
-    box-sizing: border-box;
-    padding: 0 8px !important;
-}
-
-.uk-breadcrumb {
-    margin-bottom: 12px !important;
-}
-
-.go-to-membresia {
-    color: #87cc7c;
-    font-weight: 600;
-    font-size: 16px;
-}
-
-.nav-tabs>li,
-.nav-pills>li {
-    float: none;
-    display: inline-block;
-}
-
-.nav-tabs,
-.nav-pills {
-    text-align: center;
-}
-
-.tabbable-panel {
-    border: 3px solid #eee;
-    padding: 10px;
-}
-
-.tabbable-line {
-    text-align: center;
-}
-
-.nav-tabs .nav-item.show .nav-link,
-.nav-tabs .nav-link.active {
-    border-top: 1px solid !important;
-    border-right: 1px solid !important;
-    border-left: 1px solid !important;
-}
-
-.tabbable-line>.nav-tabs {
-    border: none;
-    margin: 0px;
-    text-align: center;
-    display: inline-block;
-}
-
-.tabbable-line>.nav-tabs>li {
-    margin-right: 2px;
-}
-
-.tabbable-line>.nav-tabs>li>a {
-    border: 0;
-    margin-right: 0;
-    color: #737373;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.tabbable-line>.nav-tabs>li>a>i {
-    color: #a6a6a6;
-}
-
-.tabbable-line>.nav-tabs>li.open,
-.tabbable-line>.nav-tabs>li:hover {
-    border-bottom: 4px solid #fbcdcf;
-}
-
-.tabbable-line>.nav-tabs>li.open>a,
-.tabbable-line>.nav-tabs>li:hover>a {
-    border: 0;
-    background: none !important;
-    color: #333333;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.nav-link {
-    color: #4c4c4c;
-    border: var(--bs-nav-tabs-border-width) solid transparent;
-}
-
-.header-custom {
-    background-color: #4c4c4c;
-    color: white;
-}
-
-.left-cell {
-    border-radius: 10px 0px 0px 0px;
-}
-
-.rigth-cell {
-    border-radius: 0px 10px 0px 0px;
-}
-
-.label-empate {
-    background-color: #f4b60c;
-    color: white !important;
-    -webkit-text-fill-color: #f9f9f9;
-    -webkit-text-stroke-color: #fafafa;
-    -webkit-text-stroke-width: 1px;
-}
-
-.label-ganador {
-    background-color: #51ad2f;
-    color: white !important;
-    -webkit-text-fill-color: #f9f9f9;
-    -webkit-text-stroke-color: #fafafa;
-    -webkit-text-stroke-width: 1px;
-}
-
-.label-perdedor {
-    background-color: #f71312;
-    color: white !important;
-    -webkit-text-fill-color: #f9f9f9;
-    -webkit-text-stroke-color: #fafafa;
-    -webkit-text-stroke-width: 1px;
-}
-
-.thead-custom {
-    border-style: hidden;
-}
-
-.label-equipo-identificado {
-    color: #0e0e0e;
-    font-weight: bold;
-}
-
-.titleTab {
-    font-size: 24px;
-}
-
-.filtro-aplicado {
-    background-color: #9bbc37e1;
-    /* border-color: #050505; */
-}
-.fechaLiga {
-    width: 80px;
-    font-size: 12px;
-}
-
-.porcentajeFiltro {
-    color: #9bbc37e1;
-}
+:host { display:block; background:#f4f7f6; color:#20352d; font:14px/1.5 Arial,Helvetica,sans-serif; }
+.stats-shell,.stats-page>.uk-container { width:min(1440px,calc(100% - 64px)); max-width:none; margin:auto; padding:0!important; box-sizing:border-box; }
+.stats-intro { padding:112px 0 26px; background:linear-gradient(#143e2c 0 90px,#fff 90px); border-bottom:1px solid #dfe8e3; }
+.stats-eyebrow { color:#557467; font-size:11px; font-weight:700; letter-spacing:1.4px; margin:0 0 10px; }
+h1 { font:700 32px/1.2 Arial,Helvetica,sans-serif; margin:0 0 10px; color:#163d2d; text-transform:none; }
+.stats-intro p:last-child { margin:0; color:#61746a; }
+.stats-page { padding:24px 0 40px; }
+.stats-filters { padding:22px; border:1px solid #dfe8e3; border-radius:14px; background:#fff; box-shadow:0 3px 12px #18382a05; }
+.stats-filter-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+h2 { margin:0; color:#203b2d; font:700 16px/1.4 Arial,Helvetica,sans-serif; text-transform:none; }
+.stats-filter-heading>span { color:#7a8981; font-size:12px; }
+.stats-filter-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
+.stats-filter-grid>div { width:auto; min-width:0; padding:0!important; }
+.form-label { display:block; margin-bottom:7px; color:#50645a; font-size:12px; font-weight:600; }
+.form-select { min-height:44px; border:1px solid #cfddd4; border-radius:8px; color:#203b2d; background-color:#fff; font:14px Arial,Helvetica,sans-serif; box-shadow:none; cursor:pointer; }
+.form-select:hover { border-color:#61987a; }
+.form-select:focus { border-color:#006738; box-shadow:0 0 0 3px #00673818; }
+.stats-matchup { display:flex; justify-content:center; align-items:center; gap:30px; padding:24px 12px; text-align:center; }
+.stats-matchup>span { min-width:0; }
+.stats-matchup small { display:block; color:#78887e; font-size:11px; margin-bottom:4px; }
+.stats-matchup strong { font-size:18px; color:#173f2d; overflow-wrap:anywhere; }
+.stats-versus { flex-shrink:0; display:grid; place-items:center; width:32px; height:32px; border-radius:50%; background:#e3ece6; color:#50715e; font-size:10px; font-weight:700; }
+.tabbable-panel { margin-top:20px; padding:22px; border:1px solid #dfe8e3; border-radius:14px; background:#fff; }
+.stats-matchup+.row .tabbable-panel { margin-top:0; }
+.tabbable-line { text-align:center; }
+.tabbable-line>.nav-tabs { display:flex; flex-wrap:wrap; gap:6px; padding:5px; margin:0; border:0; border-radius:10px; background:#f0f4f1; }
+.nav-tabs>li { flex:1; float:none; margin:0; }
+.nav-tabs .nav-link { width:100%; border:0; border-radius:7px; padding:12px 16px; color:#617267; font:600 14px/1.3 Arial,Helvetica,sans-serif; white-space:nowrap; }
+.nav-tabs .nav-link:hover { background:#e5eee8; color:#006738; }
+.nav-tabs .nav-link.active { background:#006738; color:#fff; box-shadow:0 2px 5px #00673820; }
+.nav-link:focus-visible,.stats-table-scroll:focus-visible { outline:3px solid #ca9d24; outline-offset:3px; }
+.stats-legend { display:flex; gap:7px; align-items:center; margin:14px 0 22px; font-size:12px; color:#718277; text-align:left; }
+.stats-legend>span { width:8px; height:8px; flex-shrink:0; border-radius:50%; background:#83b89a; }
+.tab-pane .bd-highlight { margin-left:0; width:33.333%; padding:0 12px 18px!important; text-align:left; }
+h3,h4 { font:600 15px/1.5 Arial,Helvetica,sans-serif; color:#294b38; text-transform:none; margin:20px 0 14px; overflow-wrap:anywhere; }
+.tab-pane .col-4 h3 { min-height:38px; display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; }
+.porcentajeFiltro { display:inline-block; padding:3px 8px; border-radius:6px; background:#edf6f0; color:#006738; font:700 13px/1.4 Arial,Helvetica,sans-serif; }
+.porcentajeFiltro:empty { display:none; }
+.stats-table-scroll { overflow-x:auto; max-width:100%; width:100%; border:1px solid #e2eae5; border-radius:9px; margin-bottom:18px; }
+.table { width:100%; min-width:490px; margin:0; border:0; font-size:12px; color:#334a3d; }
+.table>:not(caption)>*>* { padding:11px 10px; border:0; border-bottom:1px solid #edf1ee; background:transparent; box-shadow:none; vertical-align:middle; }
+.table thead th { background:#eef3f0; color:#5c7163; font-size:11px; font-weight:600; white-space:nowrap; }
+.table tbody tr:last-child>* { border-bottom:0; }
+.table tbody tr:nth-child(even):not(.filtro-aplicado) { background:#fafcfb; }
+.table tbody tr:hover { background:#f3f7f4; }
+.table tbody tr.filtro-aplicado { background:#e7f3eb; }
+.table tbody tr.filtro-aplicado>:first-child { box-shadow:inset 3px 0 #268854; }
+.table .label-equipo-identificado { font-weight:700; color:#153e2a; }
+.table .label-ganador { color:#167147; font-weight:700; background:#e7f3eb; }
+.table .label-perdedor { color:#b04040; font-weight:700; background:#fceeee; }
+.table .label-empate { color:#8d671a; font-weight:700; background:#fff5df; }
+.table tbody th[scope="row"] { white-space:nowrap; }
+.fechaLiga { width:88px; white-space:nowrap; }
+.stats-empty td { padding:26px!important; color:#7a8981; font-size:13px; }
+.stats-start { padding:32px 20px; text-align:center; color:#61746a; }
+.go-to-membresia { color:#006738; font-weight:600; }
+@media(max-width:1100px) { .stats-filter-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .tabbable-panel { padding:16px; } }
+@media(max-width:767px) { .stats-shell,.stats-page>.uk-container { width:calc(100% - 32px); } .stats-intro { padding:104px 0 22px; } h1 { font-size:27px; } .stats-filters { padding:16px; } .stats-filter-heading>span { display:none; } .stats-filter-grid { gap:14px; } .stats-matchup { gap:16px; } .stats-matchup strong { font-size:15px; } .nav-tabs .nav-link { padding:12px 8px; font-size:12px; } .tab-pane .bd-highlight { width:100%; padding:0 0 14px!important; } .stats-legend { align-items:flex-start; } .stats-legend>span { margin-top:5px; } .tabbable-panel { padding:12px; } }
+@media(max-width:420px) { .stats-filter-grid { grid-template-columns:1fr; } .nav-tabs>li { flex-basis:calc(50% - 6px); } }

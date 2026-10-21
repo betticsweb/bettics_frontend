@@ -1,30 +1,11 @@
-<div class="tm-top-a-box tm-full-width tm-box-bg-1 ">
-    <div class="uk-container uk-container-center">
-        <section id="tm-top-a" class="tm-top-a uk-grid uk-grid-collapse" data-uk-grid-match="{target:'> div > .uk-panel'}" data-uk-grid-margin="">
-            <div class="uk-width-1-1 uk-row-first">
-                <div class="uk-panel">
-                    <div class="uk-cover-background uk-position-relative head-wrap" style="height: 190px; background-image: url('../../../../assets/images/head-bg.jpg');">
-                        <img class="uk-invisible" src="../../../../assets/images/head-bg.jpg" alt="" height="190" width="1920">
-                        <div class="uk-position-cover uk-flex uk-flex-center head-title">
-                            <h1>
-                                Estadísticas
-                            </h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-</div>
-<div class="uk-container uk-container-center alt">
-    <ul class="uk-breadcrumb">
-        <li><a>Cuenta</a>
-        </li>
-        <li class="uk-active"><span>Estadísticas</span>
-        </li>
-    </ul>
-</div>
-<div class="tm-bottom-a-box">
+<header class="stats-intro">
+  <div class="stats-shell">
+    <p class="stats-eyebrow">CUENTA / ANÁLISIS DE PARTIDOS</p>
+    <h1>Estadísticas</h1>
+    <p>Compara equipos y encuentra tendencias en sus últimos encuentros.</p>
+  </div>
+</header>
+<div class="tm-bottom-a-box stats-page">
     <div class="uk-container uk-container-center">
 
         <div *ngIf="!suscriptoCulqi">
@@ -46,70 +27,80 @@
             </div>
         </div>
         <div *ngIf="suscriptoCulqi">
-            <div class="d-flex justify-content-center row">
+            <section class="stats-filters" aria-labelledby="stats-filter-title">
+              <div class="stats-filter-heading"><h2 id="stats-filter-title">Elige el encuentro</h2><span>Liga · Temporada · Equipos</span></div>
+              <div class="stats-filter-grid">
                 <div class="p-2 bd-highlight col-lg-3 col-sm-6">
-                    <label class="form-label">Liga</label>
-                    <select class="form-select" (change)="cargarTemporadasEquipos()" [(ngModel)]="strLeagueSelected">
+                    <label for="stats-select-1" class="form-label">Liga</label>
+                    <select id="stats-select-1" class="form-select" (change)="cargarTemporadasEquipos()" [(ngModel)]="strLeagueSelected">
                             <option *ngFor="let op of strLeague" [value]="op.id">
                                 {{op.descripcion}}
                               </option> 
                     </select>
                 </div>
                 <div class="p-2 bd-highlight col-lg-3 col-sm-6">
-                    <label class="form-label">Temporada</label>
-                    <select class="form-select" (change)="cargarEquipos(false)" [(ngModel)]="strSeasonSelected">
+                    <label for="stats-select-2" class="form-label">Temporada</label>
+                    <select id="stats-select-2" class="form-select" (change)="cargarEquipos(false)" [(ngModel)]="strSeasonSelected">
                             <option *ngFor="let op of strSeason" [value]="op.id">
                                 {{op.descripcion}}
                               </option> 
                     </select>
                 </div>
                 <div class="p-2 bd-highlight col-lg-3 ">
-                    <label class="form-label">  Equipo local
+                    <label for="stats-select-3" class="form-label">  Equipo local
                     </label>
-                    <select class="form-select" (change)="onChange()" [(ngModel)]="strHomeTeamSelected">
+                    <select id="stats-select-3" class="form-select" (change)="onChange()" [(ngModel)]="strHomeTeamSelected">
                             <option *ngFor="let op of strHomeTeam" [ngValue]="op.id">
                                 {{op.descripcion}}
                               </option> 
                     </select>
                 </div>
                 <div class="p-2 bd-highlight col-lg-3 ">
-                    <label class="form-label">Equipo Visitante
+                    <label for="stats-select-4" class="form-label">Equipo visitante
                     </label>
-                    <select class="form-select" (change)="onChange()" [(ngModel)]="strAwayTeamSelected">
+                    <select id="stats-select-4" class="form-select" (change)="onChange()" [(ngModel)]="strAwayTeamSelected">
                             <option *ngFor="let op of strAwayTeam" [ngValue]="op.id"   >
                                 {{op.descripcion}}
                               </option> 
                     </select>
                 </div>
             </div>
+            </section>
+            <div class="stats-matchup" *ngIf="strHomeTeamNameSelected && strAwayTeamNameSelected">
+              <span><small>Local</small><strong>{{strHomeTeamNameSelected}}</strong></span>
+              <span class="stats-versus">VS</span>
+              <span><small>Visitante</small><strong>{{strAwayTeamNameSelected}}</strong></span>
+            </div>
+            <p class="stats-start" *ngIf="!strHomeTeamSelected || !strAwayTeamSelected">Selecciona una liga, una temporada y los dos equipos para ver su comparación.</p>
             <div class="row">
                 <div class="col-12">
-                    <div class="tabbable-panel">
+                    <div class="tabbable-panel" *ngIf="strHomeTeamSelected && strAwayTeamSelected">
                         <div class="tabbable-line">
-                            <ul class="nav nav-tabs ">
-                                <li class="nav-item" role="presentation" class="active">
+                            <ul class="nav nav-tabs" role="tablist" aria-label="Tipo de estadística">
+                                <li class="nav-item active" role="presentation">
                                     <!-- <a href="#tab_default_1" data-toggle="tab">
                                      </a> -->
                                     <button (click)="onTab(1)" class="nav-link active titleTab" id="goles-tab" data-bs-toggle="tab" data-bs-target="#goles" type="button" role="tab" aria-controls="goles" aria-selected="true">Goles</button>
                                 </li>
                                 <li>
-                                    <button (click)="onTab(2)" class="nav-link titleTab" id="corners-tab" data-bs-toggle="tab" data-bs-target="#corners" type="button" role="tab" aria-controls="corners" aria-selected="true">Corners</button>
+                                    <button (click)="onTab(2)" class="nav-link titleTab" id="corners-tab" data-bs-toggle="tab" data-bs-target="#corners" type="button" role="tab" aria-controls="corners" aria-selected="false">Corners</button>
                                 </li>
                                 <li>
-                                    <button (click)="onTab(3)" class="nav-link titleTab" id="tarjetas-tab" data-bs-toggle="tab" data-bs-target="#tarjetas" type="button" role="tab" aria-controls="tarjetas" aria-selected="true">Tarjetas</button>
+                                    <button (click)="onTab(3)" class="nav-link titleTab" id="tarjetas-tab" data-bs-toggle="tab" data-bs-target="#tarjetas" type="button" role="tab" aria-controls="tarjetas" aria-selected="false">Tarjetas</button>
                                 </li>
                                 <li>
-                                    <button (click)="onTab(4)" class="nav-link titleTab" id="remates-tab" data-bs-toggle="tab" data-bs-target="#remates" type="button" role="tab" aria-controls="remates" aria-selected="true">Tiros a Puerta</button>
+                                    <button (click)="onTab(4)" class="nav-link titleTab" id="remates-tab" data-bs-toggle="tab" data-bs-target="#remates" type="button" role="tab" aria-controls="remates" aria-selected="false">Tiros a Puerta</button>
                                 </li>
                             </ul>
+                            <p class="stats-legend"><span aria-hidden="true"></span> Las filas verdes cumplen el filtro seleccionado. El porcentaje indica su frecuencia en cada grupo.</p>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="goles" role="tabpanel" aria-labelledby="goles-tab">
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md' ">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label class="form-label">Total Goles más de:
+                                            <label for="stats-select-5" class="form-label">Total Goles más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                            <select id="stats-select-5" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                     <option [ngValue]="" disabled hidden></option>
                                                     <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
                                                         {{op}}
@@ -117,9 +108,9 @@
                                             </select>
                                         </div>
                                         <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                            <label class="form-label">Goles Local más de:
+                                            <label for="stats-select-6" class="form-label">Goles Local más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                            <select id="stats-select-6" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                 <option [ngValue]="" disabled hidden></option>
                                                 <option *ngFor="let op of strFilterMatchLocal" [ngValue]="op" >
                                                         {{op}}
@@ -128,9 +119,9 @@
                                         </div>
 
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label class="form-label">Goles Visita más de:
+                                            <label for="stats-select-7" class="form-label">Goles Visita más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                            <select id="stats-select-7" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                 <option [ngValue]="" disabled hidden></option>
                                                 <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
                                                         {{op}}
@@ -139,12 +130,12 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                                <h3>Enfrentamientos directos <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos | slice:1}}</span></h3>
                                             </div>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered  table-sm">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered  table-sm">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -156,6 +147,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!partidosLosDosEquipos.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td>{{item.strHomeTeam}}</td>
@@ -164,18 +156,18 @@
                                                         <td>{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                                <h3>Últimos partidos</h3>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h4>
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home | slice:1}}</span></h4>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -187,6 +179,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Home.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -195,14 +188,14 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h4>
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away | slice:1}}</span></h4>
                                         </div>
                                         <div class="table-responsive">
 
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -214,6 +207,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Away.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true}">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -222,19 +216,19 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>LOCAL / VISITA</h3>
+                                                <h3>Como local / como visitante</h3>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h4>
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -245,6 +239,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!soloLocal.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -253,13 +248,13 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h4>
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita | slice:1}}</span></h4>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -271,6 +266,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!soloVisita.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -279,15 +275,15 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                     </div>
                                     <div *ngIf="mediaBreakpoint$.value != 'xs' && mediaBreakpoint$.value != 'sm' && mediaBreakpoint$.value != 'md'">
                                         <div class="row">
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label class="form-label">Total Goles más de:
+                                                <label for="stats-select-8" class="form-label">Total Goles más de:
                                                 </label>
-                                                <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                <select id="stats-select-8" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                         <option [ngValue]="" disabled hidden></option>
                                                         <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
                                                             {{op}}
@@ -295,9 +291,9 @@
                                                 </select>
                                             </div>
                                             <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                                <label class="form-label">Goles Local más de2:
+                                                <label for="stats-select-9" class="form-label">Goles local más de:
                                                 </label>
-                                                <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                <select id="stats-select-9" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                         <option [ngValue]="" disabled hidden></option>
                                                         <option *ngFor="let op of strFilterMatchLocal" [ngValue]="op" >
                                                             {{op}}
@@ -306,9 +302,9 @@
                                             </div>
 
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label class="form-label">Goles Visita más de:
+                                                <label for="stats-select-10" class="form-label">Goles Visita más de:
                                                 </label>
-                                                <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                <select id="stats-select-10" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                         <option [ngValue]="" disabled hidden></option>
                                                         <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
                                                             {{op}}
@@ -316,10 +312,10 @@
                                                 </select>
                                             </div>
                                             <div class="col-12">
-                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                                <h3>Enfrentamientos directos <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos | slice:1}}</span></h3>
                                             </div>
 
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -331,6 +327,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!partidosLosDosEquipos.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th scope="row">{{item.dateEvent}}</th>
                                                         <td>{{item.strHomeTeam}}</td>
@@ -339,23 +336,21 @@
                                                         <td>{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
-                                        <br>
-                                        <br>
 
                                         <div class="row">
                                             <div class="col-4">
-                                                <h3>{{strHomeTeamNameSelected}} <span><span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></span></h3>
+                                                <h3>{{strHomeTeamNameSelected}} <span><span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home | slice:1}}</span></span></h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                                <h3>Últimos partidos</h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h3>
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-6">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -367,6 +362,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Home.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -375,10 +371,10 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                             <div class="col-6 ">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -390,6 +386,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Away.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -398,23 +395,21 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                         </div>
-                                        <br>
-                                        <br>
                                         <div class="row">
                                             <div class="col-4">
-                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h3>
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>LOCAL / VISITA</h3>
+                                                <h3>Como local / como visitante</h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h3>
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-6">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -426,6 +421,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!soloLocal.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -434,10 +430,10 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                             <div class="col-6 ">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -449,6 +445,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!soloVisita.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -457,7 +454,7 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
 
                                         </div>
@@ -467,9 +464,9 @@
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label class="form-label">Total Corners más de:
+                                            <label for="stats-select-11" class="form-label">Total Corners más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                            <select id="stats-select-11" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                 <option [ngValue]="" disabled hidden></option>
                                                 <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
                                                         {{op}}
@@ -477,9 +474,9 @@
                                             </select>
                                         </div>
                                         <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                            <label class="form-label">Corner Local más de:
+                                            <label for="stats-select-12" class="form-label">Corner Local más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                            <select id="stats-select-12" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                 <option [ngValue]="" disabled hidden></option>    
                                                 <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
                                                         {{op}}
@@ -488,9 +485,9 @@
                                         </div>
 
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label class="form-label">Corner Visita más de:
+                                            <label for="stats-select-13" class="form-label">Corner Visita más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                            <select id="stats-select-13" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                 <option [ngValue]="" disabled hidden></option>
                                                 <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
                                                         {{op}}
@@ -499,11 +496,11 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                                <h3>Enfrentamientos directos <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos | slice:1}}</span></h3>
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-bordered  table-sm">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered  table-sm">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -515,6 +512,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!partidosLosDosEquipos.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga"scope="row">{{item.dateEvent}}</th>
                                                         <td>{{item.strHomeTeam}}</td>
@@ -523,19 +521,19 @@
                                                         <td>{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                                <h3>Últimos partidos</h3>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h4>
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -547,6 +545,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Home.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -555,14 +554,14 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h4>
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -574,6 +573,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Away.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -582,19 +582,19 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>LOCAL / VISITA</h3>
+                                                <h3>Como local / como visitante</h3>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h4>
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -606,6 +606,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!soloLocal.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -614,14 +615,14 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h4>
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -633,6 +634,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!soloVisita.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -641,7 +643,7 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
 
                                         </div>
 
@@ -651,9 +653,9 @@
                                         <div class="row">
 
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label class="form-label">Total Corners más de:
+                                                <label for="stats-select-14" class="form-label">Total Corners más de:
                                                 </label>
-                                                <select class="form-select"  (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                <select id="stats-select-14" class="form-select"  (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                         <option [ngValue]="" ></option>
                                                         <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
                                                             {{op}}
@@ -661,9 +663,9 @@
                                                 </select>
                                             </div>
                                             <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                                <label class="form-label">Corner Local más de:
+                                                <label for="stats-select-15" class="form-label">Corner Local más de:
                                                 </label>
-                                                <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                <select id="stats-select-15" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                         <option [ngValue]="" ></option>
                                                         <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
                                                             {{op}}
@@ -672,9 +674,9 @@
                                             </div>
 
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label class="form-label">Corner Visita más de:
+                                                <label for="stats-select-16" class="form-label">Corner Visita más de:
                                                 </label>
-                                                <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                <select id="stats-select-16" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                         <option [ngValue]="" ></option>
                                                         <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
                                                             {{op}}
@@ -682,11 +684,11 @@
                                                 </select>
                                             </div>
                                             <div class="col-12">
-                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                                <h3>Enfrentamientos directos <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos | slice:1}}</span></h3>
                                             </div>
 
 
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -698,6 +700,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!partidosLosDosEquipos.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th scope="row">{{item.dateEvent}}</th>
                                                         <td>{{item.strHomeTeam}}</td>
@@ -706,23 +709,21 @@
                                                         <td>{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
-                                        <br>
-                                        <br>
 
                                         <div class="row">
                                             <div class="col-4">
-                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h3>
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                                <h3>Últimos partidos</h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h3>
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-6">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -734,6 +735,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Home.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -742,10 +744,10 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                             <div class="col-6 ">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -757,6 +759,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Away.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -765,23 +768,21 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                         </div>
-                                        <br>
-                                        <br>
                                         <div class="row">
                                             <div class="col-4">
-                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h3>
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>LOCAL / VISITA</h3>
+                                                <h3>Como local / como visitante</h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h3>
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-6">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -793,6 +794,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!soloLocal.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -801,10 +803,10 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                             <div class="col-6 ">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -816,6 +818,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!soloVisita.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -824,7 +827,7 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
 
                                         </div>
@@ -836,9 +839,9 @@
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label class="form-label">Total Tarjetas más de:
+                                            <label for="stats-select-17" class="form-label">Total Tarjetas más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                            <select id="stats-select-17" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                     <option [ngValue]="" disabled hidden></option>
                                                     <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
                                                         {{op}}
@@ -846,9 +849,9 @@
                                             </select>
                                         </div>
                                         <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                            <label class="form-label">Tarjetas Local más de:
+                                            <label for="stats-select-18" class="form-label">Tarjetas Local más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                            <select id="stats-select-18" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                 <option [ngValue]="" disabled hidden></option>
                                                     <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
                                                         {{op}}
@@ -857,9 +860,9 @@
                                         </div>
 
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label class="form-label">Tarjetas Visita más de:
+                                            <label for="stats-select-19" class="form-label">Tarjetas Visita más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                            <select id="stats-select-19" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                 <option [ngValue]="" disabled hidden></option>
                                                     <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
                                                         {{op}}
@@ -868,20 +871,20 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                                <h3>Enfrentamientos directos <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos | slice:1}}</span></h3>
                                             </div>
                                         </div>
                                         <div class="p-2 bd-highlight col-lg-3 ">
-                                            <label class="form-label">Total Match Tarjetas
+                                            <label for="stats-select-20" class="form-label">Total Match Tarjetas
                                             </label>
-                                            <select class="form-select" (change)="onChange()" [(ngModel)]="strAwayTeamSelected">
+                                            <select id="stats-select-20" class="form-select" (change)="onChange()" [(ngModel)]="strAwayTeamSelected">
                                                     <option   *ngFor="let op of strAwayTeam" [ngValue]="op.id"   >
                                                         {{op.descripcion}}
                                                       </option> 
                                             </select>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-bordered  table-sm">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered  table-sm">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -893,6 +896,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!partidosLosDosEquipos.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td>{{item.strHomeTeam}}</td>
@@ -901,19 +905,19 @@
                                                         <td>{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                                <h3>Últimos partidos</h3>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h4>
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -925,6 +929,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Home.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -933,14 +938,14 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h4>
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -952,6 +957,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Away.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -960,19 +966,19 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>LOCAL / VISITA</h3>
+                                                <h3>Como local / como visitante</h3>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h4>
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -984,6 +990,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!soloLocal.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -992,14 +999,14 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h4>
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -1011,6 +1018,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!soloVisita.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1019,7 +1027,7 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
 
                                         </div>
 
@@ -1028,9 +1036,9 @@
                                     <div *ngIf="mediaBreakpoint$.value != 'xs' && mediaBreakpoint$.value != 'sm' && mediaBreakpoint$.value != 'md'">
                                         <div class="row">
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label class="form-label">Total Tarjetas más de:
+                                                <label for="stats-select-21" class="form-label">Total Tarjetas más de:
                                                 </label>
-                                                <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                <select id="stats-select-21" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                     <option [ngValue]="" disabled hidden></option>
                                                         <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
                                                             {{op}}
@@ -1038,9 +1046,9 @@
                                                 </select>
                                             </div>
                                             <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                                <label class="form-label">Tarjetas Local más de:
+                                                <label for="stats-select-22" class="form-label">Tarjetas Local más de:
                                                 </label>
-                                                <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                <select id="stats-select-22" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                     <option [ngValue]="" disabled hidden></option>
                                                         <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
                                                             {{op}}
@@ -1049,9 +1057,9 @@
                                             </div>
 
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label class="form-label">Tarjetas Visita más de:
+                                                <label for="stats-select-23" class="form-label">Tarjetas Visita más de:
                                                 </label>
-                                                <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                <select id="stats-select-23" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                     <option [ngValue]="" disabled hidden></option>
                                                         <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
                                                             {{op}}
@@ -1059,10 +1067,10 @@
                                                 </select>
                                             </div>
                                             <div class="col-12">
-                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                                <h3>Enfrentamientos directos <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos | slice:1}}</span></h3>
                                             </div>
 
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -1074,6 +1082,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!partidosLosDosEquipos.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th scope="row">{{item.dateEvent}}</th>
                                                         <td>{{item.strHomeTeam}}</td>
@@ -1082,23 +1091,21 @@
                                                         <td>{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
-                                        <br>
-                                        <br>
 
                                         <div class="row">
                                             <div class="col-4">
-                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h3>
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                                <h3>Últimos partidos</h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h3>
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-6">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -1110,6 +1117,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Home.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1118,10 +1126,10 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                             <div class="col-6 ">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -1133,6 +1141,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Away.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1141,23 +1150,21 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                         </div>
-                                        <br>
-                                        <br>
                                         <div class="row">
                                             <div class="col-4">
-                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h3>
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>LOCAL / VISITA</h3>
+                                                <h3>Como local / como visitante</h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h3>
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-6">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -1169,6 +1176,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!soloLocal.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1177,10 +1185,10 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                             <div class="col-6 ">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -1192,6 +1200,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!soloVisita.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1200,7 +1209,7 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
 
                                         </div>
@@ -1212,9 +1221,9 @@
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label class="form-label">Total Tiros a puerta más de:
+                                            <label for="stats-select-24" class="form-label">Total Tiros a puerta más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                            <select id="stats-select-24" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                 <option [ngValue]="" disabled hidden></option>
                                                     <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
                                                         {{op}}
@@ -1222,9 +1231,9 @@
                                             </select>
                                         </div>
                                         <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                            <label class="form-label">Tiros a puerta Local más de:
+                                            <label for="stats-select-25" class="form-label">Tiros a puerta Local más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                            <select id="stats-select-25" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                 <option [ngValue]="" disabled hidden></option>    
                                                 <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
                                                         {{op}}
@@ -1233,9 +1242,9 @@
                                         </div>
 
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label class="form-label">Tiros a puerta Visita más de:
+                                            <label for="stats-select-26" class="form-label">Tiros a puerta Visita más de:
                                             </label>
-                                            <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                            <select id="stats-select-26" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                 <option [ngValue]="" disabled hidden></option>
                                                     <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
                                                         {{op}}
@@ -1244,11 +1253,11 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                                <h3>Enfrentamientos directos <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos | slice:1}}</span></h3>
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-bordered  table-sm">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered  table-sm">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -1260,6 +1269,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!partidosLosDosEquipos.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td>{{item.strHomeTeam}}</td>
@@ -1268,19 +1278,19 @@
                                                         <td>{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                                <h3>Últimos partidos</h3>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h4>
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -1292,6 +1302,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Home.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1300,14 +1311,14 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h4>
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -1319,6 +1330,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Away.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1327,19 +1339,19 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <h3>LOCAL / VISITA</h3>
+                                                <h3>Como local / como visitante</h3>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h4>
+                                            <h4>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -1351,6 +1363,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!soloLocal.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1359,14 +1372,14 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
                                         <div class="row">
-                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h4>
+                                            <h4>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away | slice:1}}</span></h4>
                                         </div>
 
                                         <div class="table-responsive">
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -1378,6 +1391,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!soloVisita.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th class="fechaLiga" scope="row">{{item.dateEvent}}</th>
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1386,7 +1400,7 @@
                                                         <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
 
                                         </div>
 
@@ -1395,9 +1409,9 @@
                                     <div *ngIf="mediaBreakpoint$.value != 'xs' && mediaBreakpoint$.value != 'sm' && mediaBreakpoint$.value != 'md'">
                                         <div class="row">
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label class="form-label">Total Tiros a puerta más de:
+                                                <label for="stats-select-27" class="form-label">Total Tiros a puerta más de:
                                                 </label>
-                                                <select class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
+                                                <select id="stats-select-27" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                     <option [ngValue]="" disabled hidden></option>    
                                                     <option   *ngFor="let op of strFilterMatch" [ngValue]="op"   >
                                                             {{op}}
@@ -1405,9 +1419,9 @@
                                                 </select>
                                             </div>
                                             <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                                <label class="form-label">Tiros a puerta Local más de:
+                                                <label for="stats-select-28" class="form-label">Tiros a puerta Local más de:
                                                 </label>
-                                                <select class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
+                                                <select id="stats-select-28" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                     <option [ngValue]="" disabled hidden></option>    
                                                     <option   *ngFor="let op of strFilterMatchLocal" [ngValue]="op"   >
                                                             {{op}}
@@ -1416,9 +1430,9 @@
                                             </div>
 
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label class="form-label">Tiros a puerta Visita más de:
+                                                <label for="stats-select-29" class="form-label">Tiros a puerta Visita más de:
                                                 </label>
-                                                <select class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
+                                                <select id="stats-select-29" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                     <option [ngValue]="" disabled hidden></option>    
                                                     <option   *ngFor="let op of strFilterMatchVisita" [ngValue]="op"   >
                                                             {{op}}
@@ -1426,10 +1440,10 @@
                                                 </select>
                                             </div>
                                             <div class="col-12">
-                                                <h3>PARTIDOS ENTRE LOS DOS EQUIPOS <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos}}</span></h3>
+                                                <h3>Enfrentamientos directos <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentaje2Equipos | slice:1}}</span></h3>
                                             </div>
 
-                                            <table class="table table-bordered ">
+                                            <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                 <thead class="thead-custom">
                                                     <tr class="header-custom thead-custom">
                                                         <th scope="col" class="left-cell">Fecha</th>
@@ -1441,6 +1455,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+ <tr class="stats-empty" *ngIf="!partidosLosDosEquipos.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                     <tr *ngFor="let item of partidosLosDosEquipos" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                         <th scope="row">{{item.dateEvent}}</th>
                                                         <td>{{item.strHomeTeam}}</td>
@@ -1449,23 +1464,21 @@
                                                         <td>{{item.strAwayTeam}}</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table></div>
                                         </div>
-                                        <br>
-                                        <br>
 
                                         <div class="row">
                                             <div class="col-4">
-                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home}}</span></h3>
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Home | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>ÚLTIMOS PARTIDOS</h3>
+                                                <h3>Últimos partidos</h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away}}</span></h3>
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeUltimos6Away | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-6">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -1477,6 +1490,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Home.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of ultimos6Home" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1485,10 +1499,10 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                             <div class="col-6 ">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -1500,6 +1514,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!ultimos6Away.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of ultimos6Away" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1508,23 +1523,21 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                         </div>
-                                        <br>
-                                        <br>
                                         <div class="row">
                                             <div class="col-4">
-                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal}}</span></h3>
+                                                <h3>{{strHomeTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloLocal | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>LOCAL / VISITA</h3>
+                                                <h3>Como local / como visitante</h3>
                                             </div>
                                             <div class="col-4">
-                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita}}</span></h3>
+                                                <h3>{{strAwayTeamNameSelected}} <span class= "porcentajeFiltro">{{porcentajeFiltro.porcentajeSoloVisita | slice:1}}</span></h3>
                                             </div>
                                             <div class="col-6">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -1536,6 +1549,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!soloLocal.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of soloLocal" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1544,10 +1558,10 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
                                             <div class="col-6 ">
-                                                <table class="table table-bordered ">
+                                                <div class="stats-table-scroll" tabindex="0" role="region" aria-label="Resultados de partidos"><table class="table table-bordered ">
                                                     <thead class="thead-custom">
                                                         <tr class="header-custom thead-custom">
                                                             <th scope="col" class="left-cell">Fecha</th>
@@ -1559,6 +1573,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+ <tr class="stats-empty" *ngIf="!soloVisita.length"><td colspan="5">No hay partidos para esta selección.</td></tr>
                                                         <tr *ngFor="let item of soloVisita" [ngClass]=" { 'filtro-aplicado': item.filtroAplicado == true } ">
                                                             <th scope="row">{{item.dateEvent}}</th>
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='true' } ">{{item.strHomeTeam}}</td>
@@ -1567,7 +1582,7 @@
                                                             <td [ngClass]=" { 'label-equipo-identificado': item.esLocal==='false' } ">{{item.strAwayTeam}}</td>
                                                         </tr>
                                                     </tbody>
-                                                </table>
+                                                </table></div>
                                             </div>
 
                                         </div>
