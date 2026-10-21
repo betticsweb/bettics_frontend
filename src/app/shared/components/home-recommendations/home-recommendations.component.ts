@@ -24,9 +24,7 @@ interface Recomendacion {
   styleUrls: ['./home-recommendations.component.css']
 })
 export class HomeRecommendationsComponent implements OnInit, OnDestroy {
-  recomendaciones: Recomendacion[] = [];
-  fechaSeleccionada = '';
-  esHoy = false;
+  recomendaciones: (Recomendacion & { fecha: string; fechaEtiqueta: string })[] = [];
   estado: 'cargando' | 'listo' | 'vacio' | 'error' = 'cargando';
   private readonly destroy$ = new Subject<void>();
 
@@ -57,7 +55,6 @@ export class HomeRecommendationsComponent implements OnInit, OnDestroy {
 
   cargar(): void {
     this.estado = 'cargando';
-    this.fechaSeleccionada = '';
     this.recomendaciones = [];
     this.accesoService.obtenerPartidosPriorizados({ pageNumber: 1, pageSize: 13 })
       .pipe(timeout(20000), takeUntil(this.destroy$))
@@ -67,20 +64,22 @@ export class HomeRecommendationsComponent implements OnInit, OnDestroy {
             this.estado = 'error';
             return;
           }
-          const hoy = new Intl.DateTimeFormat('en-CA', {
+          const partesHoy = new Intl.DateTimeFormat('en-US', {
             timeZone: 'America/Lima', year: 'numeric', month: '2-digit', day: '2-digit'
-          }).format(new Date());
-          const partidos = respuesta.resResult.map(partido => ({
-            partido, fecha: this.fechaClave(partido.date_unix)
-          })).filter(item => item.fecha && item.fecha >= hoy);
-          const fecha = partidos.map(item => item.fecha).sort()[0];
-          this.esHoy = fecha === hoy;
-          this.recomendaciones = partidos.filter(item => item.fecha === fecha).map(item => item.partido);
-          if (fecha) {
-            this.fechaSeleccionada = new Intl.DateTimeFormat('es-PE', {
-              timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric'
-            }).format(new Date(`${fecha}T12:00:00Z`));
-          }
+          }).formatToParts(new Date());
+          const hoy = ['year', 'month', 'day']
+            .map(tipo => partesHoy.find(parte => parte.type === tipo)?.value).join('-');
+          const formatoFecha = new Intl.DateTimeFormat('es-PE', {
+            timeZone: 'UTC', day: 'numeric', month: 'long'
+          });
+          this.recomendaciones = respuesta.resResult.map(partido => ({
+            ...partido, fecha: this.fechaClave(partido.date_unix)
+          })).filter(partido => partido.fecha && partido.fecha >= hoy)
+            .sort((a, b) => a.fecha.localeCompare(b.fecha))
+            .map(partido => ({
+              ...partido,
+              fechaEtiqueta: formatoFecha.format(new Date(`${partido.fecha}T12:00:00Z`))
+            }));
           this.estado = this.recomendaciones.length ? 'listo' : 'vacio';
         },
         error: () => {
