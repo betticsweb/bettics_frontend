@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import Swal from 'sweetalert2';
 import { Subject, takeUntil, timeout } from 'rxjs';
 import { explainMarket, statisticsParams } from 'src/app/shared/utils/recommendation-market';
 import { RecommendationsService } from '../../services/recommendations.service';
@@ -20,7 +21,16 @@ interface Recommendation {
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
   readonly statisticsParams = statisticsParams;
-  readonly explainMarket = explainMarket;
+  showHelp(detail: Selection): void {
+    void Swal.fire({
+      title: '¿Qué significa?',
+      text: explainMarket(detail),
+      confirmButtonText: 'Entendido',
+      confirmButtonColor: '#006738',
+      showCloseButton: true,
+      returnFocus: true
+    });
+  }
   private destroy$ = new Subject<void>();
   recomendaciones: Recommendation[] = [];
   filtered: Recommendation[] = [];
