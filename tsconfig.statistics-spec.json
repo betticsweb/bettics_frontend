@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.spec.json",
+  "include": [
+    "src/app/shared/utils/*.spec.ts",
+    "src/app/main/account/pages/event-liga-page/*.spec.ts",
+    "src/**/*.d.ts"
+  ],
+  "exclude": ["src/app/app.component.spec.ts"]
+}

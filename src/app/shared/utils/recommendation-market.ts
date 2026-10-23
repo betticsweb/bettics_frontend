@@ -7,21 +7,26 @@ const normalize = (value: string) => String(value || '').normalize('NFD').replac
 
 export function marketContext(selection: MarketSelection) {
   const market = normalize(selection.mercadoApuesta);
-  const option = normalize(selection.opcionApuesta);
-  const tab = /corner|esquina/.test(market) ? 2 : /tarjeta/.test(market) ? 3 : /tiro|disparo/.test(market) ? 4 : /gol/.test(market) ? 1 : 0;
-  const unit = ['', 'goles', 'córners', 'tarjetas', 'tiros a puerta'][tab];
-  // Read the line from the selection, never from market identifiers such as (N123).
-  const line = String(selection.valorOpcionApuesta || selection.opcionApuesta || '').replace(',', '.').match(/(?:^|\s)(\d+(?:\.\d+)?)(?:\s|$)/);
+  const both = /ambos.*(?:marc|anot)|(?:marc|anot).*ambos|cada equipo.*(?:gol|marc|anot)|(?:gol|marc|anot).*cada equipo/.test(market);
+  const winner = /^(?:ganador(?: del partido)?|1x2|resultado del partido)(?:\s|$)/.test(market);
+  const unsupported = /handicap|asiatic|exacto|doble oportunidad/.test(market);
+  const tab = unsupported ? 0 : both ? 1 : /corner|esquina/.test(market) ? 2 : /tarjeta/.test(market) ? 3 : /tiros? a puerta|remates? al arco|disparos? a puerta/.test(market) ? 4 : /gol/.test(market) ? 1 : winner ? 5 : 0;
+  const unit = ['', 'goles', 'córners', 'tarjetas', 'tiros a puerta', 'resultados'][tab];
+  const optionText = normalize(`${selection.opcionApuesta} ${selection.valorOpcionApuesta}`);
+  const line = optionText.replace(',', '.').match(/(?:^|\s)(\d+(?:\.\d+)?)(?:\s|$)/);
   const threshold = line ? Number(line[1]) : null;
-  const direction = /menos|under/.test(option + ' ' + market) ? 'menos' : /mas|over/.test(option + ' ' + market) ? 'mas' : '';
-  const scope = /local/.test(market) ? 'local' : /visita/.test(market) ? 'visita' : 'total';
+  const direction = /menos|under/.test(optionText + ' ' + market) ? 'menos' : /mas|over/.test(optionText + ' ' + market) ? 'mas' : '';
+  const homeName = normalize(selection.equipoLocal).trim();
+  const awayName = normalize(selection.equipoVisitante).trim();
+  const scope = /\blocal\b|\bequipo\s*1\b/.test(market) || (homeName.length > 2 && market.includes(homeName)) ? 'local' : /visita|\bequipo\s*2\b/.test(market) || (awayName.length > 2 && market.includes(awayName)) ? 'visita' : 'total';
+
   return {tab, unit, threshold, direction, scope};
 }
 export function statisticsParams(selection: MarketSelection) {
   const context = marketContext(selection);
   return {liga: selection.liga, equipoLocal: selection.equipoLocal, equipoVisitante: selection.equipoVisitante,
     idHomeTeam: selection.idHomeTeam || null, idAwayTeam: selection.idAwayTeam || null,
-    mercado: selection.mercadoApuesta, opcion: selection.opcionApuesta,
+    mercado: selection.mercadoApuesta, opcion: selection.opcionApuesta, valor: selection.valorOpcionApuesta,
     tab: context.tab || null, umbral: context.threshold, sentido: context.direction, alcance: context.scope};
 }
 function periodExplanation(selection: MarketSelection): string {
@@ -46,11 +51,11 @@ export function explainMarket(selection: MarketSelection): string {
   if (/handicap|asiatico|asiatica/.test(market) || (threshold !== null && !Number.isInteger(threshold * 2))) {
     return `${prefix}La selección es «${selection.mercadoApuesta}: ${selection.opcionApuesta} ${selection.valorOpcionApuesta || ''}». Este mercado puede incluir ajustes o dividir la apuesta entre dos líneas; confirma sus reglas de liquidación antes de interpretar el resultado.${disclaimer}`;
   }
-  if (/ambos.*(?:marc|anot)|(?:marc|anot).*ambos/.test(market)) {
+  if (/ambos.*(?:marc|anot)|(?:marc|anot).*ambos|cada equipo.*(?:gol|marc|anot)|(?:gol|marc|anot).*cada equipo/.test(market)) {
     const negative = /\bno\b/.test(option) || (direction === 'menos' && threshold === 0.5);
     return `${prefix}Ambos equipos marcan significa que ${selection.equipoLocal} y ${selection.equipoVisitante} anotan al menos un gol cada uno en ese período. ${negative ? 'La selección «No» se cumple con 1–0 o 0–0; no se cumple con 1–1.' : 'La selección afirmativa (Sí o más de 0.5 goles de cada equipo) se cumple con 1–1; no se cumple con 1–0 ni 0–0.'}${disclaimer}`;
   }
-  if (tab && /equipo con mas|ganador|mas (?:corners|tiros de esquina|tarjetas|tiros a puerta)/.test(market) && !/total|mas de/.test(market)) {
+  if (tab && tab !== 5 && /equipo con mas|ganador|mas (?:corners|tiros de esquina|tarjetas|tiros a puerta)/.test(market) && !/total|mas de/.test(market)) {
     return `${prefix}Se comparan los ${unit} de cada equipo en ese período. La selección «${selection.opcionApuesta}» necesita que ese equipo tenga más ${unit} que su rival, no solo que supere una cantidad. Por ejemplo, con 6 de ${selection.equipoLocal} y 4 de ${selection.equipoVisitante}, gana ${selection.equipoLocal} en este mercado; con 4–6 gana ${selection.equipoVisitante}. Si quedan iguales, hay empate; su liquidación depende de las reglas del mercado.${disclaimer}`;
   }
   if (tab && threshold !== null && direction) {

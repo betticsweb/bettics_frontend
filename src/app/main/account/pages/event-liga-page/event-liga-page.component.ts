@@ -1,3 +1,4 @@
+import { Analysis, analysisContext, evaluate, frequency } from 'src/app/shared/utils/statistics-analysis';
 import { Component, OnInit, enableProdMode } from '@angular/core';
 import { BehaviorSubject, debounceTime, forkJoin, fromEvent, merge, Subject, takeUntil } from 'rxjs';
 import { EventLigaModel } from 'src/app/core/models/eventLiga.model';
@@ -70,6 +71,11 @@ export class EventLigaPageComponent implements OnInit {
   ultimos6Home: any[] = [];
   soloLocal: any[] = [];
 
+  analysis: Analysis | null = null;
+  analysisMode = 'total';
+  resultSelection = '1';
+  periodNotice = '';
+  unsupportedNotice = '';
   filterDirection = 'mas';
   recommendationThreshold = '';
   recommendationMarket = '';
@@ -134,7 +140,10 @@ export class EventLigaPageComponent implements OnInit {
                 this.params_liga = params['liga'];
                 this.recommendationMarket = params['mercado'] || '';
                 this.recommendationOption = params['opcion'] || '';
-                this.recommendationThreshold = params['umbral'] || '';
+                this.recommendationThreshold = params['umbral'] ?? '';
+                this.analysis = analysisContext({liga: params['liga'], equipoLocal: params['equipoLocal'], equipoVisitante: params['equipoVisitante'], mercadoApuesta: params['mercado'] || '', opcionApuesta: params['opcion'] || '', valorOpcionApuesta: params['valor'] ?? params['umbral'] ?? ''});
+                this.periodNotice = this.analysis.period ? 'No hay datos disponibles del ' + this.analysis.period + ' para analizar esta recomendación' : '';
+                this.unsupportedNotice = this.analysis.kind === 'unsupported' && params['mercado'] ? 'Este mercado o selección no es compatible con el análisis disponible.' : '';
                 this.pendingMarket = true;
                 this.params_equipoLocal = params['equipoLocal'];
                 this.params_idHomeTeam = params['idHomeTeam'];
@@ -399,15 +408,16 @@ export class EventLigaPageComponent implements OnInit {
   private applyRecommendationMarket(): void {
     if (!this.pendingMarket) return;
     this.pendingMarket = false;
-    const params = this.route.snapshot.queryParamMap;
-    const tab = Number(params.get('tab'));
-    if (![1, 2, 3, 4].includes(tab)) return;
-    this.onTab(tab);
-    if (!['mas', 'menos'].includes(params.get('sentido') || '') || params.get('umbral') === null) return;
-    this.filterDirection = params.get('sentido')!;
-    const threshold = Number(params.get('umbral'));
-    if (!Number.isFinite(threshold) || threshold < 0) return;
-    const scope = params.get('alcance');
+    const context = this.analysis;
+    if (!context || !context.tab) return;
+    this.onTab(context.tab);
+    if (context.period || context.kind === 'unsupported') return;
+    this.analysisMode = context.kind;
+    this.resultSelection = context.result || '1';
+    if (context.kind !== 'total') { this.applySpecial(); return; }
+    this.filterDirection = context.direction;
+    const threshold = context.threshold!;
+    const scope = context.scope;
     const options = scope === 'local' ? this.strFilterMatchLocal : scope === 'visita' ? this.strFilterMatchVisita : this.strFilterMatch;
     if (!options.includes(threshold)) options.push(threshold);
     if (scope === 'local') this.strMatchFilterLocalSelected = threshold;
@@ -419,10 +429,10 @@ export class EventLigaPageComponent implements OnInit {
   crearValoresFiltro(ultimos6Home:any, ultimos6Away:any, soloLocal:any, soloVisita:any ): void{
 
     // Goles
-    const intScore_ultimos6Home = ultimos6Home.map((a:any) => a.intHomeScore).filter((e:any) => e);
-    const intScore_ultimos6Away = ultimos6Away.map((a:any) => a.intAwayScore).filter((e:any) => e);
-    const intScore_soloLocal = soloLocal.map((a:any) => a.intHomeScore).filter((e:any) => e);
-    const intScore_soloVisita = soloVisita.map((a:any) => a.intAwayScore).filter((e:any) => e);
+    const intScore_ultimos6Home = ultimos6Home.map((a:any) => a.intHomeScore).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const intScore_ultimos6Away = ultimos6Away.map((a:any) => a.intAwayScore).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const intScore_soloLocal = soloLocal.map((a:any) => a.intHomeScore).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const intScore_soloVisita = soloVisita.map((a:any) => a.intAwayScore).filter((e:any) => e !== null && e !== undefined && e !== '');
 
     this.totalIntScoreFilter = this.union(intScore_ultimos6Home, intScore_ultimos6Away, intScore_soloLocal, intScore_soloVisita)
     this.totalIntScoreFilterVisita = this.union(intScore_ultimos6Away, intScore_soloVisita)
@@ -430,10 +440,10 @@ export class EventLigaPageComponent implements OnInit {
     console.log(this.totalIntScoreFilter)
 
     // Goles
-    const cornerKicks_ultimos6Home = ultimos6Home.map((a:any) => a.cornerKicksHome).filter((e:any) => e);
-    const cornerKicks_ultimos6Away = ultimos6Away.map((a:any) => a.cornerKicksAway).filter((e:any) => e);
-    const cornerKicks_soloLocal = soloLocal.map((a:any) => a.cornerKicksHome).filter((e:any) => e);
-    const cornerKicks_soloVisita = soloVisita.map((a:any) => a.cornerKicksAway).filter((e:any) => e);
+    const cornerKicks_ultimos6Home = ultimos6Home.map((a:any) => a.cornerKicksHome).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const cornerKicks_ultimos6Away = ultimos6Away.map((a:any) => a.cornerKicksAway).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const cornerKicks_soloLocal = soloLocal.map((a:any) => a.cornerKicksHome).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const cornerKicks_soloVisita = soloVisita.map((a:any) => a.cornerKicksAway).filter((e:any) => e !== null && e !== undefined && e !== '');
 
     this.totalCornerKicksFilter = this.union(cornerKicks_ultimos6Home, cornerKicks_ultimos6Away, cornerKicks_soloLocal, cornerKicks_soloVisita)
     this.totalCornerKicksFilterVisita = this.union(cornerKicks_ultimos6Away, cornerKicks_soloVisita)
@@ -441,10 +451,10 @@ export class EventLigaPageComponent implements OnInit {
     console.log(this.totalCornerKicksFilter)
   
     // Tarjetas
-    const totalCards_ultimos6Home = ultimos6Home.map((a:any) => a.totalCardsHome).filter((e:any) => e);
-    const totalCards_ultimos6Away = ultimos6Away.map((a:any) => a.totalCardsAway).filter((e:any) => e);
-    const totalCards_soloLocal = soloLocal.map((a:any) => a.totalCardsHome).filter((e:any) => e);
-    const totalCards_soloVisita = soloVisita.map((a:any) => a.totalCardsAway).filter((e:any) => e);
+    const totalCards_ultimos6Home = ultimos6Home.map((a:any) => a.totalCardsHome).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const totalCards_ultimos6Away = ultimos6Away.map((a:any) => a.totalCardsAway).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const totalCards_soloLocal = soloLocal.map((a:any) => a.totalCardsHome).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const totalCards_soloVisita = soloVisita.map((a:any) => a.totalCardsAway).filter((e:any) => e !== null && e !== undefined && e !== '');
 
     this.totalCardsFilter = this.union(totalCards_ultimos6Home, totalCards_ultimos6Away, totalCards_soloLocal, totalCards_soloVisita)
     this.totalCardsFilterVisita = this.union(totalCards_ultimos6Away, totalCards_soloVisita)
@@ -452,10 +462,10 @@ export class EventLigaPageComponent implements OnInit {
     console.log(this.totalCardsFilter)
 
     // Tarjetas
-    const shotson_ultimos6Home = ultimos6Home.map((a:any) => a.shotsonGoalHome).filter((e:any) => e);
-    const shotson_ultimos6Away = ultimos6Away.map((a:any) => a.shotsonGoalAway).filter((e:any) => e);
-    const shotson_soloLocal = soloLocal.map((a:any) => a.shotsonGoalHome).filter((e:any) => e);
-    const tshotson_soloVisita = soloVisita.map((a:any) => a.shotsonGoalAway).filter((e:any) => e);
+    const shotson_ultimos6Home = ultimos6Home.map((a:any) => a.shotsonGoalHome).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const shotson_ultimos6Away = ultimos6Away.map((a:any) => a.shotsonGoalAway).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const shotson_soloLocal = soloLocal.map((a:any) => a.shotsonGoalHome).filter((e:any) => e !== null && e !== undefined && e !== '');
+    const tshotson_soloVisita = soloVisita.map((a:any) => a.shotsonGoalAway).filter((e:any) => e !== null && e !== undefined && e !== '');
 
     this.totalshotsonFilter = this.union(shotson_ultimos6Home, shotson_ultimos6Away, shotson_soloLocal, tshotson_soloVisita)
     this.totalshotsonFilterLocal = this.union( shotson_ultimos6Home, shotson_soloLocal)
@@ -531,7 +541,9 @@ export class EventLigaPageComponent implements OnInit {
     
     console.log(tab)
     this.limpiarFiltrado();
-    this.tabActual = tab; 
+    this.tabActual = tab;
+    this.analysisMode = tab === 5 ? 'winner' : 'total';
+    this.filterDirection = 'mas';
     this.strMatchFilterSelected = ""
     this.strMatchFilterVisitaSelected = ""
     this.strMatchFilterLocalSelected= ""
@@ -686,139 +698,43 @@ export class EventLigaPageComponent implements OnInit {
 
   aplicarfiltroMatch(tipo:any): void {
     this.limpiarfiltros(tipo);
+    this.analysisMode = 'total';
+    const threshold = tipo === 1 ? this.strMatchFilterLocalSelected : tipo === 3 ? this.strMatchFilterVisitaSelected : this.strMatchFilterSelected;
+    const analysis: Analysis = {tab: this.tabActual, kind: 'total', period: '', scope: tipo === 1 ? 'local' : tipo === 3 ? 'visita' : 'total', threshold: threshold === '' ? null : Number(threshold), direction: this.filterDirection, result: ''};
+    this.applyAnalysis(analysis);
+  }
 
-    if(this.tabActual== 1){
+  applySpecial(): void {
+    this.strMatchFilterSelected = this.strMatchFilterLocalSelected = this.strMatchFilterVisitaSelected = '';
+    this.applyAnalysis({tab: this.tabActual, kind: this.analysisMode as any, period: '', scope: 'total', threshold: null, direction: '', result: this.resultSelection});
+  }
 
-      console.log("strMatchFilterSelected")
-      console.log(this.strMatchFilterSelected)
+  get analysisGroups(): any[] {
+    return [
+      {title: 'Enfrentamientos directos', rows: this.partidosLosDosEquipos, focus: 'h2h', key: 'porcentaje2Equipos'},
+      {title: 'Últimos partidos · ' + this.strHomeTeamNameSelected, rows: this.ultimos6Home, focus: 'home', key: 'porcentajeUltimos6Home'},
+      {title: 'Últimos partidos · ' + this.strAwayTeamNameSelected, rows: this.ultimos6Away, focus: 'away', key: 'porcentajeUltimos6Away'},
+      {title: 'Como local · ' + this.strHomeTeamNameSelected, rows: this.soloLocal, focus: 'home', key: 'porcentajeSoloLocal'},
+      {title: 'Como visitante · ' + this.strAwayTeamNameSelected, rows: this.soloVisita, focus: 'away', key: 'porcentajeSoloVisita'}
+    ];
+  }
 
-      this.ultimos6Home.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoGoles(tipo, element);
+  groupExplanation(focus: string): string {
+    const name = focus === 'away' ? this.strAwayTeamNameSelected : this.strHomeTeamNameSelected;
+    if (this.analysisMode === 'both') return 'Ambos marcan: ' + (this.resultSelection === 'si' ? 'Sí, ambos anotaron al menos un gol.' : 'No, al menos uno terminó con cero goles.');
+    const win = this.resultSelection === (focus === 'away' ? '2' : '1');
+    return this.resultSelection === 'X' ? 'Se cuentan empates.' : 'Se cuenta ' + (win ? 'victoria de ' : 'derrota de ') + name + (this.analysisMode === 'comparison' ? ' en córners' : '') + ', independientemente de su localía histórica.';
+  }
+
+  private applyAnalysis(analysis: Analysis): void {
+    for (const group of this.analysisGroups) {
+      const results = group.rows.map((row: any) => {
+        const result = evaluate(row, analysis, {id: this.strHomeTeamSelected, name: this.strHomeTeamNameSelected}, {id: this.strAwayTeamSelected, name: this.strAwayTeamNameSelected}, group.focus);
+        row.filtroAplicado = result === true;
+        return result;
       });
-      this.ultimos6Away.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoGoles(tipo, element);
-      });
-
-      this.soloVisita.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoGoles(tipo, element);
-      });
-
-      this.soloLocal.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoGoles(tipo, element);
-      });
-
-      this.partidosLosDosEquipos.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoGoles(tipo, element);
-      });
-
+      this.porcentajeFiltro[group.key] = ':' + frequency(results);
     }
-
-    if(this.tabActual== 2){
-
-      this.ultimos6Home.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoCorner(tipo, element);
-      });
-      this.ultimos6Away.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoCorner(tipo, element);
-      });
-
-      this.soloVisita.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoCorner(tipo, element);
-      });
-
-      this.soloLocal.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoCorner(tipo, element);
-      });
-
-      this.partidosLosDosEquipos.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoCorner(tipo, element);
-      });
-      
-    }
-    if(this.tabActual== 4){
-
-      this.ultimos6Away.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoRemate(tipo, element);
-      });
-      this.ultimos6Home.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoRemate(tipo, element);
-      });
-
-      this.soloVisita.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoRemate(tipo, element);
-      });
-
-      this.soloLocal.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoRemate(tipo, element);
-      });
-
-      this.partidosLosDosEquipos.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoRemate(tipo, element);
-      });
-      
-    }
-    if(this.tabActual== 3){
-      this.ultimos6Home.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoTarjeta(tipo, element);
-      });
-      this.ultimos6Away.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoTarjeta(tipo, element);
-      });
-
-      this.soloVisita.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoTarjeta(tipo, element);
-      });
-
-      this.soloLocal.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoTarjeta(tipo, element);
-      });
-
-      this.partidosLosDosEquipos.forEach((element: any) => {
-        element.filtroAplicado = false;
-        element = this.retornarElementoTarjeta(tipo, element);
-      });
-    }
-
-    // Pintar porcentaje
-    const total2PartidosFiltrados = this.partidosLosDosEquipos.filter(x=> x.filtroAplicado ==true).length;
-    const totalUltimos6Home = this.ultimos6Home.filter(x=> x.filtroAplicado ==true).length;
-    const totalUltimos6Away = this.ultimos6Away.filter(x=> x.filtroAplicado ==true).length;
-    const totalSoloLocal = this.soloLocal.filter(x=> x.filtroAplicado ==true).length;
-    const totalSoloVisita = this.soloVisita.filter(x=> x.filtroAplicado ==true).length;
-
-    const porcentaje2Equipos = Math.round(((total2PartidosFiltrados * 100 )/( this.partidosLosDosEquipos.length  ))) || 0;
-    const porcentajeUltimos6Home = Math.round(((totalUltimos6Home * 100 )/( this.ultimos6Home.length  ))) || 0;
-    const porcentajeUltimos6Away = Math.round(((totalUltimos6Away * 100 )/( this.ultimos6Away.length  ))) || 0;
-    const porcentajeSoloLocal = Math.round(((totalSoloLocal * 100 )/( this.soloLocal.length  ))) || 0;
-    const porcentajeSoloVisita = Math.round(((totalSoloVisita * 100 )/( this.soloVisita.length  ))) || 0;
-
-    this.porcentajeFiltro = {
-      porcentaje2Equipos: ":" + String(porcentaje2Equipos) + "%",
-      porcentajeUltimos6Home: ":" + porcentajeUltimos6Home + "%",
-      porcentajeUltimos6Away: ":" + porcentajeUltimos6Away + "%",
-      porcentajeSoloLocal: ":" + porcentajeSoloLocal + "%",
-      porcentajeSoloVisita: ":" + porcentajeSoloVisita + "%"
-    }
-
   }
 
   limpiarFiltrado(): void {
@@ -842,117 +758,4 @@ export class EventLigaPageComponent implements OnInit {
     });
   }
 
-  matchesThreshold(value: number, threshold: any): boolean {
-    return this.filterDirection === 'menos' ? value < parseFloat(threshold) : value > parseFloat(threshold);
-  }
-
-  retornarElementoGoles(tipo:any, element:any): void {
- 
-    if(tipo==1){ // Local 
-      if (
-        this.matchesThreshold(parseFloat(element.intHomeScore), this.strMatchFilterLocalSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-    if(tipo==2){ // Total 
-      console.log((parseFloat(element.intHomeScore) + parseFloat(element.intAwayScore)))
-      console.log(parseFloat(this.strMatchFilterSelected) )
-      if (
-        this.matchesThreshold((parseFloat(element.intHomeScore) + parseFloat(element.intAwayScore)), this.strMatchFilterSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-    if(tipo==3){ // visita 
-      if (
-        this.matchesThreshold(parseFloat(element.intAwayScore), this.strMatchFilterVisitaSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-    return element;
-  }
-
-  retornarElementoCorner(tipo:any, element:any): void {
-
-    if(tipo==1){ // Local 
-      if (
-        this.matchesThreshold(parseFloat(element.cornerKicksHome), this.strMatchFilterLocalSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-    if(tipo==2){ // Total 
-      if (
-        this.matchesThreshold(parseFloat(element.cornerKicksHome) + parseFloat(element.cornerKicksAway), this.strMatchFilterSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-    if(tipo==3){ // visita 
-      if (
-        this.matchesThreshold(parseFloat(element.cornerKicksAway), this.strMatchFilterVisitaSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-
-    return element;
-  }
-
-  retornarElementoRemate(tipo:any, element:any): void {
-
-    if(tipo==1){ // Local 
-      if (
-        this.matchesThreshold(parseFloat(element.shotsonGoalHome), this.strMatchFilterLocalSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-    if(tipo==2){ // Total 
-      if (
-        this.matchesThreshold(parseFloat(element.shotsonGoalHome) + parseFloat(element.shotsonGoalAway), this.strMatchFilterSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-    if(tipo==3){ // visita 
-      if (
-        this.matchesThreshold(parseFloat(element.shotsonGoalAway), this.strMatchFilterVisitaSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-
-    return element;
-  }
-
-  retornarElementoTarjeta(tipo:any, element:any): void {
-
-    if(tipo==1){ // Local
-
-      if (
-        this.matchesThreshold(parseFloat(element.totalCardsHome), this.strMatchFilterLocalSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-    if(tipo==2){ // Total
-      if (
-        this.matchesThreshold(parseFloat(element.totalCardsHome) + parseFloat(element.totalCardsAway), this.strMatchFilterSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-    if(tipo==3){ // visita
-      if (
-        this.matchesThreshold(parseFloat(element.totalCardsAway), this.strMatchFilterVisitaSelected)
-      ) {
-        element.filtroAplicado = true
-      } 
-    }
-
-    return element;
-  }
 }

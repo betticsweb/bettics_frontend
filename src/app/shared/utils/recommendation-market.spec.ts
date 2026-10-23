@@ -9,7 +9,7 @@ describe('Recommendation market navigation', () => {
     expect(marketContext({...base, mercadoApuesta: 'Corners Visita', opcionApuesta: 'Menos de', valorOpcionApuesta: '4,5'})).toEqual({tab: 2, unit: 'córners', threshold: 4.5, direction: 'menos', scope: 'visita'});
   });
   it('does not invent a numeric line for a winner', () => {
-    expect(statisticsParams({...base, mercadoApuesta: 'Ganador (N123)', opcionApuesta: '1', valorOpcionApuesta: ''}).tab).toBeNull();
+    expect(statisticsParams({...base, mercadoApuesta: 'Ganador (N123)', opcionApuesta: '1', valorOpcionApuesta: ''}).tab).toBe(5);
   });
   it('explains the selected total with winning and losing examples', () => {
     expect(explainMarket(base)).toContain('con 3 goles');

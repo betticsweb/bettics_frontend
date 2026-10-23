@@ -28,8 +28,9 @@
         </div>
         <div *ngIf="suscriptoCulqi">
             <p *ngIf="recommendationMarket" role="status">Recomendación: {{recommendationMarket}} · {{recommendationOption}} {{recommendationThreshold}}.</p>
-            <label for="stats-direction">Comparación del umbral</label>
-            <select id="stats-direction" [(ngModel)]="filterDirection" (ngModelChange)="aplicarfiltroMatch(strMatchFilterLocalSelected !== '' ? 1 : strMatchFilterVisitaSelected !== '' ? 3 : 2)"><option value="mas">Más de</option><option value="menos">Menos de</option></select>
+            <p *ngIf="periodNotice" role="status">{{periodNotice}}.</p>
+            <p *ngIf="unsupportedNotice" role="status">{{unsupportedNotice}}</p>
+            <p *ngIf="periodNotice">Estadísticas generales del partido completo, separadas de la recomendación por tiempo. Los filtros siguientes analizan únicamente el partido completo.</p>
             <section class="stats-filters" aria-labelledby="stats-filter-title">
               <div class="stats-filter-heading"><h2 id="stats-filter-title">Elige el encuentro</h2><span>Liga · Temporada · Equipos</span></div>
               <div class="stats-filter-grid">
@@ -83,21 +84,54 @@
                                 <li class="nav-item active" role="presentation">
                                     <!-- <a href="#tab_default_1" data-toggle="tab">
                                      </a> -->
-                                    <button (click)="onTab(1)" class="nav-link active titleTab" id="goles-tab" data-bs-toggle="tab" data-bs-target="#goles" type="button" role="tab" aria-controls="goles" aria-selected="true">Goles</button>
+                                    <button (click)="onTab(1)" class="nav-link titleTab" [class.active]="tabActual === 1" id="goles-tab" [attr.aria-selected]="tabActual === 1" type="button" role="tab" aria-controls="goles">Goles</button>
                                 </li>
                                 <li>
-                                    <button (click)="onTab(2)" class="nav-link titleTab" id="corners-tab" data-bs-toggle="tab" data-bs-target="#corners" type="button" role="tab" aria-controls="corners" aria-selected="false">Corners</button>
+                                    <button (click)="onTab(2)" class="nav-link titleTab" [class.active]="tabActual === 2" id="corners-tab" [attr.aria-selected]="tabActual === 2" type="button" role="tab" aria-controls="corners">Corners</button>
                                 </li>
                                 <li>
-                                    <button (click)="onTab(3)" class="nav-link titleTab" id="tarjetas-tab" data-bs-toggle="tab" data-bs-target="#tarjetas" type="button" role="tab" aria-controls="tarjetas" aria-selected="false">Tarjetas</button>
+                                    <button (click)="onTab(3)" class="nav-link titleTab" [class.active]="tabActual === 3" id="tarjetas-tab" [attr.aria-selected]="tabActual === 3" type="button" role="tab" aria-controls="tarjetas">Tarjetas</button>
                                 </li>
                                 <li>
-                                    <button (click)="onTab(4)" class="nav-link titleTab" id="remates-tab" data-bs-toggle="tab" data-bs-target="#remates" type="button" role="tab" aria-controls="remates" aria-selected="false">Tiros a Puerta</button>
+                                    <button (click)="onTab(4)" class="nav-link titleTab" [class.active]="tabActual === 4" id="remates-tab" [attr.aria-selected]="tabActual === 4" type="button" role="tab" aria-controls="remates">Tiros a Puerta</button>
                                 </li>
+                                <li><button (click)="onTab(5); resultSelection = '1'; applySpecial()" class="nav-link titleTab" [class.active]="tabActual === 5" role="tab" [attr.aria-selected]="tabActual === 5">1X2</button></li>
                             </ul>
+                            <div *ngIf="tabActual === 1 || tabActual === 2 || tabActual === 5">
+                              <label for="analysis-mode">Análisis del partido completo</label>
+                              <select id="analysis-mode" [(ngModel)]="analysisMode" (ngModelChange)="resultSelection = analysisMode === 'both' ? 'si' : '1'; analysisMode === 'total' ? onTab(tabActual) : applySpecial()">
+                                <option *ngIf="tabActual !== 5" value="total">Totales</option>
+                                <option *ngIf="tabActual === 1" value="both">Ambos marcan</option>
+                                <option *ngIf="tabActual === 2" value="comparison">Equipo con más córners</option>
+                                <option *ngIf="tabActual === 5" value="winner">1X2</option>
+                              </select>
+                            </div>
+                            <section *ngIf="analysisMode !== 'total'" aria-label="Análisis específico del partido completo">
+                              <h2>{{analysisMode === 'both' ? 'Ambos marcan' : analysisMode === 'comparison' ? 'Equipo con más córners' : '1X2'}} · Partido completo</h2>
+                              <label for="analysis-result">Selección</label>
+                              <select id="analysis-result" [(ngModel)]="resultSelection" (ngModelChange)="applySpecial()">
+                                <ng-container *ngIf="analysisMode === 'both'"><option value="si">Sí</option><option value="no">No</option></ng-container>
+                                <ng-container *ngIf="analysisMode !== 'both'"><option value="1">1 · {{strHomeTeamNameSelected}}</option><option value="X">X · Empate</option><option value="2">2 · {{strAwayTeamNameSelected}}</option></ng-container>
+                              </select>
+                              <p>1 y 2 identifican a los equipos del próximo encuentro. En cada histórico se identifica al equipo por su identidad, aunque haya cambiado de localía. Solo se incluyen registros evaluables.</p>
+                              <article *ngFor="let group of analysisGroups">
+                                <h3>{{group.title}} · {{porcentajeFiltro[group.key] | slice:1}}</h3>
+                                <p>{{groupExplanation(group.focus)}}</p>
+                                <div class="table-responsive"><table class="table table-bordered table-sm">
+                                  <thead><tr><th>Fecha</th><th>Local histórico</th><th>{{analysisMode === 'comparison' ? 'Córners' : 'Goles'}}</th><th>Visitante histórico</th></tr></thead>
+                                  <tbody><tr *ngIf="!group.rows.length"><td colspan="4">Sin datos</td></tr>
+                                    <tr *ngFor="let item of group.rows" [class.filtro-aplicado]="item.filtroAplicado">
+                                      <td>{{item.dateEvent}}</td><td>{{item.strHomeTeam}}</td>
+                                      <td>{{(analysisMode === 'comparison' ? item.cornerKicksHome : item.intHomeScore) ?? 'Sin datos'}} – {{(analysisMode === 'comparison' ? item.cornerKicksAway : item.intAwayScore) ?? 'Sin datos'}}</td><td>{{item.strAwayTeam}}</td>
+                                    </tr>
+                                  </tbody>
+                                </table></div>
+                              </article>
+                            </section>
+                            <p>Los filtros de Local y Visita se refieren a {{strHomeTeamNameSelected}} y {{strAwayTeamNameSelected}}, respectivamente; se identifica a cada equipo aunque haya cambiado de localía en sus históricos. Se excluyen los registros sin datos evaluables.</p>
                             <p class="stats-legend"><span aria-hidden="true"></span> Las filas verdes cumplen el filtro seleccionado. El porcentaje indica su frecuencia en cada grupo.</p>
                             <div class="tab-content">
-                                <div class="tab-pane active" id="goles" role="tabpanel" aria-labelledby="goles-tab">
+                                <div class="tab-pane" [class.active]="tabActual === 1 && analysisMode === 'total'" id="goles" role="tabpanel" aria-labelledby="goles-tab">
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md' ">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
@@ -463,7 +497,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="corners" role="tabpanel" aria-labelledby="corners-tab">
+                                <div class="tab-pane" [class.active]="tabActual === 2 && analysisMode === 'total'" id="corners" role="tabpanel" aria-labelledby="corners-tab">
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
@@ -838,7 +872,7 @@
 
                                 </div>
 
-                                <div class="tab-pane" id="tarjetas" role="tabpanel" aria-labelledby="tarjetas-tab">
+                                <div class="tab-pane" [class.active]="tabActual === 3 && analysisMode === 'total'" id="tarjetas" role="tabpanel" aria-labelledby="tarjetas-tab">
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
@@ -1220,7 +1254,7 @@
 
                                 </div>
 
-                                <div class="tab-pane" id="remates" role="tabpanel" aria-labelledby="remates-tab">
+                                <div class="tab-pane" [class.active]="tabActual === 4 && analysisMode === 'total'" id="remates" role="tabpanel" aria-labelledby="remates-tab">
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
