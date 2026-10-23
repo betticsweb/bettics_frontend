@@ -22,7 +22,7 @@
     </div>
     <div class="results"><strong aria-live="polite">{{filtered.length}} {{filtered.length === 1 ? 'recomendación' : 'recomendaciones'}}</strong><button class="clear" type="button" (click)="reset()">Limpiar filtros</button></div>
     <div *ngIf="!filtered.length" class="state"><h3>No hay recomendaciones con estos filtros</h3><p>Prueba otra liga, equipo o fecha.</p><button type="button" (click)="setPeriod('all')">Ver todas las fechas</button></div>
-    <section *ngFor="let group of groups" class="day-group">
+    <section *ngFor="let group of groups; trackBy: trackGroup" class="day-group">
       <h3>{{dateLabel(group.date)}}</h3>
       <div class="cards">
         <article class="recommendation" *ngFor="let item of group.items">
@@ -32,6 +32,10 @@
             <small>{{dateLabel(detail.fechaJuego)}}</small>
             <h4>{{detail.equipoLocal}} <span>vs</span> {{detail.equipoVisitante}}</h4>
             <div class="market"><div><small>{{type(detail)}}</small><p>{{detail.mercadoApuesta}}: <strong>{{detail.opcionApuesta}} {{detail.valorOpcionApuesta}}</strong></p></div><div class="odds"><small>Cuota</small><strong>{{detail.cuotaSimple}}</strong></div></div>
+            <div class="selection-actions">
+              <a routerLink="/cuenta/estadisticas" [queryParams]="statisticsParams(detail)" [attr.aria-label]="'Estadísticas de ' + detail.equipoLocal + ' contra ' + detail.equipoVisitante">Ver Estadísticas</a>
+              <details><summary>¿Qué significa?</summary><p>{{explainMarket(detail)}}</p></details>
+            </div>
           </div>
           <footer *ngIf="item.detalle.length > 1">Cuota total <strong>{{item.odds | number:'1.2-2'}}</strong></footer>
         </article>

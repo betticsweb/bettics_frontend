@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run build -- --output-path=dist-vercel",
+  "outputDirectory": "dist-vercel",
+  "installCommand": "npm ci --legacy-peer-deps --cache /tmp/bettics-npm-cache --no-audit --no-fund",
+  "rewrites": [{"source": "/((?!.*\\.).*)", "destination": "/index.html"}]
+}

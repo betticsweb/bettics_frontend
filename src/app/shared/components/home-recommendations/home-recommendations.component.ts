@@ -1,3 +1,5 @@
+import { RouterModule } from '@angular/router';
+import { explainMarket, statisticsParams } from '../../utils/recommendation-market';
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
@@ -19,11 +21,17 @@ interface Recomendacion {
 @Component({
   selector: 'app-home-recommendations',
   standalone: true,
-  imports: [CommonModule, CarouselModule],
+  imports: [CommonModule, CarouselModule, RouterModule],
   templateUrl: './home-recommendations.component.html',
   styleUrls: ['./home-recommendations.component.css']
 })
 export class HomeRecommendationsComponent implements OnInit, OnDestroy {
+  private selection(partido: Recomendacion) {
+    return {liga: partido.liga, equipoLocal: partido.home_name, equipoVisitante: partido.away_name,
+      mercadoApuesta: partido.mercado, opcionApuesta: partido.mercado, valorOpcionApuesta: ''};
+  }
+  statisticsParams(partido: Recomendacion) { return statisticsParams(this.selection(partido)); }
+  explainMarket(partido: Recomendacion) { return explainMarket(this.selection(partido)); }
   recomendaciones: (Recomendacion & { fecha: string; fechaEtiqueta: string })[] = [];
   estado: 'cargando' | 'listo' | 'vacio' | 'error' = 'cargando';
   private readonly destroy$ = new Subject<void>();

@@ -27,6 +27,9 @@
             </div>
         </div>
         <div *ngIf="suscriptoCulqi">
+            <p *ngIf="recommendationMarket" role="status">Recomendación: {{recommendationMarket}} · {{recommendationOption}} {{recommendationThreshold}}.</p>
+            <label for="stats-direction">Comparación del umbral</label>
+            <select id="stats-direction" [(ngModel)]="filterDirection" (ngModelChange)="aplicarfiltroMatch(strMatchFilterLocalSelected !== '' ? 1 : strMatchFilterVisitaSelected !== '' ? 3 : 2)"><option value="mas">Más de</option><option value="menos">Menos de</option></select>
             <section class="stats-filters" aria-labelledby="stats-filter-title">
               <div class="stats-filter-heading"><h2 id="stats-filter-title">Elige el encuentro</h2><span>Liga · Temporada · Equipos</span></div>
               <div class="stats-filter-grid">
@@ -98,7 +101,7 @@
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md' ">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label for="stats-select-5" class="form-label">Total Goles más de:
+                                            <label for="stats-select-5" class="form-label">Total Goles {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-5" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                     <option [ngValue]="" disabled hidden></option>
@@ -108,7 +111,7 @@
                                             </select>
                                         </div>
                                         <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                            <label for="stats-select-6" class="form-label">Goles Local más de:
+                                            <label for="stats-select-6" class="form-label">Goles Local {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-6" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                 <option [ngValue]="" disabled hidden></option>
@@ -119,7 +122,7 @@
                                         </div>
 
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label for="stats-select-7" class="form-label">Goles Visita más de:
+                                            <label for="stats-select-7" class="form-label">Goles Visita {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-7" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                 <option [ngValue]="" disabled hidden></option>
@@ -281,7 +284,7 @@
                                     <div *ngIf="mediaBreakpoint$.value != 'xs' && mediaBreakpoint$.value != 'sm' && mediaBreakpoint$.value != 'md'">
                                         <div class="row">
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label for="stats-select-8" class="form-label">Total Goles más de:
+                                                <label for="stats-select-8" class="form-label">Total Goles {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-8" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                         <option [ngValue]="" disabled hidden></option>
@@ -291,7 +294,7 @@
                                                 </select>
                                             </div>
                                             <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                                <label for="stats-select-9" class="form-label">Goles local más de:
+                                                <label for="stats-select-9" class="form-label">Goles local {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-9" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                         <option [ngValue]="" disabled hidden></option>
@@ -302,7 +305,7 @@
                                             </div>
 
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label for="stats-select-10" class="form-label">Goles Visita más de:
+                                                <label for="stats-select-10" class="form-label">Goles Visita {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-10" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                         <option [ngValue]="" disabled hidden></option>
@@ -464,7 +467,7 @@
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label for="stats-select-11" class="form-label">Total Corners más de:
+                                            <label for="stats-select-11" class="form-label">Total Corners {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-11" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                 <option [ngValue]="" disabled hidden></option>
@@ -474,7 +477,7 @@
                                             </select>
                                         </div>
                                         <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                            <label for="stats-select-12" class="form-label">Corner Local más de:
+                                            <label for="stats-select-12" class="form-label">Corner Local {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-12" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                 <option [ngValue]="" disabled hidden></option>    
@@ -485,7 +488,7 @@
                                         </div>
 
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label for="stats-select-13" class="form-label">Corner Visita más de:
+                                            <label for="stats-select-13" class="form-label">Corner Visita {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-13" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                 <option [ngValue]="" disabled hidden></option>
@@ -653,7 +656,7 @@
                                         <div class="row">
 
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label for="stats-select-14" class="form-label">Total Corners más de:
+                                                <label for="stats-select-14" class="form-label">Total Corners {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-14" class="form-select"  (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                         <option [ngValue]="" ></option>
@@ -663,7 +666,7 @@
                                                 </select>
                                             </div>
                                             <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                                <label for="stats-select-15" class="form-label">Corner Local más de:
+                                                <label for="stats-select-15" class="form-label">Corner Local {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-15" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                         <option [ngValue]="" ></option>
@@ -674,7 +677,7 @@
                                             </div>
 
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label for="stats-select-16" class="form-label">Corner Visita más de:
+                                                <label for="stats-select-16" class="form-label">Corner Visita {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-16" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                         <option [ngValue]="" ></option>
@@ -839,7 +842,7 @@
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label for="stats-select-17" class="form-label">Total Tarjetas más de:
+                                            <label for="stats-select-17" class="form-label">Total Tarjetas {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-17" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                     <option [ngValue]="" disabled hidden></option>
@@ -849,7 +852,7 @@
                                             </select>
                                         </div>
                                         <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                            <label for="stats-select-18" class="form-label">Tarjetas Local más de:
+                                            <label for="stats-select-18" class="form-label">Tarjetas Local {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-18" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                 <option [ngValue]="" disabled hidden></option>
@@ -860,7 +863,7 @@
                                         </div>
 
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label for="stats-select-19" class="form-label">Tarjetas Visita más de:
+                                            <label for="stats-select-19" class="form-label">Tarjetas Visita {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-19" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                 <option [ngValue]="" disabled hidden></option>
@@ -1036,7 +1039,7 @@
                                     <div *ngIf="mediaBreakpoint$.value != 'xs' && mediaBreakpoint$.value != 'sm' && mediaBreakpoint$.value != 'md'">
                                         <div class="row">
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label for="stats-select-21" class="form-label">Total Tarjetas más de:
+                                                <label for="stats-select-21" class="form-label">Total Tarjetas {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-21" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                     <option [ngValue]="" disabled hidden></option>
@@ -1046,7 +1049,7 @@
                                                 </select>
                                             </div>
                                             <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                                <label for="stats-select-22" class="form-label">Tarjetas Local más de:
+                                                <label for="stats-select-22" class="form-label">Tarjetas Local {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-22" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                     <option [ngValue]="" disabled hidden></option>
@@ -1057,7 +1060,7 @@
                                             </div>
 
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label for="stats-select-23" class="form-label">Tarjetas Visita más de:
+                                                <label for="stats-select-23" class="form-label">Tarjetas Visita {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-23" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                     <option [ngValue]="" disabled hidden></option>
@@ -1221,7 +1224,7 @@
 
                                     <div *ngIf="mediaBreakpoint$.value == 'xs' || mediaBreakpoint$.value == 'sm' || mediaBreakpoint$.value == 'md'">
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label for="stats-select-24" class="form-label">Total Tiros a puerta más de:
+                                            <label for="stats-select-24" class="form-label">Total Tiros a puerta {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-24" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                 <option [ngValue]="" disabled hidden></option>
@@ -1231,7 +1234,7 @@
                                             </select>
                                         </div>
                                         <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                            <label for="stats-select-25" class="form-label">Tiros a puerta Local más de:
+                                            <label for="stats-select-25" class="form-label">Tiros a puerta Local {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-25" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                 <option [ngValue]="" disabled hidden></option>    
@@ -1242,7 +1245,7 @@
                                         </div>
 
                                         <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                            <label for="stats-select-26" class="form-label">Tiros a puerta Visita más de:
+                                            <label for="stats-select-26" class="form-label">Tiros a puerta Visita {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                             </label>
                                             <select id="stats-select-26" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                 <option [ngValue]="" disabled hidden></option>
@@ -1409,7 +1412,7 @@
                                     <div *ngIf="mediaBreakpoint$.value != 'xs' && mediaBreakpoint$.value != 'sm' && mediaBreakpoint$.value != 'md'">
                                         <div class="row">
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label for="stats-select-27" class="form-label">Total Tiros a puerta más de:
+                                                <label for="stats-select-27" class="form-label">Total Tiros a puerta {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-27" class="form-select" (change)="aplicarfiltroMatch(2)" [(ngModel)]="strMatchFilterSelected">
                                                     <option [ngValue]="" disabled hidden></option>    
@@ -1419,7 +1422,7 @@
                                                 </select>
                                             </div>
                                             <div class="p-2 bd-highlight offset-lg-2 col-lg-2 ">
-                                                <label for="stats-select-28" class="form-label">Tiros a puerta Local más de:
+                                                <label for="stats-select-28" class="form-label">Tiros a puerta Local {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-28" class="form-select" (change)="aplicarfiltroMatch(1)" [(ngModel)]="strMatchFilterLocalSelected">
                                                     <option [ngValue]="" disabled hidden></option>    
@@ -1430,7 +1433,7 @@
                                             </div>
 
                                             <div class="p-2 bd-highlight offset-lg-1 col-lg-2 ">
-                                                <label for="stats-select-29" class="form-label">Tiros a puerta Visita más de:
+                                                <label for="stats-select-29" class="form-label">Tiros a puerta Visita {{filterDirection === 'menos' ? 'menos de' : 'más de'}}:
                                                 </label>
                                                 <select id="stats-select-29" class="form-select" (change)="aplicarfiltroMatch(3)" [(ngModel)]="strMatchFilterVisitaSelected">
                                                     <option [ngValue]="" disabled hidden></option>    

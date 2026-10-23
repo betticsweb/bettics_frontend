@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil, timeout } from 'rxjs';
+import { explainMarket, statisticsParams } from 'src/app/shared/utils/recommendation-market';
 import { RecommendationsService } from '../../services/recommendations.service';
 
 interface Selection {
+  idHomeTeam?: string; idAwayTeam?: string;
   liga: string; equipoLocal: string; equipoVisitante: string;
   mercadoApuesta: string; opcionApuesta: string; valorOpcionApuesta: string;
   cuotaSimple: string; fechaJuego: string;
@@ -17,6 +19,8 @@ interface Recommendation {
   styleUrls: ['./profile-page.component.css']
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
+  readonly statisticsParams = statisticsParams;
+  readonly explainMarket = explainMarket;
   private destroy$ = new Subject<void>();
   recomendaciones: Recommendation[] = [];
   filtered: Recommendation[] = [];
@@ -36,7 +40,17 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   readonly periods = [{value: 'today', label: 'Hoy'}, {value: 'tomorrow', label: 'Mañana'}, {value: 'week', label: 'Próximos 7 días'}, {value: 'all', label: 'Todas las fechas'}];
 
   constructor(private service: RecommendationsService) {}
-  ngOnInit(): void { this.load(); }
+  ngOnInit(): void {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem('recommendation-filters') || 'null');
+      if (saved) {
+        for (const key of ['period', 'league', 'category', 'market', 'search', 'order'] as const) {
+          if (typeof saved[key] === 'string') this[key] = saved[key];
+        }
+      }
+    } catch { /* Storage can be unavailable. */ }
+    this.load();
+  }
   load(): void {
     this.loading = true;
     this.error = '';
@@ -126,9 +140,12 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     });
     return groups;
   }
+  trackGroup(_index: number, group: {date: string}): string { return group.date; }
   dateLabel(date: string): string {
     date = this.dateKey(date);
     return date ? new Intl.DateTimeFormat('es-PE', {timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric'}).format(new Date(date + 'T12:00:00Z')) : 'Fecha por confirmar';
   }
-  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
+  ngOnDestroy(): void {
+    try { sessionStorage.setItem('recommendation-filters', JSON.stringify({period: this.period, league: this.league, category: this.category, market: this.market, search: this.search, order: this.order})); } catch { /* Storage can be unavailable. */ }
+    this.destroy$.next(); this.destroy$.complete(); }
 }

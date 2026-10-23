@@ -16,6 +16,8 @@
             <div class="prediction"><strong>{{ partido.probabilidad }}%</strong><p>Probabilidad de {{ partido.mercado }}</p></div>
             <div class="team"><img *ngIf="partido.home_image" [src]="partido.home_image" alt="" width="24" height="24" loading="lazy" (error)="ocultarImagen($event)"><span>{{ partido.home_name }}</span></div>
             <div class="team"><img *ngIf="partido.away_image" [src]="partido.away_image" alt="" width="24" height="24" loading="lazy" (error)="ocultarImagen($event)"><span>{{ partido.away_name }}</span></div>
+            <a routerLink="/cuenta/estadisticas" [queryParams]="statisticsParams(partido)">Ver Estadísticas</a>
+            <details><summary>¿Qué significa?</summary><p>{{explainMarket(partido)}}</p></details>
           </article>
         </ng-template>
       </owl-carousel-o>

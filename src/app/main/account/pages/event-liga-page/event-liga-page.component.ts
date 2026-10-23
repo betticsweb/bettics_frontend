@@ -70,6 +70,11 @@ export class EventLigaPageComponent implements OnInit {
   ultimos6Home: any[] = [];
   soloLocal: any[] = [];
 
+  filterDirection = 'mas';
+  recommendationThreshold = '';
+  recommendationMarket = '';
+  recommendationOption = '';
+  private pendingMarket = false;
   params_liga = '';
   params_equipoLocal = '';
   params_idHomeTeam = '';
@@ -121,12 +126,16 @@ export class EventLigaPageComponent implements OnInit {
           this.suscriptoCulqi = true;
           this.mensajeSuscriptoCulqi = '';
 
-          this.route.queryParams
+          this.route.queryParams.pipe(takeUntil(this._unsubscribeAll))
             .subscribe(params => {
               console.log(params); // { orderby: "price" }
 
               if (params['liga']) {
                 this.params_liga = params['liga'];
+                this.recommendationMarket = params['mercado'] || '';
+                this.recommendationOption = params['opcion'] || '';
+                this.recommendationThreshold = params['umbral'] || '';
+                this.pendingMarket = true;
                 this.params_equipoLocal = params['equipoLocal'];
                 this.params_idHomeTeam = params['idHomeTeam'];
                 this.params_equipoVisitante = params['equipoVisitante'];
@@ -383,7 +392,28 @@ export class EventLigaPageComponent implements OnInit {
         this.ultimos6Home = rest.ultimos6Home;
         this.soloVisita = rest.soloVisita;
         this.soloLocal = rest.soloLocal;
+        this.applyRecommendationMarket();
       });
+  }
+
+  private applyRecommendationMarket(): void {
+    if (!this.pendingMarket) return;
+    this.pendingMarket = false;
+    const params = this.route.snapshot.queryParamMap;
+    const tab = Number(params.get('tab'));
+    if (![1, 2, 3, 4].includes(tab)) return;
+    this.onTab(tab);
+    if (!['mas', 'menos'].includes(params.get('sentido') || '') || params.get('umbral') === null) return;
+    this.filterDirection = params.get('sentido')!;
+    const threshold = Number(params.get('umbral'));
+    if (!Number.isFinite(threshold) || threshold < 0) return;
+    const scope = params.get('alcance');
+    const options = scope === 'local' ? this.strFilterMatchLocal : scope === 'visita' ? this.strFilterMatchVisita : this.strFilterMatch;
+    if (!options.includes(threshold)) options.push(threshold);
+    if (scope === 'local') this.strMatchFilterLocalSelected = threshold;
+    else if (scope === 'visita') this.strMatchFilterVisitaSelected = threshold;
+    else this.strMatchFilterSelected = threshold;
+    this.aplicarfiltroMatch(scope === 'local' ? 1 : scope === 'visita' ? 3 : 2);
   }
 
   crearValoresFiltro(ultimos6Home:any, ultimos6Away:any, soloLocal:any, soloVisita:any ): void{
@@ -572,11 +602,11 @@ export class EventLigaPageComponent implements OnInit {
         console.log(this.strAwayTeam)
         if (isQueryParams) {
           this.strHomeTeamNameSelected = this.params_equipoLocal;
-          this.strHomeTeamSelected = this.params_idHomeTeam;
+          this.strHomeTeamSelected = this.params_idHomeTeam || this.strHomeTeam.find(x => x.descripcion === this.params_equipoLocal)?.id;
           this.strAwayTeamNameSelected = this.params_equipoVisitante;
-          this.strAwayTeamSelected = this.params_idAwayTeam;
+          this.strAwayTeamSelected = this.params_idAwayTeam || this.strAwayTeam.find(x => x.descripcion === this.params_equipoVisitante)?.id;
         }
-        this.cargarResumenes();
+        if (this.strHomeTeamSelected && this.strAwayTeamSelected) this.cargarResumenes();
 
       });
   }
@@ -633,7 +663,10 @@ export class EventLigaPageComponent implements OnInit {
 
   }
   ngOnDestroy() {
+    this._unsubscriber$.next(null);
     this._unsubscriber$.complete();
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
   }
 
   limpiarfiltros(tipo:any): void { 
@@ -809,11 +842,15 @@ export class EventLigaPageComponent implements OnInit {
     });
   }
 
+  matchesThreshold(value: number, threshold: any): boolean {
+    return this.filterDirection === 'menos' ? value < parseFloat(threshold) : value > parseFloat(threshold);
+  }
+
   retornarElementoGoles(tipo:any, element:any): void {
  
     if(tipo==1){ // Local 
       if (
-        parseFloat(element.intHomeScore) > parseFloat(this.strMatchFilterLocalSelected) 
+        this.matchesThreshold(parseFloat(element.intHomeScore), this.strMatchFilterLocalSelected)
       ) {
         element.filtroAplicado = true
       } 
@@ -822,14 +859,14 @@ export class EventLigaPageComponent implements OnInit {
       console.log((parseFloat(element.intHomeScore) + parseFloat(element.intAwayScore)))
       console.log(parseFloat(this.strMatchFilterSelected) )
       if (
-        (parseFloat(element.intHomeScore) + parseFloat(element.intAwayScore)) > parseFloat(this.strMatchFilterSelected) 
+        this.matchesThreshold((parseFloat(element.intHomeScore) + parseFloat(element.intAwayScore)), this.strMatchFilterSelected)
       ) {
         element.filtroAplicado = true
       } 
     }
     if(tipo==3){ // visita 
       if (
-        parseFloat(element.intAwayScore) > parseFloat(this.strMatchFilterVisitaSelected) 
+        this.matchesThreshold(parseFloat(element.intAwayScore), this.strMatchFilterVisitaSelected)
       ) {
         element.filtroAplicado = true
       } 
@@ -841,21 +878,21 @@ export class EventLigaPageComponent implements OnInit {
 
     if(tipo==1){ // Local 
       if (
-        parseFloat(element.cornerKicksHome) > parseFloat(this.strMatchFilterLocalSelected)
+        this.matchesThreshold(parseFloat(element.cornerKicksHome), this.strMatchFilterLocalSelected)
       ) {
         element.filtroAplicado = true
       } 
     }
     if(tipo==2){ // Total 
       if (
-        parseFloat(element.cornerKicksHome) + parseFloat(element.cornerKicksAway) > parseFloat(this.strMatchFilterSelected) 
+        this.matchesThreshold(parseFloat(element.cornerKicksHome) + parseFloat(element.cornerKicksAway), this.strMatchFilterSelected)
       ) {
         element.filtroAplicado = true
       } 
     }
     if(tipo==3){ // visita 
       if (
-        parseFloat(element.cornerKicksAway) > parseFloat(this.strMatchFilterVisitaSelected) 
+        this.matchesThreshold(parseFloat(element.cornerKicksAway), this.strMatchFilterVisitaSelected)
       ) {
         element.filtroAplicado = true
       } 
@@ -868,21 +905,21 @@ export class EventLigaPageComponent implements OnInit {
 
     if(tipo==1){ // Local 
       if (
-        parseFloat(element.shotsonGoalHome) > parseFloat(this.strMatchFilterLocalSelected)
+        this.matchesThreshold(parseFloat(element.shotsonGoalHome), this.strMatchFilterLocalSelected)
       ) {
         element.filtroAplicado = true
       } 
     }
     if(tipo==2){ // Total 
       if (
-        parseFloat(element.shotsonGoalHome) + parseFloat(element.shotsonGoalAway) > parseFloat(this.strMatchFilterSelected) 
+        this.matchesThreshold(parseFloat(element.shotsonGoalHome) + parseFloat(element.shotsonGoalAway), this.strMatchFilterSelected)
       ) {
         element.filtroAplicado = true
       } 
     }
     if(tipo==3){ // visita 
       if (
-        parseFloat(element.shotsonGoalAway) > parseFloat(this.strMatchFilterVisitaSelected) 
+        this.matchesThreshold(parseFloat(element.shotsonGoalAway), this.strMatchFilterVisitaSelected)
       ) {
         element.filtroAplicado = true
       } 
@@ -896,21 +933,21 @@ export class EventLigaPageComponent implements OnInit {
     if(tipo==1){ // Local
 
       if (
-        parseFloat(element.totalCardsHome) > parseFloat(this.strMatchFilterLocalSelected)
+        this.matchesThreshold(parseFloat(element.totalCardsHome), this.strMatchFilterLocalSelected)
       ) {
         element.filtroAplicado = true
       } 
     }
     if(tipo==2){ // Total
       if (
-        parseFloat(element.totalCardsHome) + parseFloat(element.totalCardsAway) > parseFloat(this.strMatchFilterSelected)
+        this.matchesThreshold(parseFloat(element.totalCardsHome) + parseFloat(element.totalCardsAway), this.strMatchFilterSelected)
       ) {
         element.filtroAplicado = true
       } 
     }
     if(tipo==3){ // visita
       if (
-        parseFloat(element.totalCardsAway) > parseFloat(this.strMatchFilterVisitaSelected) 
+        this.matchesThreshold(parseFloat(element.totalCardsAway), this.strMatchFilterVisitaSelected)
       ) {
         element.filtroAplicado = true
       } 
