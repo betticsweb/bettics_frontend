@@ -100,14 +100,14 @@
                             <div *ngIf="tabActual === 1 || tabActual === 2 || tabActual === 5">
                               <label for="analysis-mode">Análisis del partido completo</label>
                               <select id="analysis-mode" [(ngModel)]="analysisMode" (ngModelChange)="resultSelection = analysisMode === 'both' ? 'si' : '1'; analysisMode === 'total' ? onTab(tabActual) : applySpecial()">
-                                <option *ngIf="tabActual !== 5" value="total">Totales</option>
+                                <option *ngIf="tabActual !== 5" value="total">{{tabActual === 2 ? 'Corners Totales' : 'Totales'}}</option>
                                 <option *ngIf="tabActual === 1" value="both">Ambos marcan</option>
                                 <option *ngIf="tabActual === 2" value="comparison">Equipo con más córners</option>
                                 <option *ngIf="tabActual === 5" value="winner">1X2</option>
                               </select>
                             </div>
-                            <div *ngIf="analysisMode === 'total'" class="p-2 bd-highlight col-lg-3 col-sm-6">
-                              <label for="stats-direction" class="form-label">Comparación del umbral</label>
+                            <div *ngIf="analysisMode === 'total'" class="stats-direction-control">
+                              <label for="stats-direction" class="form-label">Comparación del umbral:</label>
                               <select id="stats-direction" class="form-select" [ngModel]="filterDirection" (ngModelChange)="changeDirection($event)">
                                 <option value="mas">Más de</option>
                                 <option value="menos">Menos de</option>
