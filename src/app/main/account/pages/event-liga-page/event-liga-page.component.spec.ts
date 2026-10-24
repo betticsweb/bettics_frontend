@@ -63,6 +63,43 @@ describe('Recommendation to statistics (simulated service)', () => {
     expect(teams).toHaveBeenCalledWith({strLeague: 'Peru Primera Division', strSeason: null});
     expect(histories).not.toHaveBeenCalled();
   });
+  it('resolves the supplied Peru URL without IDs and applies corner comparison rather than total > 1', () => {
+    const service = TestBed.inject(EventoLigaService);
+    const teams = spyOn(service, 'obtenerEquipos').and.returnValue(of({
+      strHomeTeam: [{_id: {idHomeTeam: 'huancayo', strHomeTeam: 'Sport Huancayo'}}],
+      strAwayTeam: [{_id: {idAwayTeam: 'alianza', strAwayTeam: 'Alianza Atlético'}}]
+    }));
+    const peruRow = {...row, idHomeTeam: 'huancayo', strHomeTeam: 'Sport Huancayo', idAwayTeam: 'alianza', strAwayTeam: 'Alianza Atlético', cornerKicksHome: 5, cornerKicksAway: 4};
+    const histories = spyOn(service, 'obtenerResumenes').and.returnValue(of({partidosLosDosEquipos: [peruRow], ultimos6Home: [], ultimos6Away: [], soloLocal: [], soloVisita: []}));
+    params.next({liga: 'Peru Primera Division', equipoLocal: 'Sport Huancayo', equipoVisitante: 'Alianza Atletico', mercado: 'Equipo con mas corners (N1)', opcion: 'Sport Huancayo', valor: '1', tab: '2', umbral: '1', sentido: 'mas', alcance: 'total'});
+    fixture.detectChanges();
+    const c = fixture.componentInstance;
+    expect(teams).toHaveBeenCalledWith({strLeague: 'Peru Primera Division', strSeason: '2026'});
+    expect(histories).toHaveBeenCalledWith({strLeague: 'Peru Primera Division', strSeason: '2026', idHomeTeam: 'huancayo', idAwayTeam: 'alianza'});
+    expect(c.strAwayTeamNameSelected).toBe('Alianza Atlético');
+    expect(c.analysisMode).toBe('comparison');
+    expect(c.strMatchFilterSelected).toBe('');
+    expect(c.partidosLosDosEquipos[0].filtroAplicado).toBeTrue();
+    expect(c.porcentajeFiltro.porcentaje2Equipos).toBe(':1/1 · 100 %');
+  });
+  it('preselects an upcoming home team found only in the historical away list', () => {
+    const service = TestBed.inject(EventoLigaService);
+    spyOn(service, 'obtenerEquipos').and.returnValue(of({strHomeTeam: [], strAwayTeam: [{_id: {idAwayTeam: 'a', strAwayTeam: 'A'}}, {_id: {idAwayTeam: 'b', strAwayTeam: 'B'}}]}));
+    const histories = spyOn(service, 'obtenerResumenes').and.callThrough();
+    params.next(statisticsParams({...base, idHomeTeam: undefined, idAwayTeam: undefined}));
+    fixture.detectChanges();
+    expect(histories).toHaveBeenCalledWith(jasmine.objectContaining({idHomeTeam: 'a', idAwayTeam: 'b'}));
+    expect(fixture.componentInstance.strHomeTeam.some(x => x.id === 'a')).toBeTrue();
+  });
+  it('explains unresolved names without querying unknown IDs or displaying stale history', () => {
+    const service = TestBed.inject(EventoLigaService);
+    const histories = spyOn(service, 'obtenerResumenes').and.callThrough();
+    params.next(statisticsParams({...base, idAwayTeam: undefined, equipoVisitante: 'Unknown team'}));
+    fixture.detectChanges();
+    expect(histories).not.toHaveBeenCalled();
+    expect(fixture.componentInstance.partidosLosDosEquipos).toEqual([]);
+    expect(fixture.nativeElement.textContent).toContain('No se encontraron ambos equipos');
+  });
   it('selects teams, league, corners and exact line with consistent green rows and denominator', () => {
     const c = fixture.componentInstance;
     expect(c.tabActual).toBe(2);

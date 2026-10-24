@@ -1,3 +1,4 @@
+import { findStatisticsTeam, statisticsTeams } from 'src/app/shared/utils/statistics-teams';
 import { availableSeasons, latestSeason } from 'src/app/shared/utils/statistics-seasons';
 import { Analysis, analysisContext, evaluate, frequency } from 'src/app/shared/utils/statistics-analysis';
 import { Component, OnInit, enableProdMode } from '@angular/core';
@@ -82,6 +83,7 @@ export class EventLigaPageComponent implements OnInit {
   recommendationMarket = '';
   recommendationOption = '';
   private pendingMarket = false;
+  teamSelectionNotice = '';
   params_liga = '';
   params_equipoLocal = '';
   params_idHomeTeam = '';
@@ -138,6 +140,7 @@ export class EventLigaPageComponent implements OnInit {
               console.log(params); // { orderby: "price" }
 
               if (params['liga']) {
+                this.teamSelectionNotice = '';
                 this.params_liga = params['liga'];
                 this.recommendationMarket = params['mercado'] || '';
                 this.recommendationOption = params['opcion'] || '';
@@ -475,6 +478,7 @@ export class EventLigaPageComponent implements OnInit {
   }
 
   cargarTemporadasEquipos(): void {
+    this.teamSelectionNotice = '';
     this.strSeasonSelected = null;
     this.strHomeTeamSelected = this.strAwayTeamSelected = '';
     this.strHomeTeamNameSelected = this.strAwayTeamNameSelected = '';
@@ -584,17 +588,21 @@ export class EventLigaPageComponent implements OnInit {
           })
         });
 
-        this.strHomeTeam = strHomeTeamAll.sort((a, b) => a.descripcion > b.descripcion ? 1 : -1);
-        this.strHomeTeam.sort((a, b) => a.descripcion > b.descripcion ? 1 : -1);
-        this.strAwayTeam = strAwayTeamAll.sort((a, b) => a.descripcion > b.descripcion ? 1 : -1);
-        this.strAwayTeam.sort((a, b) => a.descripcion > b.descripcion ? 1 : -1);
-
-        console.log(this.strAwayTeam)
+        const teams = statisticsTeams(strHomeTeamAll, strAwayTeamAll);
+        this.strHomeTeam = teams;
+        this.strAwayTeam = [...teams];
         if (isQueryParams) {
-          this.strHomeTeamNameSelected = this.params_equipoLocal;
-          this.strHomeTeamSelected = this.params_idHomeTeam || this.strHomeTeam.find(x => x.descripcion === this.params_equipoLocal)?.id;
-          this.strAwayTeamNameSelected = this.params_equipoVisitante;
-          this.strAwayTeamSelected = this.params_idAwayTeam || this.strAwayTeam.find(x => x.descripcion === this.params_equipoVisitante)?.id;
+          const home = findStatisticsTeam(teams, this.params_idHomeTeam, this.params_equipoLocal);
+          const away = findStatisticsTeam(teams, this.params_idAwayTeam, this.params_equipoVisitante);
+          this.strHomeTeamNameSelected = home?.descripcion || this.params_equipoLocal;
+          this.strHomeTeamSelected = home?.id;
+          this.strAwayTeamNameSelected = away?.descripcion || this.params_equipoVisitante;
+          this.strAwayTeamSelected = away?.id;
+          this.teamSelectionNotice = home && away ? '' : 'No se encontraron ambos equipos de la recomendación en esta liga y temporada. Revisa los equipos seleccionados o prueba Todas las temporadas.';
+          if (!home || !away) {
+            this.partidosLosDosEquipos = this.ultimos6Home = this.ultimos6Away = this.soloLocal = this.soloVisita = [];
+            this.onTab(this.tabActual);
+          }
         }
         if (this.strHomeTeamSelected && this.strAwayTeamSelected) this.cargarResumenes();
 
@@ -609,6 +617,7 @@ export class EventLigaPageComponent implements OnInit {
       ) {
 
 
+      this.teamSelectionNotice = '';
       this.strAwayTeamNameSelected = this.strAwayTeam.find(x => x.id == this.strAwayTeamSelected).descripcion
       this.strHomeTeamNameSelected = this.strHomeTeam.find(x => x.id == this.strHomeTeamSelected).descripcion
       this.cargarResumenes();

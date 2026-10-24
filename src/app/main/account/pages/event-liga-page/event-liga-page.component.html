@@ -28,6 +28,7 @@
         </div>
         <div *ngIf="suscriptoCulqi">
             <p *ngIf="recommendationMarket" role="status">Recomendación: {{recommendationMarket}} · {{recommendationOption}} {{recommendationThreshold}}.</p>
+            <p *ngIf="teamSelectionNotice" role="status">{{teamSelectionNotice}}</p>
             <p *ngIf="periodNotice" role="status">{{periodNotice}}.</p>
             <p *ngIf="unsupportedNotice" role="status">{{unsupportedNotice}}</p>
             <p *ngIf="periodNotice">Estadísticas generales del partido completo, separadas de la recomendación por tiempo. Los filtros siguientes analizan únicamente el partido completo.</p>

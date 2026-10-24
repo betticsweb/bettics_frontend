@@ -17,7 +17,7 @@ NG_BUILD_MAX_WORKERS=4 npm run build -- --output-path=dist-vercel
 
 The production build can emit the existing CommonJS and stylesheet-budget warnings. Keep generated files in ignored `dist-vercel`, because `dist` is tracked.
 
-Focused tests (76 Jasmine tests, including Angular template and simulated-service navigation):
+Focused tests (85 Jasmine tests, including Angular template and simulated-service navigation):
 
 ```sh
 CHROME_BIN=/usr/bin/chromium NG_BUILD_MAX_WORKERS=4 npm test -- --watch=false --browsers=ChromeHeadless --ts-config=tsconfig.statistics-spec.json --include='src/app/shared/utils/*.spec.ts' --include='src/app/main/account/pages/event-liga-page/*.spec.ts'
@@ -41,3 +41,5 @@ The script uses system Chromium and verifies actual recommendation-link navigati
 An unauthenticated request to the real historical API returns HTTP 401, so authenticated real-data statistics require a user session. Preview deployments can redirect to Vercel authentication. Validate the GitHub/Vercel deployment state separately from application responses and clearly report any inaccessible checks. Publishing the Codex environment draft is independent of deploying the website.
 
 Season regression coverage accepts annual string/number API values and slash/hyphen seasons, compares full season identifiers, and clears teams before a league change. These tests use simulated services; they do not establish that the production Peru dataset exists or that recommendation league/team identifiers match it.
+
+The supplied Sport Huancayo–Alianza Atletico URL is covered without team IDs: lookup tolerates accents/case/whitespace, resolves the historical IDs, and keeps the exact league identifier. Home/away selectors share the league team list so a team is available even if it only played in the opposite historical venue. Unknown or ambiguous names show a selection notice instead of silently suppressing the historical request. The reproduction uses a simulated Alianza Atlético record; production API data still requires authentication.
