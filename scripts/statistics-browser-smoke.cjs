@@ -55,6 +55,13 @@ const baseUrl = process.env.STATISTICS_BASE_URL || 'http://127.0.0.1:4200';
   if(i===0||i===1){
    assert.equal(await page.locator('#corners select').filter({visible:true}).first().evaluate(el=>el.selectedOptions[0].textContent.trim()), value);
    assert((await page.locator('#corners').textContent()).includes('1/1 · 100 %'));
+   assert.equal(await page.locator('#stats-direction').inputValue(),i === 0 ? 'mas' : 'menos');
+   if(i === 0){
+    await page.locator('#stats-direction').selectOption('menos');
+    assert((await page.locator('#corners').textContent()).includes('0/1 · 0 %'));
+    await page.locator('#stats-direction').selectOption('mas');
+    assert((await page.locator('#corners').textContent()).includes('1/1 · 100 %'));
+   }
   }
   if(i===2){assert((await page.locator('section[aria-label="Análisis específico del partido completo"]').textContent()).includes('derrota de B'));}
   if(i===3||i===4){assert.equal(await page.locator('#analysis-result').inputValue(),i===3?'si':'no');}

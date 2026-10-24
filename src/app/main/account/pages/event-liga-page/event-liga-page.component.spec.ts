@@ -47,16 +47,32 @@ describe('Recommendation to statistics (simulated service)', () => {
     expect(c.porcentajeFiltro.porcentajeUltimos6Home).toBe(':1/1 · 100 %');
     expect(fixture.nativeElement.querySelector('#corners-tab').classList.contains('active')).toBeTrue();
     expect(fixture.nativeElement.querySelector('#corners').classList.contains('active')).toBeTrue();
-    expect(fixture.nativeElement.textContent).not.toContain('Comparación del umbral');
+    expect(fixture.nativeElement.querySelector('#stats-direction')).toBeTruthy();
   });
   for (const [market, tab] of [['Total goles', 1], ['Tarjetas', 3], ['Tiros a puerta', 4], ['Ganador del partido', 5], ['Ambos marcan', 1]] as const) {
     it(`navigates to ${market}`, () => expect(navigate(market, tab === 5 ? '1' : market === 'Ambos marcan' ? 'Sí' : 'Más de', tab === 5 || market === 'Ambos marcan' ? '' : '2.5').tabActual).toBe(tab));
   }
-  it('preserves the under direction without the global selector', () => {
+  it('preselects the under direction from the recommendation', () => {
     const c = navigate('Total córners', 'Menos de', '10.5');
     expect(c.filterDirection).toBe('menos');
     expect(c.strMatchFilterSelected).toBe(10.5);
     expect(c.partidosLosDosEquipos[0].filtroAplicado).toBeTrue();
+  });
+  it('updates green rows and percentages when the comparison changes, preserving the line', () => {
+    const c = fixture.componentInstance;
+    const select: HTMLSelectElement = fixture.nativeElement.querySelector('#stats-direction');
+    select.value = 'menos';
+    select.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    expect(c.filterDirection).toBe('menos');
+    expect(c.strMatchFilterSelected).toBe(8.5);
+    expect(c.ultimos6Home.map(x => x.filtroAplicado)).toEqual([false, false]);
+    expect(c.porcentajeFiltro.porcentajeUltimos6Home).toBe(':0/1 · 0 %');
+    select.value = 'mas';
+    select.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    expect(c.ultimos6Home[0].filtroAplicado).toBeTrue();
+    expect(c.porcentajeFiltro.porcentajeUltimos6Home).toBe(':1/1 · 100 %');
   });
   it('shows both-scoring No and zero as valid, excluding missing goals', () => {
     const c = navigate('Ambos marcan', 'No', '');

@@ -106,6 +106,13 @@
                                 <option *ngIf="tabActual === 5" value="winner">1X2</option>
                               </select>
                             </div>
+                            <div *ngIf="analysisMode === 'total'" class="p-2 bd-highlight col-lg-3 col-sm-6">
+                              <label for="stats-direction" class="form-label">Comparación del umbral</label>
+                              <select id="stats-direction" class="form-select" [ngModel]="filterDirection" (ngModelChange)="changeDirection($event)">
+                                <option value="mas">Más de</option>
+                                <option value="menos">Menos de</option>
+                              </select>
+                            </div>
                             <section *ngIf="analysisMode !== 'total'" aria-label="Análisis específico del partido completo">
                               <h2>{{analysisMode === 'both' ? 'Ambos marcan' : analysisMode === 'comparison' ? 'Equipo con más córners' : '1X2'}} · Partido completo</h2>
                               <label for="analysis-result">Selección</label>

@@ -696,6 +696,15 @@ export class EventLigaPageComponent implements OnInit {
     }
   }
 
+  changeDirection(direction: string): void {
+    this.filterDirection = direction;
+    if (this.analysisMode !== 'total') return;
+    const selected = (value: any) => value !== '' && value !== null && value !== undefined;
+    if (selected(this.strMatchFilterLocalSelected)) this.aplicarfiltroMatch(1);
+    else if (selected(this.strMatchFilterVisitaSelected)) this.aplicarfiltroMatch(3);
+    else if (selected(this.strMatchFilterSelected)) this.aplicarfiltroMatch(2);
+  }
+
   aplicarfiltroMatch(tipo:any): void {
     this.limpiarfiltros(tipo);
     this.analysisMode = 'total';

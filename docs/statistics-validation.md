@@ -17,7 +17,7 @@ NG_BUILD_MAX_WORKERS=4 npm run build -- --output-path=dist-vercel
 
 The production build can emit the existing CommonJS and stylesheet-budget warnings. Keep generated files in ignored `dist-vercel`, because `dist` is tracked.
 
-Focused tests (66 Jasmine tests, including Angular template and simulated-service navigation):
+Focused tests (67 Jasmine tests, including Angular template and simulated-service navigation):
 
 ```sh
 CHROME_BIN=/usr/bin/chromium NG_BUILD_MAX_WORKERS=4 npm test -- --watch=false --browsers=ChromeHeadless --ts-config=tsconfig.statistics-spec.json --include='src/app/shared/utils/*.spec.ts' --include='src/app/main/account/pages/event-liga-page/*.spec.ts'
