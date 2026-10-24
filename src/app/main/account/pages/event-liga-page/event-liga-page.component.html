@@ -45,7 +45,7 @@
                 <div class="p-2 bd-highlight col-lg-3 col-sm-6">
                     <label for="stats-select-2" class="form-label">Temporada</label>
                     <select id="stats-select-2" class="form-select" (change)="cargarEquipos(false)" [(ngModel)]="strSeasonSelected">
-                            <option *ngFor="let op of strSeason" [value]="op.id">
+                            <option *ngFor="let op of strSeason" [ngValue]="op.id">
                                 {{op.descripcion}}
                               </option> 
                     </select>

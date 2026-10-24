@@ -36,6 +36,33 @@ describe('Recommendation to statistics (simulated service)', () => {
     fixture.detectChanges();
     return fixture.componentInstance;
   }
+  for (const seasons of [['2025', '2026'], [2025, 2026], ['2025/2026', '2026/2027']]) {
+    it(`loads teams and histories after selecting the latest season from ${JSON.stringify(seasons)}`, () => {
+      const service = TestBed.inject(EventoLigaService);
+      spyOn(service, 'obtenerTemporadasByLiga').and.returnValue(of({strSeason: seasons}));
+      const teams = spyOn(service, 'obtenerEquipos').and.callThrough();
+      const histories = spyOn(service, 'obtenerResumenes').and.callThrough();
+      fixture.componentInstance.cargarTemporadas(true);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.strSeasonSelected).toBe(seasons[1]);
+      expect(teams).toHaveBeenCalledWith(jasmine.objectContaining({strSeason: seasons[1]}));
+      expect(histories).toHaveBeenCalledWith(jasmine.objectContaining({strSeason: seasons[1], idHomeTeam: 'a', idAwayTeam: 'b'}));
+      expect(fixture.componentInstance.partidosLosDosEquipos.length).toBe(1);
+    });
+  }
+  it('clears teams from the previous league and loads the new league without a stale season', () => {
+    const c = fixture.componentInstance;
+    const service = TestBed.inject(EventoLigaService);
+    const teams = spyOn(service, 'obtenerEquipos').and.callThrough();
+    const histories = spyOn(service, 'obtenerResumenes').and.callThrough();
+    c.strLeagueSelected = 'Peru Primera Division';
+    c.cargarTemporadasEquipos();
+    expect(c.strSeasonSelected).toBeNull();
+    expect(c.strHomeTeamSelected).toBe('');
+    expect(c.strAwayTeamSelected).toBe('');
+    expect(teams).toHaveBeenCalledWith({strLeague: 'Peru Primera Division', strSeason: null});
+    expect(histories).not.toHaveBeenCalled();
+  });
   it('selects teams, league, corners and exact line with consistent green rows and denominator', () => {
     const c = fixture.componentInstance;
     expect(c.tabActual).toBe(2);

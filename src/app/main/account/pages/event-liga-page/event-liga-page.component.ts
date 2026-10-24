@@ -1,3 +1,4 @@
+import { availableSeasons, latestSeason } from 'src/app/shared/utils/statistics-seasons';
 import { Analysis, analysisContext, evaluate, frequency } from 'src/app/shared/utils/statistics-analysis';
 import { Component, OnInit, enableProdMode } from '@angular/core';
 import { BehaviorSubject, debounceTime, forkJoin, fromEvent, merge, Subject, takeUntil } from 'rxjs';
@@ -474,9 +475,11 @@ export class EventLigaPageComponent implements OnInit {
   }
 
   cargarTemporadasEquipos(): void {
-    this.cargarTemporadas(false);
     this.strSeasonSelected = null;
-    this.cargarEquipos(false);
+    this.strHomeTeamSelected = this.strAwayTeamSelected = '';
+    this.strHomeTeamNameSelected = this.strAwayTeamNameSelected = '';
+    this.strHomeTeam = this.strAwayTeam = [];
+    this.cargarTemporadas(false);
   }
 
   union(...listado: any) {
@@ -494,37 +497,12 @@ export class EventLigaPageComponent implements OnInit {
       )
       .subscribe(rest => {
 
-        let strSeasonAll: any[] = [{
-          id: null,
-          descripcion: 'Todas'
-        }];
-        let max = 0;
-        rest.strSeason.forEach((element: any) => {
-          strSeasonAll.push({
-            id: element,
-            descripcion: element
-          })
-          let numero = 0
-          if (element.includes("-")){
-            numero = element.split('-')[1]
-          }
-          else if (element.includes("/")){
-            numero = element.split('/')[1]
-          }
-          else{
-            numero = element.split('-')[0]
-          }
-          if (max < numero)
-              max = numero;
-        });
-        console.log("max")
-        console.log(max)
-        this.strSeason = strSeasonAll
-
-        if (isQueryParams) {
-          this.strSeasonSelected = rest.strSeason.find((x: any) => x.includes(max));
-          this.cargarInfoFromQueryParameters(isQueryParams)
-        }
+        if (criterioBusqueda.strLeague !== this.strLeagueSelected) return;
+        const seasons = availableSeasons(rest.strSeason);
+        this.strSeason = [{id: null, descripcion: 'Todas'},
+          ...seasons.map(season => ({id: season, descripcion: String(season)}))];
+        this.strSeasonSelected = isQueryParams ? latestSeason(seasons) : null;
+        this.cargarInfoFromQueryParameters(isQueryParams);
       });
   }
 
