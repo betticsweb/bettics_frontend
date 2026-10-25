@@ -8,7 +8,7 @@ export const environment: Environment = {
   // urlIntegracion: 'https://apianabet.herokuapp.com', // Legacy URL
   // urlIntegracion: 'https://dev-apianabet-56f3650bc0aa.herokuapp.com',
   PORT: 3000,
-  backtestApiUrl: 'https://apianabet.herokuapp.com',
+  backtestApiUrl: '',
   
   // Dialogflow Configuration
   dialogflow: {

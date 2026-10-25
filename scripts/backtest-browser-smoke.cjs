@@ -16,15 +16,16 @@ for(let i=0;i<100;i++){
 const handler=createHandler(async()=>({predictions,matches,source:'eventosLigaProb',statusConfigured:true}));
 (async()=>{
  const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
- const page=await browser.newPage({viewport:{width:1440,height:1100}});page.setDefaultTimeout(12000);page.setDefaultNavigationTimeout(15000);const errors=[];page.on('pageerror',e=>errors.push(e.message));let apiCalls=0;
+ const page=await browser.newPage({viewport:{width:1440,height:1100}});page.setDefaultTimeout(12000);page.setDefaultNavigationTimeout(15000);const errors=[];page.on('pageerror',e=>errors.push(e.message));let apiCalls=0;const apiOrigins=new Set();
  await page.route('**/*',async route=>{
   const url=new URL(route.request().url());
-  if(url.origin===base)return route.continue();
-  if(url.hostname==='apianabet.herokuapp.com' && url.pathname==='/api/backtest/resultados'){
+  if(url.pathname==='/api/backtest/resultados' && (url.origin===base || url.hostname==='apianabet.herokuapp.com')){
+   apiOrigins.add(url.origin);
    apiCalls++;let body,status=200;
    await handler({query:Object.fromEntries(url.searchParams)}, {status(s){status=s;return this},set(){return this},json(b){body=b;return this}});
    return route.fulfill({status,contentType:'application/json',body:JSON.stringify(body)});
   }
+  if(url.origin===base)return route.continue();
   if(url.hostname==='bettics-backend.onrender.com') return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({resStatus:'ok',resResult:[],strLeague:[],strFecha:[]})});
   if(url.hostname==='fonts.googleapis.com')return route.fulfill({status:200,contentType:'text/css',body:''});
   return route.abort();
@@ -52,6 +53,6 @@ const handler=createHandler(async()=>({predictions,matches,source:'eventosLigaPr
  await page.setViewportSize({width:390,height:844});await page.waitForFunction(()=>{const el=document.querySelector('fuse-splash-screen');return !el || Number(getComputedStyle(el).opacity)===0;});await page.screenshot({path:'docs/screenshots/backtest-mobile.png',fullPage:true});
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth));
  await page.getByRole('button',{name:'Resultados actuales',exact:true}).click();assert.equal(await page.locator('app-backtest').count(),0);
- assert(apiCalls>=4);assert.deepEqual(errors,[]);
+ assert.deepEqual([...apiOrigins],[base]);assert(apiCalls>=4);assert.deepEqual(errors,[]);
  await browser.close();console.log('PASS: summary, market filters, permitted segments, comparison, evolution, pagination, pending outcomes, mobile layout and legacy view. All API data simulated.');
 })().catch(e=>{console.error(e);process.exit(1)});
