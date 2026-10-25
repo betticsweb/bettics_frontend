@@ -24,6 +24,9 @@
         </li>
     </ul>
 </div>
+<nav aria-label="Secciones de Resultados" style="display:flex;justify-content:center;gap:16px;padding:20px;background:#fff"><button class="btn" [class.btn-success]="!vistaBacktest" (click)="vistaBacktest=false">Resultados actuales</button><button class="btn" [class.btn-success]="vistaBacktest" (click)="vistaBacktest=true">Backtest histórico</button></nav>
+<app-backtest *ngIf="vistaBacktest"></app-backtest>
+<div [hidden]="vistaBacktest">
 <div class="tm-bottom-a-box">
     <div class="uk-container uk-container-center">
 
@@ -440,4 +443,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>

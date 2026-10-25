@@ -34,6 +34,7 @@ export class ResultadosPageComponent implements OnInit {
   private _unsubscriber$: Subject<any> = new Subject();
 
   verSoloResultados = true;
+  vistaBacktest = false;
 
   constructor(
     private _resultadosService: ResultadosService,

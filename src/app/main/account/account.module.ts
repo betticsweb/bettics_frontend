@@ -1,3 +1,4 @@
+import { BacktestComponent } from './pages/backtest/backtest.component';
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
@@ -22,6 +23,7 @@ import { DetallePrediccionesComponent } from './pages/shared/detalle-prediccion/
   ],
   imports: [
     CommonModule,
+    BacktestComponent,
     AccountRoutingModule,
     ReactiveFormsModule,
     FormsModule

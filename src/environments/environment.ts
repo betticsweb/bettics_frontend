@@ -9,6 +9,7 @@ export const environment: Environment = {
   hmr: false,
   name: 'DESARROLLO',
   PORT: 3000,
+  backtestApiUrl: 'https://apianabet.herokuapp.com',
   urlIntegracion: 'http://localhost:3010',
   // urlIntegracion: 'https://apianabet.herokuapp.com',
   // urlIntegracion: 'https://dev-apianabet-56f3650bc0aa.herokuapp.com',
