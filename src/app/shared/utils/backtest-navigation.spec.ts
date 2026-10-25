@@ -19,6 +19,10 @@ describe('Fiabilidad navigation',()=>{
       expect(reliabilityParams({...selection,...change}).mercado).toBeNull();
     }
   });
+  it('rejects team-scoped options even when the market title says total corners',()=>{
+    expect(reliabilityParams({...selection,opcionApuesta:'Local más de'}).mercado).toBeNull();
+    expect(reliabilityParams({...selection,equipoLocal:'Bayern Munich',opcionApuesta:'Bayern Munich más de'}).mercado).toBeNull();
+  });
   it('never guesses missing, contradictory or prohibited segments',()=>{
     expect(reliabilityParams({...selection,mercadoApuesta:'Total corners'}).segmento).toBeNull();
     expect(reliabilityParams({...selection,segmento:'N2'}).segmento).toBeNull();

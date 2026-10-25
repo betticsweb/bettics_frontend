@@ -33,7 +33,7 @@ Evolución y detalle presenta primero la tabla individual, con fecha, equipos, m
 ## Validación
 
 - Compilación de producción con `--output-path=dist-vercel`, sin sobrescribir el dist versionado.
-- 23 pruebas Angular enfocadas: mapeo, segmentos, temporadas, filtros efectivos, persistencia, orden, cancelación, errores y marcadores ausentes/cero.
+- 24 pruebas Angular enfocadas: mapeo, segmentos, temporadas, filtros efectivos, persistencia, orden, cancelación, errores y marcadores ausentes/cero.
 - Navegador: íconos en orden vertical, tres columnas y tarjetas del mismo ancho/alto; N1/N2 y conjunto; controles sincronizados con URL/API; recarga y paginación; orden ascendente/descendente; aviso de mercado incompatible; vista móvil sin desbordamiento; ausencia de llamadas a Resultados actuales.
 - Regresión de Estadísticas, popup de ayuda y navegación desde recomendaciones mediante el script existente.
 
