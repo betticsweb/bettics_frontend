@@ -1,3 +1,4 @@
+import { reliabilityParams } from 'src/app/shared/utils/backtest-navigation';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Subject, takeUntil, timeout } from 'rxjs';
@@ -5,7 +6,7 @@ import { explainMarket, statisticsParams } from 'src/app/shared/utils/recommenda
 import { RecommendationsService } from '../../services/recommendations.service';
 
 interface Selection {
-  idHomeTeam?: string; idAwayTeam?: string;
+  idHomeTeam?: string; idAwayTeam?: string; segmento?: string;
   liga: string; equipoLocal: string; equipoVisitante: string;
   mercadoApuesta: string; opcionApuesta: string; valorOpcionApuesta: string;
   cuotaSimple: string; fechaJuego: string;
@@ -21,6 +22,7 @@ interface Recommendation {
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
   readonly statisticsParams = statisticsParams;
+  readonly reliabilityParams = reliabilityParams;
   showHelp(detail: Selection): void {
     void Swal.fire({
       title: '¿Qué significa?',

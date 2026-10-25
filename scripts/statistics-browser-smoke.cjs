@@ -18,6 +18,7 @@ const baseUrl = process.env.STATISTICS_BASE_URL || 'http://127.0.0.1:4200';
  await page.route('**/*', async route=> {
   const url=new URL(route.request().url());
   if(url.origin === new URL(baseUrl).origin) return route.continue();
+  if(url.hostname==='fonts.googleapis.com') return route.fulfill({status:200,contentType:'text/css',body:''});
   if(url.hostname!=='bettics-backend.onrender.com') return route.abort();
   let data={resStatus:'ok',resResult:[]};
   if(url.pathname==='/api/recomendaciones/getCriterio') data.resResult=selections.map(([market,option,value],i)=>({_id:{cuotaCombinada:1.5},detalle:[{liga:'Liga',equipoLocal:'A',equipoVisitante:'B',idHomeTeam:'a',idAwayTeam:'b',mercadoApuesta:market,opcionApuesta:option,valorOpcionApuesta:value,fechaJuego:'2026-10-23',cuotaSimple:'1.50'}]}));
@@ -48,7 +49,7 @@ const baseUrl = process.env.STATISTICS_BASE_URL || 'http://127.0.0.1:4200';
  await page.screenshot({path:'/tmp/bettics-recommendations-desktop.png',fullPage:true});
  for(let i=0;i<selections.length;i++){
   if(i) {await page.goto(baseUrl + '/cuenta/recomendacion');await page.locator('.recommendation').first().waitFor();}
-  await page.locator('.selection-actions a').nth(i).click();
+  await page.locator('.selection-actions a[title="Ver Estadísticas"]').nth(i).click();
   await page.locator('.stats-matchup').waitFor();
   const [market,option,value,tab]=selections[i];
   await page.waitForFunction(tab=>{const btn=[...document.querySelectorAll('.titleTab')].find(b=>b.classList.contains('active'));return btn && btn.textContent.trim()===['','Goles','Corners','Tarjetas','Tiros a Puerta','1X2'][tab]},tab);

@@ -1,5 +1,7 @@
 # Resultados históricos Backtest
 
+La interfaz vigente y su validación se describen en [results-reliability-ux.md](results-reliability-ux.md). Resultados ahora muestra únicamente Backtest histórico; el script de smoke anterior delega en el nuevo flujo de Fiabilidad.
+
 La sección Resultados conserva la pantalla anterior y añade el selector «Backtest histórico». Componentes standalone con estilos propios; no se alteran los cálculos ni las consultas del módulo anterior. KNIME no se modifica.
 
 ## Configuración
