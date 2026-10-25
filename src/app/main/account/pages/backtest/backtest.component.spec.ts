@@ -29,6 +29,23 @@ describe('Backtest results UX',()=>{
   const req=expectRequest();expect(req.request.params.get('mercado')).toBe('BTTS_YES');expect(req.request.params.get('segmento')).toBe('N1');
   req.flush(response({catalogo_mercados:catalogue}));expect(component.ready).toBeTrue();
  });
+ for(const [market,count] of [['BTTS_YES',2110],['FT_HOME_WIN',1230],['FT_AWAY_WIN',260]] as const) {
+  it(`reads ${market} independently without adding a season filter`,()=>{
+   params.next(convertToParamMap({mercado:market,temporada:'todas'}));component.ngOnInit();
+   const catalogue=[{mercado:market,segmentos:['N1','N2','N3']}];
+   const probe=expectRequest();expect(probe.request.params.has('temporada')).toBeFalse();probe.flush(response({catalogo_mercados:catalogue}));
+   const actual=expectRequest();expect(actual.request.params.get('mercado')).toBe(market);expect(actual.request.params.has('temporada')).toBeFalse();
+   actual.flush(response({catalogo_mercados:catalogue,resumen:{aprobados:count},detalle:{total:count,registros:[]}}));
+   expect(component.ready).toBeTrue();expect(component.data.resumen.aprobados).toBe(count);
+  });
+ }
+ for(const season of ['2026','2026/2027']) {
+  it(`preserves exact season ${season} for new markets`,()=>{
+   params.next(convertToParamMap({mercado:'BTTS_YES',temporada:season}));component.ngOnInit();
+   const data=response({catalogo_mercados:[{mercado:'BTTS_YES',segmentos:['N1','N2','N3']}]});
+   expectRequest().flush(data);const req=expectRequest();expect(req.request.params.get('temporada')).toBe(season);req.flush(data);expect(component.ready).toBeTrue();
+  });
+ }
  it('uses a read-only paginated API and preserves null values',()=>{
   component.ngOnInit();const req=expectRequest();expect(req.request.method).toBe('GET');expect(req.request.params.get('limit')).toBe('25');expect(req.request.params.has('temporada')).toBeFalse();req.flush(response());
   expect(component.format(null,' %')).toBe('Sin datos');expect(component.format(0,' %')).toBe('0 %');

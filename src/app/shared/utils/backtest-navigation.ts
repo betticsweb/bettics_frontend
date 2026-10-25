@@ -55,6 +55,18 @@ export function reliabilityParams(selection: MarketSelection & { segmento?: stri
       if (['away','visitante','2'].includes(option) || !!text(selection.equipoVisitante) && option===text(selection.equipoVisitante)) market='FT_AWAY_WIN';
     }
   }
+  // Canonical identifiers from the CSV/API are also valid deep-link sources.
+  const extraCode=Object.keys(ADDITIONAL_MARKETS).find(code=>text(code)===name);
+  if(extraCode) {
+    if(extraCode==='BTTS_YES') {
+      if(['','si','yes'].includes(option) || /^(?:mas de|over)(?: 0[.,]5)?$/.test(option) && String(selection.valorOpcionApuesta).replace(',','.')==='0.5') market=extraCode;
+    } else {
+      const home=extraCode==='FT_HOME_WIN';
+      const accepted=home?['','home','local','1']:['','away','visitante','2'];
+      const team=text(home?selection.equipoLocal:selection.equipoVisitante);
+      if(accepted.includes(option) || !!team&&option===team)market=extraCode;
+    }
+  }
   const compatible = market && isAdditionalMarket(market) ? !!segment && ['N1','N2','N3'].includes(segment) : market && segment && BACKTEST_MARKETS[market].segments.includes(segment);
   return {
     liga: selection.liga, mercado: market, segmento: compatible ? segment : null,

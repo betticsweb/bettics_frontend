@@ -45,7 +45,7 @@ export class BacktestComponent implements OnInit, OnDestroy {
     this.contextBlocked=!!this.invalid;
   }
   get segments(): string[] {if(isAdditionalMarket(this.filters['mercado']))return ['N1','N2','N3'];return isBacktestMarket(this.filters['mercado'])?BACKTEST_MARKETS[this.filters['mercado']].segments:['N1','N2','N3','N4'];}
-  get markets(): string[] {return [...new Set([...(this.catalog.mercados||[]),...(this.filters['mercado']&&isBacktestMarket(this.filters['mercado'])?[this.filters['mercado']]:[])])];}
+  get markets(): string[] {return [...new Set([...(this.catalog.mercados||[]),...(this.filters['mercado']&&(isBacktestMarket(this.filters['mercado'])||isAdditionalMarket(this.filters['mercado']))?[this.filters['mercado']]:[])])];}
   get rankedRows(): any[] {return sortedBacktestRows(this.view==='segmentos'?this.data?.segmentos||[]:this.data?.ranking||[],this.filters['orden'],this.filters['direccion'],this.labels);}
   get ready(): boolean {return !!this.data&&!this.data.requiere_version&&!this.contextBlocked;}
   get reliabilityContext(): boolean {return this.origin==='fiabilidad'&&!this.contextBlocked;}

@@ -66,3 +66,15 @@ describe('Additional reliability market candidates',()=>{
     expect(reliabilityParams({...selection,mercadoApuesta:'Gol primer tiempo (N1)',opcionApuesta:'Más de',valorOpcionApuesta:'0.5'}).mercado).toBeNull();
   });
 });
+
+describe('canonical FT identifiers shared with KNIME and MongoDB',()=>{
+ it('accepts each canonical market without renaming its identifier',()=>{
+  for(const [market,option]of [['BTTS_YES','YES'],['FT_HOME_WIN','HOME'],['FT_AWAY_WIN','AWAY']]) {
+   expect(reliabilityParams({...selection,mercadoApuesta:market+' (N1)',opcionApuesta:option}).mercado).toBe(market);
+  }
+ });
+ it('rejects contradictory canonical selections',()=>{
+  expect(reliabilityParams({...selection,mercadoApuesta:'BTTS_YES (N1)',opcionApuesta:'No'}).mercado).toBeNull();
+  expect(reliabilityParams({...selection,mercadoApuesta:'FT_HOME_WIN (N1)',opcionApuesta:'AWAY'}).mercado).toBeNull();
+ });
+});
