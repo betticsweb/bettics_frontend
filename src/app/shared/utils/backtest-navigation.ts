@@ -6,6 +6,11 @@ export const BACKTEST_MARKETS: Record<string, { label: string; segments: string[
   GOLES_OVER_25: { label: 'Más de 2.5 goles', segments: ['N1','N2','N3'] },
   CORNERS_LOCAL_GANA: { label: 'Local con más córners', segments: ['N1','N2','N3'] }
 };
+export const ADDITIONAL_MARKETS: Record<string,string> = {
+  BTTS_YES:'Ambos marcan — Sí',
+  FT_HOME_WIN:'Ganador FT — Local', FT_AWAY_WIN:'Ganador FT — Visitante'
+};
+export const isAdditionalMarket = (value: string): boolean => Object.prototype.hasOwnProperty.call(ADDITIONAL_MARKETS,value);
 export const isBacktestMarket = (value: string): boolean => Object.prototype.hasOwnProperty.call(BACKTEST_MARKETS,value);
 const text = (value: unknown) => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase().replace(/\s+/g,' ');
 export function reliabilityParams(selection: MarketSelection & { segmento?: string }) {
@@ -41,7 +46,28 @@ export function reliabilityParams(selection: MarketSelection & { segmento?: stri
       if (goals && over && numbers[0] === 2.5) market = 'GOLES_OVER_25';
     }
   }
-  const compatible = market && segment && BACKTEST_MARKETS[market].segments.includes(segment);
+  if (!market && !/handicap|asiatic|segundo/.test(name)) {
+    if (/^(?:ambos equipos marcan|ambos marcan)$/.test(name)) {
+      if (['si','yes'].includes(option) || /^(?:mas de|over)(?: 0[.,]5)?$/.test(option) && String(selection.valorOpcionApuesta).replace(',','.')==='0.5') market='BTTS_YES';
+    }
+    if (/^ganador del partido$/.test(name)) {
+      if (['home','local','1'].includes(option) || !!text(selection.equipoLocal) && option===text(selection.equipoLocal)) market='FT_HOME_WIN';
+      if (['away','visitante','2'].includes(option) || !!text(selection.equipoVisitante) && option===text(selection.equipoVisitante)) market='FT_AWAY_WIN';
+    }
+  }
+  // Canonical identifiers from the CSV/API are also valid deep-link sources.
+  const extraCode=Object.keys(ADDITIONAL_MARKETS).find(code=>text(code)===name);
+  if(extraCode) {
+    if(extraCode==='BTTS_YES') {
+      if(['','si','yes'].includes(option) || /^(?:mas de|over)(?: 0[.,]5)?$/.test(option) && String(selection.valorOpcionApuesta).replace(',','.')==='0.5') market=extraCode;
+    } else {
+      const home=extraCode==='FT_HOME_WIN';
+      const accepted=home?['','home','local','1']:['','away','visitante','2'];
+      const team=text(home?selection.equipoLocal:selection.equipoVisitante);
+      if(accepted.includes(option) || !!team&&option===team)market=extraCode;
+    }
+  }
+  const compatible = market && isAdditionalMarket(market) ? !!segment && ['N1','N2','N3'].includes(segment) : market && segment && BACKTEST_MARKETS[market].segments.includes(segment);
   return {
     liga: selection.liga, mercado: market, segmento: compatible ? segment : null,
     temporada: 'ultima', origen: 'fiabilidad',

@@ -18,11 +18,21 @@ function add(liga,season,market,segment,odds,win,day=18){
 for(let i=0;i<6;i++)add(league,'2025/2026','CORNERS_OVER_85','N1',1.4,true,1);
 for(let i=0;i<28;i++)add('Peru Primera Division','2026','CORNERS_UNDER_105',i%2?'N1':'N2',1.6,i%3!==0,20);
 for(let i=0;i<4;i++)add(league,'2026/2027','GOLES_OVER_25','N3',1.5,i%2===0,18);
+// Reported counts are reproduced by synthetic fixtures to test UI/filter plumbing,
+// NOT to assert that production MongoDB has been queried from this test.
+for(const [market,count,selection] of [['BTTS_YES',2110,'YES'],['FT_HOME_WIN',1230,'HOME'],['FT_AWAY_WIN',260,'AWAY']]) {
+ for(let i=0;i<count;i++) {
+  const id=String(++seq),date='2026-09-01',season=i%2?'2026':'2026/2027',win=i%3!==0;
+  predictions.push({match_id:id,fecha_partido:date,liga:league,temporada:season,mercado:market,periodo:'FT',seleccion:selection,linea:null,segmento:['N1','N2','N3'][i%3],cuota:1.8,version_politica:'DEMO_LOCAL',tipo_evaluacion:'OOT'});
+  const [h,a]=selection==='YES'?(win?[1,1]:[0,2]):selection==='HOME'?(win?[2,0]:[0,2]):(win?[0,2]:[2,0]);
+  matches.set(id,[{dateEvent:date,strLeague:league,strHomeTeam:'Local FT de prueba',strAwayTeam:'Visitante FT de prueba',intHomeScore:h,intAwayScore:a,status:'complete'}]);
+ }
+}
 const handler=createHandler(async()=>({predictions,matches,source:'fixture',statusConfigured:true,drawRule:'pending'}));
 const selections=[
  {liga:league,mercadoApuesta:'Total corners (N1)',opcionApuesta:'Más de',valorOpcionApuesta:'8.5'},
  {liga:league,mercadoApuesta:'Total corners (N2)',opcionApuesta:'Más de',valorOpcionApuesta:'8.5'},
- {liga:league,mercadoApuesta:'Ambos equipos marcan (N1)',opcionApuesta:'Sí',valorOpcionApuesta:''}
+ {liga:league,mercadoApuesta:'Ganador del primer tiempo (N1)',opcionApuesta:'Local',valorOpcionApuesta:'1'}
 ].map((row,i)=>({...row,equipoLocal:'Local de prueba '+(i+1),equipoVisitante:'Visitante de prueba',cuotaSimple:'1.40',fechaJuego:'2026-10-25'}));
 (async()=>{
  const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
@@ -104,8 +114,21 @@ const selections=[
  assert.equal(await page.locator('.cards').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length),1);
  await page.locator('.reliability-action').nth(2).click();await page.locator('.context-warning').waitFor();await settled();assert.equal(await page.locator('.kpis').count(),0);assert((await page.locator('.context-warning').textContent()).includes('mercado equivalente'));
  await page.reload({waitUntil:'domcontentloaded'});await page.locator('.context-warning').waitFor();assert.equal(await page.locator('.kpis').count(),0);
+ await page.setViewportSize({width:1440,height:1100});
+ for(const [market,count]of [['BTTS_YES',2110],['FT_HOME_WIN',1230],['FT_AWAY_WIN',260]]) {
+  await page.goto(base+'/cuenta/resultados?mercado='+market+'&temporada=todas&vista=evolucion',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(expected=>Number(document.querySelector('.kpis strong')?.textContent.replace(/\D/g,''))===expected,count);
+  await page.locator('.detail-table').waitFor();await settled();
+  assert.equal(await page.locator('.context-warning').count(),0);
+  assert((await page.locator('.detail-table').textContent()).includes('Goles:'));
+  const last=requests.at(-1);assert.equal(last.mercado,market);assert(!('temporada'in last));
+  assert.equal(await page.locator('.detail-table tbody tr').count(),25);
+  await page.reload({waitUntil:'domcontentloaded'});await page.locator('.detail-table').waitFor();await settled();
+  assert.equal(new URL(page.url()).searchParams.get('mercado'),market);
+  assert.equal(new URL(page.url()).searchParams.get('temporada'),'todas');
+ }
  assert(requests.every(r=>!('direccion'in r)&&!('vista'in r)&&!('origen'in r)&&!('orden'in r)));
  assert.deepEqual(errors,[]);
- console.log('PASS: 3 unchanged desktop cards; vertical Statistics/Reliability/Help icons; N1/N2/all-segment reference; persistent URL, latest season per league, sorting, first-position paginated detail, real-score labels, mobile and unsupported context. API responses simulated.');
+ console.log('PASS: 3 unchanged desktop cards; vertical Statistics/Reliability/Help icons; N1/N2/all-segment reference; persistent URL, latest season per league, sorting, first-position paginated detail, real-score labels, mobile and unsupported context. Three FT markets, both season formats and all-season counts 2110/1230/260 tested with synthetic API fixtures; these are not production count checks.');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

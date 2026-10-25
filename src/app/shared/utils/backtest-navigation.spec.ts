@@ -53,3 +53,28 @@ describe('Backtest seasons and sorting',()=>{
     expect(sortedBacktestRows(rows,'liga','desc',labels)[0].liga).toBe('Z');
   });
 });
+describe('Additional reliability market candidates',()=>{
+  it('maps explicit BTTS selections without guessing approval segments',()=>{
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ambos equipos marcan (N2)',opcionApuesta:'Sí'})).toEqual(jasmine.objectContaining({mercado:'BTTS_YES',segmento:'N2',temporada:'ultima'}));
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ambos equipos marcan (N1)',opcionApuesta:'No'}).mercado).toBeNull();
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ambos equipos marcan (N1)',opcionApuesta:'Más de 0.5',valorOpcionApuesta:'0.5'}).mercado).toBe('BTTS_YES');
+  });
+  it('maps named home/away winners but never a draw or an invented HT line',()=>{
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ganador del partido (N1)',opcionApuesta:'Visitante'}).mercado).toBe('FT_AWAY_WIN');
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ganador del primer tiempo (N1)',opcionApuesta:'Local'}).mercado).toBeNull();
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ganador del partido (N1)',opcionApuesta:'X'}).mercado).toBeNull();
+    expect(reliabilityParams({...selection,mercadoApuesta:'Gol primer tiempo (N1)',opcionApuesta:'Más de',valorOpcionApuesta:'0.5'}).mercado).toBeNull();
+  });
+});
+
+describe('canonical FT identifiers shared with KNIME and MongoDB',()=>{
+ it('accepts each canonical market without renaming its identifier',()=>{
+  for(const [market,option]of [['BTTS_YES','YES'],['FT_HOME_WIN','HOME'],['FT_AWAY_WIN','AWAY']]) {
+   expect(reliabilityParams({...selection,mercadoApuesta:market+' (N1)',opcionApuesta:option}).mercado).toBe(market);
+  }
+ });
+ it('rejects contradictory canonical selections',()=>{
+  expect(reliabilityParams({...selection,mercadoApuesta:'BTTS_YES (N1)',opcionApuesta:'No'}).mercado).toBeNull();
+  expect(reliabilityParams({...selection,mercadoApuesta:'FT_HOME_WIN (N1)',opcionApuesta:'AWAY'}).mercado).toBeNull();
+ });
+});
