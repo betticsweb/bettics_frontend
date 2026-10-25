@@ -17,6 +17,18 @@ describe('Backtest results UX',()=>{
  });
  afterEach(()=>{component.ngOnDestroy();http.verify();});
  const expectRequest=()=>http.expectOne(r=>r.url===environment.backtestApiUrl+'/api/backtest/resultados');
+ it('blocks a new market when the backend has no verified catalogue',()=>{
+  params.next(convertToParamMap({liga:league,mercado:'AMBOS_MARCAN_SI',segmento:'N1',temporada:'2026/2027',origen:'fiabilidad'}));
+  component.ngOnInit();const probe=expectRequest();expect(probe.request.params.has('mercado')).toBeFalse();probe.flush(response());
+  expect(component.ready).toBeFalse();expect(component.notice).toContain('política histórica verificada');http.expectNone(()=>true);
+ });
+ it('uses exact new market filters only after a versioned policy is verified',()=>{
+  params.next(convertToParamMap({liga:league,mercado:'AMBOS_MARCAN_SI',segmento:'N1',temporada:'2026/2027',origen:'fiabilidad'}));
+  component.ngOnInit();const catalogue=[{mercado:'AMBOS_MARCAN_SI',version_politica:'V1',segmentos:['N1']}];
+  expectRequest().flush(response({catalogo_mercados:catalogue}));
+  const req=expectRequest();expect(req.request.params.get('mercado')).toBe('AMBOS_MARCAN_SI');expect(req.request.params.get('segmento')).toBe('N1');
+  req.flush(response({catalogo_mercados:catalogue}));expect(component.ready).toBeTrue();
+ });
  it('uses a read-only paginated API and preserves null values',()=>{
   component.ngOnInit();const req=expectRequest();expect(req.request.method).toBe('GET');expect(req.request.params.get('limit')).toBe('25');expect(req.request.params.has('temporada')).toBeFalse();req.flush(response());
   expect(component.format(null,' %')).toBe('Sin datos');expect(component.format(0,' %')).toBe('0 %');

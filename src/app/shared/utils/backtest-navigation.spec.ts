@@ -53,3 +53,16 @@ describe('Backtest seasons and sorting',()=>{
     expect(sortedBacktestRows(rows,'liga','desc',labels)[0].liga).toBe('Z');
   });
 });
+describe('Additional reliability market candidates',()=>{
+  it('maps explicit BTTS selections without guessing approval segments',()=>{
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ambos equipos marcan (N2)',opcionApuesta:'Sí'})).toEqual(jasmine.objectContaining({mercado:'AMBOS_MARCAN_SI',segmento:'N2',temporada:'ultima'}));
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ambos equipos marcan (N1)',opcionApuesta:'No'}).mercado).toBe('AMBOS_MARCAN_NO');
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ambos equipos marcan (N1)',opcionApuesta:'Más de 0.5'}).mercado).toBeNull();
+  });
+  it('maps named home/away winners but never a draw or an invented HT line',()=>{
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ganador del partido (N1)',opcionApuesta:'Visitante'}).mercado).toBe('GANADOR_FT_VISITANTE');
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ganador del primer tiempo (N1)',opcionApuesta:'Local'}).mercado).toBe('GANADOR_HT_LOCAL');
+    expect(reliabilityParams({...selection,mercadoApuesta:'Ganador del partido (N1)',opcionApuesta:'X'}).mercado).toBeNull();
+    expect(reliabilityParams({...selection,mercadoApuesta:'Gol primer tiempo (N1)',opcionApuesta:'Más de',valorOpcionApuesta:'0.5'}).mercado).toBeNull();
+  });
+});
