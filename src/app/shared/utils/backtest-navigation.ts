@@ -7,8 +7,8 @@ export const BACKTEST_MARKETS: Record<string, { label: string; segments: string[
   CORNERS_LOCAL_GANA: { label: 'Local con más córners', segments: ['N1','N2','N3'] }
 };
 export const ADDITIONAL_MARKETS: Record<string,string> = {
-  AMBOS_MARCAN_SI:'Ambos marcan — Sí',
-  GANADOR_FT_LOCAL:'Ganador FT — Local', GANADOR_FT_VISITANTE:'Ganador FT — Visitante'
+  BTTS_YES:'Ambos marcan — Sí',
+  FT_HOME_WIN:'Ganador FT — Local', FT_AWAY_WIN:'Ganador FT — Visitante'
 };
 export const isAdditionalMarket = (value: string): boolean => Object.prototype.hasOwnProperty.call(ADDITIONAL_MARKETS,value);
 export const isBacktestMarket = (value: string): boolean => Object.prototype.hasOwnProperty.call(BACKTEST_MARKETS,value);
@@ -48,11 +48,11 @@ export function reliabilityParams(selection: MarketSelection & { segmento?: stri
   }
   if (!market && !/handicap|asiatic|segundo/.test(name)) {
     if (/^(?:ambos equipos marcan|ambos marcan)$/.test(name)) {
-      if (['si','yes'].includes(option) || /^(?:mas de|over)(?: 0[.,]5)?$/.test(option) && String(selection.valorOpcionApuesta).replace(',','.')==='0.5') market='AMBOS_MARCAN_SI';
+      if (['si','yes'].includes(option) || /^(?:mas de|over)(?: 0[.,]5)?$/.test(option) && String(selection.valorOpcionApuesta).replace(',','.')==='0.5') market='BTTS_YES';
     }
     if (/^ganador del partido$/.test(name)) {
-      if (['home','local','1'].includes(option) || !!text(selection.equipoLocal) && option===text(selection.equipoLocal)) market='GANADOR_FT_LOCAL';
-      if (['away','visitante','2'].includes(option) || !!text(selection.equipoVisitante) && option===text(selection.equipoVisitante)) market='GANADOR_FT_VISITANTE';
+      if (['home','local','1'].includes(option) || !!text(selection.equipoLocal) && option===text(selection.equipoLocal)) market='FT_HOME_WIN';
+      if (['away','visitante','2'].includes(option) || !!text(selection.equipoVisitante) && option===text(selection.equipoVisitante)) market='FT_AWAY_WIN';
     }
   }
   const compatible = market && isAdditionalMarket(market) ? !!segment && ['N1','N2','N3'].includes(segment) : market && segment && BACKTEST_MARKETS[market].segments.includes(segment);
