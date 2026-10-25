@@ -97,8 +97,8 @@ export class BacktestComponent implements OnInit, OnDestroy {
     this.request=this.http.get<any>(environment.backtestApiUrl+'/api/backtest/resultados',{params}).pipe(takeUntil(this.destroyed)).subscribe({
       next:data=>{
         if(additional) {
-          const rules=(data.catalogo_mercados||[]).filter((r:any)=>r.mercado===this.filters['mercado']&&(!this.filters['version_politica']||r.version_politica===this.filters['version_politica']));
-          if(!rules.some((r:any)=>(!this.filters['segmento']||r.segmentos?.includes(this.filters['segmento'])))) {this.notice='Este mercado o segmento todavía no tiene una política histórica verificada. No se muestran porcentajes ni ROI.';this.contextBlocked=true;}
+          const rules=(data.catalogo_mercados||[]).filter((r:any)=>r.mercado===this.filters['mercado']&&(!this.filters['version_politica']||!r.version_politica||r.version_politica===this.filters['version_politica']));
+          if(!rules.some((r:any)=>(!this.filters['segmento']||r.segmentos?.includes(this.filters['segmento'])))) {this.notice='Este mercado o segmento todavía no está disponible en la API de Resultados. No se muestran porcentajes ni ROI.';this.contextBlocked=true;}
           else {this.additionalVerified=true;this.labels[this.filters['mercado']]=ADDITIONAL_MARKETS[this.filters['mercado']];}
         }
         this.catalog={...data.opciones,temporadas:(data.opciones?.temporadas||[]).map(String)};

@@ -20,7 +20,7 @@ describe('Backtest results UX',()=>{
  it('blocks a new market when the backend has no verified catalogue',()=>{
   params.next(convertToParamMap({liga:league,mercado:'AMBOS_MARCAN_SI',segmento:'N1',temporada:'2026/2027',origen:'fiabilidad'}));
   component.ngOnInit();const probe=expectRequest();expect(probe.request.params.has('mercado')).toBeFalse();probe.flush(response());
-  expect(component.ready).toBeFalse();expect(component.notice).toContain('política histórica verificada');http.expectNone(()=>true);
+  expect(component.ready).toBeFalse();expect(component.notice).toContain('API de Resultados');http.expectNone(()=>true);
  });
  it('uses exact new market filters only after a versioned policy is verified',()=>{
   params.next(convertToParamMap({liga:league,mercado:'AMBOS_MARCAN_SI',segmento:'N1',temporada:'2026/2027',origen:'fiabilidad'}));

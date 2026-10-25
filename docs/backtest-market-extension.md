@@ -1,9 +1,7 @@
-# Ampliación exclusivamente FT
+# Tres mercados FT en el flujo existente
 
-Fiabilidad reconoce Ambos marcan Sí, ganador FT Local y ganador FT Visitante. HT y Ambos marcan No quedan excluidos. El segmento N1–N3 se conserva sin declarar su aprobación: se comprueba contra el catálogo de políticas verificadas del backend antes de enviar el filtro. Sin catálogo o política compatible se muestra un aviso sin ROI.
+Se conserva R Source -> mismo CSV consolidado -> mismo Python Legacy -> mismo endpoint -> backtestAprobados. Se reconocen AMBOS_MARCAN_SI/YES, GANADOR_FT_LOCAL/HOME y GANADOR_FT_VISITANTE/AWAY, FT, linea null, segmentos estructuralmente N1–N3. La aprobación sigue exclusivamente en R, sin manifiestos adicionales. HT y BTTS No excluidos.
 
-Los scripts Python originales adjuntos confirman Ambos equipos marcan con valorOpcionApuesta=0.5 como BTTS Sí. Se admite «Más de»/«Más de 0.5» únicamente para ese mercado exacto y valor 0.5; no se extrapola a goles totales. Ganador se identifica por selección explícita de equipo local/visitante. No se modifica el diseño ni la distribución de tres tarjetas.
+Fiabilidad conserva filtros persistentes y solo comprueba compatibilidad del backend desplegado; no exige otro proceso de aprobación. El motor usa goles FT confirmados y las agregaciones existentes. Diseño y cuatro mercados originales conservados. El listado de filas reales aparecerá al cargarse sus aprobados por el flujo habitual; no se simulan datos.
 
-La documentación detallada de fuentes, SHA de adjuntos, discrepancia cuotaSimple/cuotaCombinada y archivos R/CSV pendientes está en el PR backend #4. Los adjuntos son generadores Python de HTML, no reportes con filas ni políticas R N1–N3.
-
-Pruebas enfocadas con API simulada y compilación; no se afirman datos nuevos reales de producción. La carga está bloqueada hasta comprobar las políticas y evidencia OOT. Los cuatro mercados actuales se conservan.
+El único pendiente de generación es inspeccionar el R Source actual y su malla: esos archivos no están en los repositorios ni en los adjuntos. No es obligatorio recomendaciones_hist.csv ni un ETL alternativo. Ver documentación del PR backend #4 para las acciones mínimas por mercado.
