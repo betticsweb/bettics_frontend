@@ -17,6 +17,7 @@ export interface Environment {
   name: string;
   PORT: number;
   urlIntegracion: string;
+  backtestApiUrl: string;
   dialogflow: DialogflowConfig;
 }
 
