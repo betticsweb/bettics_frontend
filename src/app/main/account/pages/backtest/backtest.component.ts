@@ -11,7 +11,7 @@ const API_FILTERS = ['mercado','segmento','liga','temporada','desde','hasta','ve
 const SORTS = ['mercado','liga','roi','aprobados','efectividad','ganancia'];
 @Component({selector:'app-backtest',standalone:true,imports:[CommonModule,FormsModule],templateUrl:'./backtest.component.html',styleUrls:['./backtest.component.css']})
 export class BacktestComponent implements OnInit, OnDestroy {
-  labels: Record<string,string> = Object.fromEntries(Object.entries(BACKTEST_MARKETS).map(([key,m])=>[key,m.label]));
+  labels: Record<string,string> = {...ADDITIONAL_MARKETS,...Object.fromEntries(Object.entries(BACKTEST_MARKETS).map(([key,m])=>[key,m.label]))};
   filters: Record<string,string> = {mercado:'',segmento:'',liga:'',temporada:'ultima',desde:'',hasta:'',version_politica:'',orden:'roi',direccion:'desc'};
   data: any; catalog: any = {}; loading=false; error=''; notice=''; view='resumen'; page=1; contextBlocked=false;
   private request?: Subscription;
@@ -44,7 +44,7 @@ export class BacktestComponent implements OnInit, OnDestroy {
     if(this.filters['desde']&&this.filters['hasta']&&this.filters['desde']>this.filters['hasta']) this.invalid='La fecha inicial debe ser anterior a la fecha final.';
     this.contextBlocked=!!this.invalid;
   }
-  get segments(): string[] {return isBacktestMarket(this.filters['mercado'])?BACKTEST_MARKETS[this.filters['mercado']].segments:['N1','N2','N3','N4'];}
+  get segments(): string[] {if(isAdditionalMarket(this.filters['mercado']))return ['N1','N2','N3'];return isBacktestMarket(this.filters['mercado'])?BACKTEST_MARKETS[this.filters['mercado']].segments:['N1','N2','N3','N4'];}
   get markets(): string[] {return [...new Set([...(this.catalog.mercados||[]),...(this.filters['mercado']&&isBacktestMarket(this.filters['mercado'])?[this.filters['mercado']]:[])])];}
   get rankedRows(): any[] {return sortedBacktestRows(this.view==='segmentos'?this.data?.segmentos||[]:this.data?.ranking||[],this.filters['orden'],this.filters['direccion'],this.labels);}
   get ready(): boolean {return !!this.data&&!this.data.requiere_version&&!this.contextBlocked;}

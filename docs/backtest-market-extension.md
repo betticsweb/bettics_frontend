@@ -1,7 +1,9 @@
-# Nuevos mercados: navegación compatible
+# Ampliación exclusivamente FT
 
-Fiabilidad reconoce las selecciones explícitas Sí/No de Ambos marcan y Local/Visitante de ganador FT y HT. El segmento se conserva tal como aparece en la recomendación, sin declarar que esté aprobado. Antes de consultar esas variantes se solicita el catálogo existente sin filtro de mercado: solo se permite la consulta cuando el backend acredita una política y segmento correspondientes. Un backend sin catálogo sigue funcionando y muestra un aviso sin ROI para esas variantes.
+Fiabilidad reconoce Ambos marcan Sí, ganador FT Local y ganador FT Visitante. HT y Ambos marcan No quedan excluidos. El segmento N1–N3 se conserva sin declarar su aprobación: se comprueba contra el catálogo de políticas verificadas del backend antes de enviar el filtro. Sin catálogo o política compatible se muestra un aviso sin ROI.
 
-No se inventan líneas para goles HT ni equivalencias entre «Más de 0.5» y BTTS. El generador R y sus fuentes reales no están disponibles: la carga adicional permanece bloqueada. No se modifica la estructura de las tarjetas, las tres columnas, el reporte ni los cálculos del frontend. Los porcentajes proceden exclusivamente del backend.
+Los scripts Python originales adjuntos confirman Ambos equipos marcan con valorOpcionApuesta=0.5 como BTTS Sí. Se admite «Más de»/«Más de 0.5» únicamente para ese mercado exacto y valor 0.5; no se extrapola a goles totales. Ganador se identifica por selección explícita de equipo local/visitante. No se modifica el diseño ni la distribución de tres tarjetas.
 
-Validación: compilación de producción y 28 pruebas Angular enfocadas. Los datos de pruebas son simulados; no se afirma haber consultado nuevos resultados reales privados. Backend y frontend se entregan en PR separados, pendientes de verificar las políticas originales.
+La documentación detallada de fuentes, SHA de adjuntos, discrepancia cuotaSimple/cuotaCombinada y archivos R/CSV pendientes está en el PR backend #4. Los adjuntos son generadores Python de HTML, no reportes con filas ni políticas R N1–N3.
+
+Pruebas enfocadas con API simulada y compilación; no se afirman datos nuevos reales de producción. La carga está bloqueada hasta comprobar las políticas y evidencia OOT. Los cuatro mercados actuales se conservan.

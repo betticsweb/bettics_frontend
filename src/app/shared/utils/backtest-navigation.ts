@@ -7,9 +7,8 @@ export const BACKTEST_MARKETS: Record<string, { label: string; segments: string[
   CORNERS_LOCAL_GANA: { label: 'Local con más córners', segments: ['N1','N2','N3'] }
 };
 export const ADDITIONAL_MARKETS: Record<string,string> = {
-  AMBOS_MARCAN_SI:'Ambos marcan — Sí', AMBOS_MARCAN_NO:'Ambos marcan — No',
-  GANADOR_FT_LOCAL:'Ganador FT — Local', GANADOR_FT_VISITANTE:'Ganador FT — Visitante',
-  GANADOR_HT_LOCAL:'Ganador HT — Local', GANADOR_HT_VISITANTE:'Ganador HT — Visitante'
+  AMBOS_MARCAN_SI:'Ambos marcan — Sí',
+  GANADOR_FT_LOCAL:'Ganador FT — Local', GANADOR_FT_VISITANTE:'Ganador FT — Visitante'
 };
 export const isAdditionalMarket = (value: string): boolean => Object.prototype.hasOwnProperty.call(ADDITIONAL_MARKETS,value);
 export const isBacktestMarket = (value: string): boolean => Object.prototype.hasOwnProperty.call(BACKTEST_MARKETS,value);
@@ -49,16 +48,14 @@ export function reliabilityParams(selection: MarketSelection & { segmento?: stri
   }
   if (!market && !/handicap|asiatic|segundo/.test(name)) {
     if (/^(?:ambos equipos marcan|ambos marcan)$/.test(name)) {
-      if (['si','yes'].includes(option)) market='AMBOS_MARCAN_SI';
-      if (['no'].includes(option)) market='AMBOS_MARCAN_NO';
+      if (['si','yes'].includes(option) || /^(?:mas de|over)(?: 0[.,]5)?$/.test(option) && String(selection.valorOpcionApuesta).replace(',','.')==='0.5') market='AMBOS_MARCAN_SI';
     }
-    if (/^ganador (?:del partido|del primer tiempo)$/.test(name)) {
-      const period=name.includes('primer tiempo')?'HT':'FT';
-      if (['home','local','1'].includes(option) || !!text(selection.equipoLocal) && option===text(selection.equipoLocal)) market=`GANADOR_${period}_LOCAL`;
-      if (['away','visitante','2'].includes(option) || !!text(selection.equipoVisitante) && option===text(selection.equipoVisitante)) market=`GANADOR_${period}_VISITANTE`;
+    if (/^ganador del partido$/.test(name)) {
+      if (['home','local','1'].includes(option) || !!text(selection.equipoLocal) && option===text(selection.equipoLocal)) market='GANADOR_FT_LOCAL';
+      if (['away','visitante','2'].includes(option) || !!text(selection.equipoVisitante) && option===text(selection.equipoVisitante)) market='GANADOR_FT_VISITANTE';
     }
   }
-  const compatible = market && isAdditionalMarket(market) ? !!segment : market && segment && BACKTEST_MARKETS[market].segments.includes(segment);
+  const compatible = market && isAdditionalMarket(market) ? !!segment && ['N1','N2','N3'].includes(segment) : market && segment && BACKTEST_MARKETS[market].segments.includes(segment);
   return {
     liga: selection.liga, mercado: market, segmento: compatible ? segment : null,
     temporada: 'ultima', origen: 'fiabilidad',
