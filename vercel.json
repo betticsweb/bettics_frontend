@@ -2,5 +2,25 @@
   "buildCommand": "npm run build -- --output-path=dist-vercel",
   "outputDirectory": "dist-vercel",
   "installCommand": "npm ci --legacy-peer-deps --cache /tmp/bettics-npm-cache --no-audit --no-fund",
-  "rewrites": [{"source": "/((?!.*\\.).*)", "destination": "/index.html"}]
+  "rewrites": [
+    {
+      "source": "/api/backtest/resultados",
+      "destination": "https://apianabet.herokuapp.com/api/backtest/resultados"
+    },
+    {
+      "source": "/((?!.*\\.).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/backtest/resultados",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "private, no-store"
+        }
+      ]
+    }
+  ]
 }

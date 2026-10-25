@@ -4,7 +4,7 @@ La sección Resultados conserva la pantalla anterior y añade el selector «Back
 
 ## Configuración
 
-`environment.backtestApiUrl` apunta explícitamente a `https://apianabet.herokuapp.com`. `urlIntegracion` sigue apuntando a Render en producción. La nueva vista usa únicamente `GET /api/backtest/resultados`; envía la sesión de usuario mediante el interceptor existente, nunca un token ETL. Si Heroku no confía en el emisor de esa sesión, se muestra un error de autenticación y se requiere resolver esa confianza en el servidor antes de publicar.
+`environment.backtestApiUrl` usa el mismo origen en producción. Vercel reenvía exclusivamente `/api/backtest/resultados` a `https://apianabet.herokuapp.com/api/backtest/resultados`, conservando la autenticación y las consultas; esto evita depender de la lista CORS del servidor histórico. La respuesta lleva `Cache-Control: private, no-store`. El desarrollo local conserva su URL de Heroku. `urlIntegracion` sigue apuntando a Render en producción. La nueva vista usa únicamente `GET /api/backtest/resultados`; envía la sesión de usuario mediante el interceptor existente, nunca un token ETL. Si Heroku no confía en el emisor de esa sesión, se muestra un error de autenticación y se requiere resolver esa confianza en el servidor antes de publicar.
 
 Filtros: mercado, segmentos compatibles, liga, temporada, fechas y versión de política. Las solicitudes anteriores se cancelan al cambiar filtros para no mostrar resultados obsoletos. Detalle paginado de 25 filas. No se descarga el conjunto completo de aprobados al navegador.
 
@@ -38,4 +38,4 @@ Las capturas se generan en `docs/screenshots/` y llevan el distintivo «Datos si
 
 ## Publicación pendiente
 
-No se ha desplegado. La rama frontend parte de master y depende de las nuevas APIs de la rama backend `feature/backtest-resultados` (PR #2, basada en el PR #1). Mantener la escritura del backtest deshabilitada. El backend requiere verificar su configuración de lectura y autenticación en el proceso de publicación autorizado; los resultados que no pueda confirmar la consulta se muestran como pendientes.
+La publicación está autorizada. La rama frontend parte de master y depende de las nuevas APIs de la rama backend `feature/backtest-resultados` (PR #2, basada en el PR #1). Mantener la escritura del backtest deshabilitada. El backend requiere verificar su configuración de lectura y autenticación en el proceso de publicación autorizado; los resultados que no pueda confirmar la consulta se muestran como pendientes.
