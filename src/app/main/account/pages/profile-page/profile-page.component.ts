@@ -35,7 +35,13 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     const id = String(detail.match_id || detail.matchId || '');
     const official = detail.resultadoOficial;
     if (!id || !official || official.matchId !== id) {
-      return {estado:'SIN_DATOS',detalle:'Resultado oficial no vinculado por identificador de partido'};
+      // Dates may confirm that kick-off is still in the future, but never
+      // prove a completed match. Missing IDs cannot become ACIERTO/FALLO.
+      const kickOff = Date.parse(String(detail.fechaJuego || ''));
+      if (Number.isFinite(kickOff) && kickOff > Date.now()) {
+        return {estado:'PENDIENTE',detalle:'El partido aún no comienza'};
+      }
+      return {estado:'SIN_DATOS',detalle:'Falta vincular el resultado oficial mediante el ID del partido'};
     }
     // Only canonical identifiers supplied by a verified API are eligible.
     // Segment labels N1/N2/N3 and translated UI strings must not drive settlement.
