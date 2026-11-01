@@ -30,6 +30,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     SIN_DATOS: 'Sin datos', DEVOLUCION: 'Devolución'
   };
   result(detail: Selection): Evaluacion {
+    if (detail.evaluacionResultado) return detail.evaluacionResultado;
     // The existing recommendations endpoint does not yet expose match_id or
     // a verified final score. Never join by team names/date or infer "FINALIZADO".
     const id = String(detail.match_id || detail.matchId || '');
