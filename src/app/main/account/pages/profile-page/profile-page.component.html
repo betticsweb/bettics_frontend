@@ -28,6 +28,7 @@
         <article class="recommendation" *ngFor="let item of group.items">
           <span *ngIf="item.detalle.length > 1" class="combined">Combinada · {{item.detalle.length}} selecciones</span>
           <div class="selection" *ngFor="let detail of item.detalle">
+            <button type="button" class="result-badge" [ngClass]="'status-' + result(detail).estado.toLowerCase()" (click)="showResult(detail)" [title]="result(detail).detalle" [attr.aria-label]="'Resultado: ' + resultLabels[result(detail).estado] + '. Ver detalle'">{{result(detail).estado === 'ACIERTO' ? '✓' : result(detail).estado === 'FALLO' ? '✕' : result(detail).estado === 'PENDIENTE' ? '◷' : 'ⓘ'}} {{resultLabels[result(detail).estado]}}</button>
             <div class="league">{{detail.liga}}</div>
             <small>{{dateLabel(detail.fechaJuego)}}</small>
             <h4>{{detail.equipoLocal}} <span>vs</span> {{detail.equipoVisitante}}</h4>
