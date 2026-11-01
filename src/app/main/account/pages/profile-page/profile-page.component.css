@@ -4,3 +4,14 @@
 
 /* Three compact actions fit the existing title rows without growing the card. */
 .selection-actions{gap:0}.selection-actions a,.selection-actions button{height:32px;min-height:32px;padding:5px}
+
+/* Compact result badge: preserve the three-column layout and existing actions. */
+.selection{position:relative}
+.result-badge{position:absolute;top:12px;right:59px;width:auto;max-width:130px;min-height:27px;height:27px;padding:3px 9px;border:0;border-radius:20px;white-space:nowrap;font-size:12px;font-weight:700;z-index:1}
+.result-badge.status-acierto{background:#e0f5e8;color:#076c35}
+.result-badge.status-fallo{background:#fde5e5;color:#ae1616}
+.result-badge.status-pendiente{background:#eaecf0;color:#36445b}
+.result-badge.status-sin_datos,.result-badge.status-devolucion{background:#f4f5f7;color:#576477}
+.result-badge:hover{filter:brightness(.96)}
+.result-badge:focus-visible{outline:3px solid #f6be00;outline-offset:2px}
+@media(max-width:420px){.result-badge{top:9px;right:55px;font-size:11px;padding:3px 6px}}
