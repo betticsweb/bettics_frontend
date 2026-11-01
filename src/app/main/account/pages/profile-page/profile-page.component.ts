@@ -37,30 +37,18 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     if (!id || !official || official.matchId !== id) {
       return {estado:'SIN_DATOS',detalle:'Resultado oficial no vinculado por identificador de partido'};
     }
-    const market = String(detail.mercadoApuesta || '').toLowerCase();
-    const choice = String(detail.opcionApuesta || '').toLowerCase();
-    const operator: 'MAS'|'MENOS' = /menos/.test(choice)?'MENOS':'MAS';
-    const line = Number(detail.valorOpcionApuesta);
-    let bet: ApuestaEvaluable | undefined;
-    if (/primer tiempo|primera mitad/.test(market)) {
-      bet = {matchId:id,mercado:'GOLES_PRIMER_TIEMPO',linea:line,operador:operator};
-    } else if (/ambos equipos marcan/.test(market)) {
-      bet = {matchId:id,mercado:'BTTS_SI'};
-    } else if (/equipo con mas corners/.test(market)) {
-      const home = String(detail.equipoLocal || '').toLowerCase();
-      const away = String(detail.equipoVisitante || '').toLowerCase();
-      const selected = choice.includes(home) ? 'LOCAL' : choice.includes(away) ? 'VISITA' : undefined;
-      if (selected) bet = {matchId:id,mercado:'CORNERS_GANADOR',seleccion:selected};
-    } else if (/esquina|corner/.test(market)) {
-      bet = {matchId:id,mercado:'CORNERS_TOTAL',linea:line,operador:operator};
-    } else if (/total de goles/.test(market)) {
-      bet = {matchId:id,mercado:'GOLES_TOTAL',linea:line,operador:operator};
-    } else if (/ganador del partido/.test(market)) {
-      const selected = choice.includes(String(detail.equipoLocal).toLowerCase())?'LOCAL':choice.includes(String(detail.equipoVisitante).toLowerCase())?'VISITA':undefined;
-      if(selected) bet={matchId:id,mercado:'GANADOR_FT',seleccion:selected};
+    // Only canonical identifiers supplied by a verified API are eligible.
+    // Segment labels N1/N2/N3 and translated UI strings must not drive settlement.
+    const source = detail as Selection & { mercadoCodigo?: ApuestaEvaluable['mercado'];
+      operadorCodigo?: 'MAS'|'MENOS'; seleccionCodigo?: ApuestaEvaluable['seleccion']; lineaNumero?: number };
+    if (!source.mercadoCodigo) {
+      return {estado:'SIN_DATOS',detalle:'Código de mercado no disponible en la API'};
     }
-    return bet ? evaluarRecomendacion(bet, official) :
-      {estado:'SIN_DATOS',detalle:'Mercado sin definición verificable para evaluación'};
+    const bet: ApuestaEvaluable = {
+      matchId:id, mercado:source.mercadoCodigo,
+      operador:source.operadorCodigo, seleccion:source.seleccionCodigo, linea:source.lineaNumero
+    };
+    return evaluarRecomendacion(bet, official);
   }
   showResult(detail: Selection): void {
     const e=this.result(detail);
