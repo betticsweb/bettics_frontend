@@ -1,3 +1,4 @@
+import { evaluarRecomendacion, Evaluacion, Partido, Recomendacion as ApuestaEvaluable } from 'src/app/shared/utils/evaluador-recomendacion';
 import { reliabilityParams } from 'src/app/shared/utils/backtest-navigation';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import Swal from 'sweetalert2';
@@ -6,6 +7,8 @@ import { explainMarket, statisticsParams } from 'src/app/shared/utils/recommenda
 import { RecommendationsService } from '../../services/recommendations.service';
 
 interface Selection {
+  match_id?: string; matchId?: string; resultadoOficial?: Partido;
+  evaluacionResultado?: Evaluacion;
   idHomeTeam?: string; idAwayTeam?: string; segmento?: string;
   liga: string; equipoLocal: string; equipoVisitante: string;
   mercadoApuesta: string; opcionApuesta: string; valorOpcionApuesta: string;
@@ -22,6 +25,52 @@ interface Recommendation {
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
   readonly statisticsParams = statisticsParams;
+  readonly resultLabels: Record<string,string> = {
+    ACIERTO: 'Acierto', FALLO: 'Fallo', PENDIENTE: 'Pendiente',
+    SIN_DATOS: 'Sin datos', DEVOLUCION: 'Devolución'
+  };
+  result(detail: Selection): Evaluacion {
+    // The existing recommendations endpoint does not yet expose match_id or
+    // a verified final score. Never join by team names/date or infer "FINALIZADO".
+    const id = String(detail.match_id || detail.matchId || '');
+    const official = detail.resultadoOficial;
+    if (!id || !official || official.matchId !== id) {
+      return {estado:'SIN_DATOS',detalle:'Resultado oficial no vinculado por identificador de partido'};
+    }
+    const market = String(detail.mercadoApuesta || '').toLowerCase();
+    const choice = String(detail.opcionApuesta || '').toLowerCase();
+    const operator: 'MAS'|'MENOS' = /menos/.test(choice)?'MENOS':'MAS';
+    const line = Number(detail.valorOpcionApuesta);
+    let bet: ApuestaEvaluable | undefined;
+    if (/primer tiempo|primera mitad/.test(market)) {
+      bet = {matchId:id,mercado:'GOLES_PRIMER_TIEMPO',linea:line,operador:operator};
+    } else if (/ambos equipos marcan/.test(market)) {
+      bet = {matchId:id,mercado:'BTTS_SI'};
+    } else if (/equipo con mas corners/.test(market)) {
+      const home = String(detail.equipoLocal || '').toLowerCase();
+      const away = String(detail.equipoVisitante || '').toLowerCase();
+      const selected = choice.includes(home) ? 'LOCAL' : choice.includes(away) ? 'VISITA' : undefined;
+      if (selected) bet = {matchId:id,mercado:'CORNERS_GANADOR',seleccion:selected};
+    } else if (/esquina|corner/.test(market)) {
+      bet = {matchId:id,mercado:'CORNERS_TOTAL',linea:line,operador:operator};
+    } else if (/total de goles/.test(market)) {
+      bet = {matchId:id,mercado:'GOLES_TOTAL',linea:line,operador:operator};
+    } else if (/ganador del partido/.test(market)) {
+      const selected = choice.includes(String(detail.equipoLocal).toLowerCase())?'LOCAL':choice.includes(String(detail.equipoVisitante).toLowerCase())?'VISITA':undefined;
+      if(selected) bet={matchId:id,mercado:'GANADOR_FT',seleccion:selected};
+    }
+    return bet ? evaluarRecomendacion(bet, official) :
+      {estado:'SIN_DATOS',detalle:'Mercado sin definición verificable para evaluación'};
+  }
+  showResult(detail: Selection): void {
+    const e=this.result(detail);
+    void Swal.fire({
+      title:'Resultado del mercado',
+      html:'<strong>Estado: '+this.resultLabels[e.estado]+'</strong><p>'+e.detalle.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c] || c))+'</p>',
+      confirmButtonText:'Cerrar',confirmButtonColor:'#006738',showCloseButton:true,returnFocus:true
+    });
+  }
+
   readonly reliabilityParams = reliabilityParams;
   showHelp(detail: Selection): void {
     void Swal.fire({
